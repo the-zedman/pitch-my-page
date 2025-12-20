@@ -68,6 +68,7 @@ export default function SignupPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            userId: authData.user.id,
             email: data.email,
             username: data.username,
           }),

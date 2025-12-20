@@ -5,30 +5,31 @@ import { cookies } from 'next/headers'
 
 export async function POST(request: NextRequest) {
   try {
-    // Get the session from cookies
+    const body = await request.json()
+    const { username, email, userId } = body
+
+    // If userId is provided (from client), use it directly with admin client
+    // This bypasses the need for session in API route
+    if (userId) {
+      return await createProfileWithAdmin({ id: userId, email }, body)
+    }
+
+    // Otherwise, try to get user from session
     const cookieStore = await cookies()
     const supabase = createServerSupabaseClient()
     
-    // Get authenticated user - try to get from session first
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+    // Get authenticated user
+    const { data: { user }, error: userError } = await supabase.auth.getUser()
     
-    if (sessionError || !session?.user) {
-      // Try alternative method - get user directly
-      const { data: { user }, error: userError } = await supabase.auth.getUser()
-      
-      if (userError || !user) {
-        return NextResponse.json(
-          { error: 'Unauthorized - Please log in again' },
-          { status: 401 }
-        )
-      }
-      
-      // Use admin client to create profile
-      return await createProfileWithAdmin(user, request)
+    if (userError || !user) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please log in again' },
+        { status: 401 }
+      )
     }
     
     // Use admin client to create profile
-    return await createProfileWithAdmin(session.user, request)
+    return await createProfileWithAdmin(user, body)
   } catch (error: any) {
     console.error('Profile creation API error:', error)
     return NextResponse.json(
@@ -38,8 +39,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function createProfileWithAdmin(user: any, request: NextRequest) {
-  const body = await request.json()
+async function createProfileWithAdmin(user: any, body: any) {
   const { username, email } = body
 
   // Use admin client to bypass RLS

@@ -60,6 +60,7 @@ export default function DashboardPage() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
+            userId: user.id,
             email: user.email,
             username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
           }),
