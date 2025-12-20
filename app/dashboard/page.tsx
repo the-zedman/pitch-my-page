@@ -54,26 +54,25 @@ export default function DashboardPage() {
         .eq('id', user.id)
         .single()
 
-      // If profile doesn't exist, create it
+      // If profile doesn't exist, create it via API (bypasses RLS)
       if (profileError && profileError.code === 'PGRST116') {
-        const { data: newProfile, error: createError } = await supabase
-          .from('profiles')
-          .insert({
-            id: user.id,
+        const createResponse = await fetch('/api/profiles/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
             email: user.email,
             username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
-            points: 10, // Welcome bonus
-            level: 1,
-          })
-          .select()
-          .single()
+          }),
+        })
 
-        if (createError) {
-          console.error('Profile creation error:', createError)
+        if (!createResponse.ok) {
+          const errorData = await createResponse.json()
+          console.error('Profile creation error:', errorData)
           setError('Failed to create profile. Please contact support.')
           return
         }
 
+        const { profile: newProfile } = await createResponse.json()
         profileData = newProfile
       } else if (profileError) {
         console.error('Profile error:', profileError)

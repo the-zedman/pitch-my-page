@@ -63,37 +63,34 @@ export default function SignupPage() {
         // Wait a moment for auth to fully process
         await new Promise(resolve => setTimeout(resolve, 500))
 
-        // Create profile in database
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .insert({
-            id: authData.user.id,
+        // Create profile via API (bypasses RLS)
+        const profileResponse = await fetch('/api/profiles/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
             email: data.email,
             username: data.username,
-            points: 10, // Welcome bonus points
-            level: 1,
-          })
-          .select()
-          .single()
+          }),
+        })
 
-        if (profileError) {
-          console.error('Profile creation error:', profileError)
-          // If it's a duplicate key error, profile might already exist - that's okay
-          if (profileError.code !== '23505') {
-            throw new Error('Failed to create profile. Please try again.')
-          }
-        }
-
-        // Award first signup achievement (if profile was created)
-        if (profileData) {
-          try {
-            await supabase.from('achievements').insert({
-              user_id: authData.user.id,
-              achievement_type: 'first_pitch', // We'll use this as "first signup" for now
-            })
-          } catch (e) {
-            // Ignore achievement errors
-            console.log('Achievement creation skipped:', e)
+        if (!profileResponse.ok) {
+          const errorData = await profileResponse.json()
+          console.error('Profile creation error:', errorData)
+          // Don't throw - user is created, profile can be created later
+        } else {
+          const { profile: profileData } = await profileResponse.json()
+          
+          // Award first signup achievement
+          if (profileData) {
+            try {
+              await supabase.from('achievements').insert({
+                user_id: authData.user.id,
+                achievement_type: 'first_pitch', // We'll use this as "first signup" for now
+              })
+            } catch (e) {
+              // Ignore achievement errors
+              console.log('Achievement creation skipped:', e)
+            }
           }
         }
 
