@@ -1,0 +1,320 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Loader2, Link2, Image as ImageIcon, Tag } from 'lucide-react'
+
+const submissionSchema = z.object({
+  url: z.string().url('Please enter a valid URL'),
+  title: z.string().min(10, 'Title must be at least 10 characters').max(200, 'Title must be less than 200 characters'),
+  description: z.string().min(100, 'Description must be at least 100 characters').max(1000, 'Description must be less than 1000 characters'),
+  tags: z.array(z.string()).min(1, 'Please add at least one tag').max(10, 'Maximum 10 tags allowed'),
+  category: z.enum(['ai', 'content', 'dev-tools', 'saas', 'design', 'marketing', 'other']),
+  thumbnail_url: z.string().url().optional().nullable(),
+})
+
+type SubmissionFormData = z.infer<typeof submissionSchema>
+
+interface OGData {
+  title?: string
+  description?: string
+  image?: string
+}
+
+export default function SubmissionForm() {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isFetchingOG, setIsFetchingOG] = useState(false)
+  const [ogData, setOgData] = useState<OGData | null>(null)
+  const [pointsReward, setPointsReward] = useState(10)
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors },
+  } = useForm<SubmissionFormData>({
+    resolver: zodResolver(submissionSchema),
+    defaultValues: {
+      tags: [],
+      category: 'other',
+    },
+  })
+
+  const url = watch('url')
+  const description = watch('description')
+
+  // Auto-fetch OG data when URL changes
+  useEffect(() => {
+    if (url && isValidUrl(url)) {
+      fetchOGData(url)
+    }
+  }, [url])
+
+  const isValidUrl = (url: string): boolean => {
+    try {
+      new URL(url)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  const fetchOGData = async (url: string) => {
+    setIsFetchingOG(true)
+    try {
+      const response = await fetch('/api/fetch-og-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setOgData(data)
+        
+        if (data.title) setValue('title', data.title)
+        if (data.description) {
+          const desc = data.description.length > 1000 
+            ? data.description.substring(0, 997) + '...' 
+            : data.description
+          setValue('description', desc)
+        }
+        if (data.image) setValue('thumbnail_url', data.image)
+      }
+    } catch (error) {
+      console.error('Failed to fetch OG data:', error)
+    } finally {
+      setIsFetchingOG(false)
+    }
+  }
+
+  const onSubmit = async (data: SubmissionFormData) => {
+    setIsLoading(true)
+    try {
+      const response = await fetch('/api/pitches', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        // Redirect to pitch detail page or show success
+        window.location.href = `/pitches/${result.id}`
+      } else {
+        const error = await response.json()
+        alert(error.message || 'Failed to submit pitch')
+      }
+    } catch (error) {
+      console.error('Submission error:', error)
+      alert('An error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const [tagInput, setTagInput] = useState('')
+  const tags = watch('tags')
+
+  const addTag = () => {
+    const trimmed = tagInput.trim().toLowerCase()
+    if (trimmed && !tags.includes(trimmed) && tags.length < 10) {
+      setValue('tags', [...tags, trimmed])
+      setTagInput('')
+    }
+  }
+
+  const removeTag = (tagToRemove: string) => {
+    setValue('tags', tags.filter(tag => tag !== tagToRemove))
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <div className="bg-white rounded-lg shadow-md p-8">
+        <h1 className="text-3xl font-bold mb-2">Pitch Your Page</h1>
+        <p className="text-gray-600 mb-6">
+          Share your content with the community and get ethical backlinks
+        </p>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* URL Input */}
+          <div>
+            <label htmlFor="url" className="block text-sm font-medium text-gray-700 mb-2">
+              Page URL <span className="text-red-500">*</span>
+            </label>
+            <div className="relative">
+              <Link2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                id="url"
+                type="url"
+                {...register('url')}
+                placeholder="https://example.com/my-awesome-page"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              {isFetchingOG && (
+                <Loader2 className="absolute right-3 top-1/2 transform -translate-y-1/2 animate-spin text-gray-400 w-5 h-5" />
+              )}
+            </div>
+            {errors.url && (
+              <p className="mt-1 text-sm text-red-600">{errors.url.message}</p>
+            )}
+          </div>
+
+          {/* Auto-filled Title */}
+          <div>
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              Title <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="title"
+              {...register('title')}
+              placeholder="Enter a compelling title for your pitch"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              {watch('title')?.length || 0} / 200 characters
+            </p>
+            {errors.title && (
+              <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
+            )}
+          </div>
+
+          {/* Description */}
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              id="description"
+              {...register('description')}
+              rows={6}
+              placeholder="Describe your page in at least 100 characters. What makes it special? What problem does it solve?"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+            <div className="mt-1 flex justify-between">
+              <p className="text-xs text-gray-500">
+                {description?.length || 0} / 1000 characters (minimum 100)
+              </p>
+              {errors.description && (
+                <p className="text-sm text-red-600">{errors.description.message}</p>
+              )}
+            </div>
+          </div>
+
+          {/* Tags */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Tags <span className="text-red-500">*</span>
+            </label>
+            <div className="flex gap-2 mb-2">
+              <Tag className="w-5 h-5 text-gray-400 mt-2" />
+              <input
+                type="text"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault()
+                    addTag()
+                  }
+                }}
+                placeholder="Add tags (press Enter)"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              <button
+                type="button"
+                onClick={addTag}
+                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+              >
+                Add
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm"
+                >
+                  #{tag}
+                  <button
+                    type="button"
+                    onClick={() => removeTag(tag)}
+                    className="hover:text-primary-900"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+            {errors.tags && (
+              <p className="mt-1 text-sm text-red-600">{errors.tags.message}</p>
+            )}
+          </div>
+
+          {/* Category */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Category <span className="text-red-500">*</span>
+            </label>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {(['ai', 'content', 'dev-tools', 'saas', 'design', 'marketing', 'other'] as const).map((cat) => (
+                <label key={cat} className="flex items-center gap-2 p-3 border rounded-lg cursor-pointer hover:bg-gray-50">
+                  <input
+                    type="radio"
+                    value={cat}
+                    {...register('category')}
+                    className="text-primary-600"
+                  />
+                  <span className="text-sm capitalize">{cat.replace('-', ' ')}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Thumbnail Preview */}
+          {watch('thumbnail_url') && (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Thumbnail Preview
+              </label>
+              <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+                <img
+                  src={watch('thumbnail_url') || ''}
+                  alt="Thumbnail preview"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Points Reward Info */}
+          <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+            <p className="text-sm text-primary-800">
+              <strong>You'll earn {pointsReward} points</strong> for submitting this pitch!
+            </p>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Submitting...
+              </>
+            ) : (
+              'Submit Pitch'
+            )}
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
