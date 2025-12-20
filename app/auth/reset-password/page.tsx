@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -21,20 +21,29 @@ type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>
 
 export default function ResetPasswordPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const [token, setToken] = useState<string | null>(null)
+  const [hasToken, setHasToken] = useState(false)
 
   useEffect(() => {
-    const tokenParam = searchParams.get('token')
-    if (tokenParam) {
-      setToken(tokenParam)
-    } else {
-      setError('Invalid or missing reset token. Please request a new password reset.')
-    }
-  }, [searchParams])
+    // Supabase password reset uses hash fragments in the URL
+    // Check if we're on the reset password page (Supabase will handle the hash)
+    const supabase = createSupabaseClient()
+    
+    // Check if there's a session or if this is a password reset callback
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      // If there's a hash in the URL, Supabase will process it
+      if (window.location.hash) {
+        setHasToken(true)
+      } else if (session) {
+        // User is already authenticated, might be coming from email link
+        setHasToken(true)
+      } else {
+        setError('Invalid or missing reset token. Please request a new password reset.')
+      }
+    })
+  }, [])
 
   const {
     register,
@@ -45,11 +54,6 @@ export default function ResetPasswordPage() {
   })
 
   const onSubmit = async (data: ResetPasswordFormData) => {
-    if (!token) {
-      setError('Invalid reset token')
-      return
-    }
-
     setLoading(true)
     setError(null)
     setSuccess(false)
@@ -57,7 +61,7 @@ export default function ResetPasswordPage() {
     try {
       const supabase = createSupabaseClient()
 
-      // Update password using the token
+      // Update password - Supabase handles the token from the URL hash
       const { error: updateError } = await supabase.auth.updateUser({
         password: data.password,
       })
@@ -112,7 +116,7 @@ export default function ResetPasswordPage() {
           </div>
         )}
 
-        {token && !success && (
+        {hasToken && !success && (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             {/* New Password */}
             <div>
@@ -172,7 +176,7 @@ export default function ResetPasswordPage() {
           </form>
         )}
 
-        {!token && !success && (
+        {!hasToken && !success && (
           <div className="text-center">
             <Link
               href="/auth/forgot-password"
