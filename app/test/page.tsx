@@ -45,7 +45,7 @@ export default function TestPage() {
           <button
             onClick={runTest}
             disabled={loading}
-            className="bg-primary-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mb-8"
+            className="bg-primary-500 text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 mb-8"
           >
             {loading ? (
               <>

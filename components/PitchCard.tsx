@@ -33,7 +33,7 @@ export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
       <div className="p-6">
         {/* Title */}
         <Link href={`/pitches/${pitch.id}`}>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-600 transition">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-500 transition">
             {pitch.title}
           </h3>
         </Link>
@@ -49,7 +49,7 @@ export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
             {pitch.tags.slice(0, 3).map((tag) => (
               <span
                 key={tag}
-                className="px-2 py-1 bg-primary-100 text-primary-700 text-xs rounded-full"
+                className="px-2 py-1 bg-accent-eggshell text-primary-400 text-xs rounded-full"
               >
                 #{tag}
               </span>
@@ -71,7 +71,7 @@ export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
                 onClick={() => onVote?.(pitch.id, 'upvote')}
                 className={`p-2 rounded-lg transition ${
                   userVote === 'upvote'
-                    ? 'bg-primary-100 text-primary-600'
+                    ? 'bg-accent-eggshell text-primary-500'
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
                 aria-label="Upvote"
