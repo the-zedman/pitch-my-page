@@ -14,7 +14,8 @@ import {
   Plus,
   LogOut,
   Settings,
-  Loader2
+  Loader2,
+  AlertCircle
 } from 'lucide-react'
 import { calculateLevel, getPointsForNextLevel } from '@/lib/utils'
 
@@ -22,6 +23,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [profile, setProfile] = useState<Profile | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [stats, setStats] = useState({
     pitches: 0,
     backlinks: 0,
@@ -45,16 +47,42 @@ export default function DashboardPage() {
         return
       }
 
-      // Get profile
-      const { data: profileData, error: profileError } = await supabase
+      // Get or create profile
+      let { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
         .eq('id', user.id)
         .single()
 
-      if (profileError) {
+      // If profile doesn't exist, create it
+      if (profileError && profileError.code === 'PGRST116') {
+        const { data: newProfile, error: createError } = await supabase
+          .from('profiles')
+          .insert({
+            id: user.id,
+            email: user.email,
+            username: user.user_metadata?.username || user.email?.split('@')[0] || 'user',
+            points: 10, // Welcome bonus
+            level: 1,
+          })
+          .select()
+          .single()
+
+        if (createError) {
+          console.error('Profile creation error:', createError)
+          setError('Failed to create profile. Please contact support.')
+          return
+        }
+
+        profileData = newProfile
+      } else if (profileError) {
         console.error('Profile error:', profileError)
-        router.push('/auth/login')
+        setError('Failed to load profile. Please try again.')
+        return
+      }
+
+      if (!profileData) {
+        setError('Profile not found. Please contact support.')
         return
       }
 
@@ -102,8 +130,30 @@ export default function DashboardPage() {
     )
   }
 
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-lg shadow-md p-8 max-w-md w-full text-center">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold mb-2">Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={() => router.push('/auth/login')}
+            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
+          >
+            Back to Login
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if (!profile) {
-    return null
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+      </div>
+    )
   }
 
   const level = calculateLevel(profile.points)

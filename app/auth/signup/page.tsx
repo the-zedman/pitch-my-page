@@ -60,8 +60,11 @@ export default function SignupPage() {
       }
 
       if (authData.user) {
+        // Wait a moment for auth to fully process
+        await new Promise(resolve => setTimeout(resolve, 500))
+
         // Create profile in database
-        const { error: profileError } = await supabase
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .insert({
             id: authData.user.id,
@@ -70,20 +73,28 @@ export default function SignupPage() {
             points: 10, // Welcome bonus points
             level: 1,
           })
+          .select()
+          .single()
 
         if (profileError) {
           console.error('Profile creation error:', profileError)
-          // Don't throw - user is created, profile can be fixed later
+          // If it's a duplicate key error, profile might already exist - that's okay
+          if (profileError.code !== '23505') {
+            throw new Error('Failed to create profile. Please try again.')
+          }
         }
 
-        // Award first signup achievement
-        try {
-          await supabase.from('achievements').insert({
-            user_id: authData.user.id,
-            achievement_type: 'first_pitch', // We'll use this as "first signup" for now
-          })
-        } catch (e) {
-          // Ignore achievement errors
+        // Award first signup achievement (if profile was created)
+        if (profileData) {
+          try {
+            await supabase.from('achievements').insert({
+              user_id: authData.user.id,
+              achievement_type: 'first_pitch', // We'll use this as "first signup" for now
+            })
+          } catch (e) {
+            // Ignore achievement errors
+            console.log('Achievement creation skipped:', e)
+          }
         }
 
         setSuccess(true)
