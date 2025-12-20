@@ -10,7 +10,7 @@ export default function LandingPage() {
           <div className="text-2xl font-bold text-white">Pitch My Page</div>
           <div className="flex gap-6 items-center">
             <Link href="/gallery" className="text-white hover:text-primary-100">Gallery</Link>
-            <Link href="/pricing" className="text-white hover:text-primary-100">Pricing</Link>
+            <a href="#pricing" className="text-white hover:text-primary-100">Pricing</a>
             <Link href="/login" className="text-white hover:text-primary-100">Login</Link>
             <Link 
               href="/signup" 
@@ -108,7 +108,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Preview */}
-      <section className="bg-gray-50 py-20">
+      <section id="pricing" className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-4 text-gray-900">
             Simple, Affordable Pricing
