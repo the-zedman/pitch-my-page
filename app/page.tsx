@@ -13,7 +13,7 @@ export default function LandingPage() {
             <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
             <Link href="/auth/login" className="text-white hover:text-accent-apricot">Login</Link>
             <Link 
-              href="/signup" 
+              href="/auth/signup" 
               className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
             >
               Get Started
