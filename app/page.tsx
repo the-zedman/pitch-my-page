@@ -1,45 +1,15 @@
 import Link from 'next/link'
-import { ArrowRight, Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
+import HeaderNav from '@/components/HeaderNav'
+import HeroCTA from '@/components/HeroCTA'
+import CTASection from '@/components/CTASection'
 
-export default async function LandingPage() {
-  const supabase = await createServerSupabaseClient()
-  
-  const { data: { session } } = await supabase.auth.getSession()
-  const isLoggedIn = !!session
-
+export default function LandingPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
-        <nav className="flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-white">Pitch My Page</Link>
-          <div className="flex gap-6 items-center">
-            <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
-            <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
-            {isLoggedIn ? (
-              <>
-                <Link href="/dashboard" className="text-white hover:text-accent-apricot">Dashboard</Link>
-                <Link 
-                  href="/submit" 
-                  className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
-                >
-                  Submit Pitch
-                </Link>
-              </>
-            ) : (
-              <>
-                <Link href="/auth/login" className="text-white hover:text-accent-apricot">Login</Link>
-                <Link 
-                  href="/auth/signup" 
-                  className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
-                >
-                  Get Started
-                </Link>
-              </>
-            )}
-          </div>
-        </nav>
+        <HeaderNav />
       </header>
 
       {/* Hero Section */}
@@ -51,31 +21,7 @@ export default async function LandingPage() {
           Ethical dofollow backlinks, transparent voting, and genuine community feedback. 
           No bots, no pay-to-win, just real value for indie developers and content creators.
         </p>
-        <div className="flex gap-4 justify-center flex-wrap">
-          {isLoggedIn ? (
-            <Link 
-              href="/submit" 
-              className="bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition flex items-center gap-2"
-            >
-              Submit Pitch
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          ) : (
-            <Link 
-              href="/auth/signup" 
-              className="bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition flex items-center gap-2"
-            >
-              Start Pitching Free
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          )}
-          <Link 
-            href="/gallery" 
-            className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition"
-          >
-            Explore Gallery
-          </Link>
-        </div>
+        <HeroCTA />
       </section>
 
       {/* Stats */}
@@ -207,21 +153,7 @@ export default async function LandingPage() {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join indie creators who are building sustainable growth through ethical link building and community engagement.
           </p>
-          {isLoggedIn ? (
-            <Link 
-              href="/dashboard" 
-              className="inline-block bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition"
-            >
-              Go to Dashboard
-            </Link>
-          ) : (
-            <Link 
-              href="/auth/signup" 
-              className="inline-block bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition"
-            >
-              Get Started Free
-            </Link>
-          )}
+          <CTASection />
         </div>
       </section>
 
