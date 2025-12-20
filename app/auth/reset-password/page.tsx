@@ -28,21 +28,60 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     // Supabase password reset uses hash fragments in the URL
-    // Check if we're on the reset password page (Supabase will handle the hash)
+    // We need to process the hash to establish a session
     const supabase = createSupabaseClient()
     
-    // Check if there's a session or if this is a password reset callback
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      // If there's a hash in the URL, Supabase will process it
+    const processHash = async () => {
+      // Check if there's a hash fragment (Supabase password reset token)
       if (window.location.hash) {
-        setHasToken(true)
-      } else if (session) {
-        // User is already authenticated, might be coming from email link
-        setHasToken(true)
+        try {
+          // Process the hash to establish a session
+          const { data, error } = await supabase.auth.getSession()
+          
+          if (error) {
+            // Try to exchange the hash for a session
+            const hashParams = new URLSearchParams(window.location.hash.substring(1))
+            const accessToken = hashParams.get('access_token')
+            const refreshToken = hashParams.get('refresh_token')
+            
+            if (accessToken && refreshToken) {
+              // Set the session manually
+              const { error: setError } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken,
+              })
+              
+              if (setError) {
+                throw setError
+              }
+              
+              setHasToken(true)
+              // Clear the hash from URL
+              window.history.replaceState(null, '', window.location.pathname)
+            } else {
+              throw new Error('Invalid reset token in URL')
+            }
+          } else if (data.session) {
+            setHasToken(true)
+            // Clear the hash from URL
+            window.history.replaceState(null, '', window.location.pathname)
+          }
+        } catch (err: any) {
+          console.error('Session processing error:', err)
+          setError('Invalid or expired reset token. Please request a new password reset.')
+        }
       } else {
-        setError('Invalid or missing reset token. Please request a new password reset.')
+        // Check if there's already a session
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          setHasToken(true)
+        } else {
+          setError('Invalid or missing reset token. Please request a new password reset.')
+        }
       }
-    })
+    }
+    
+    processHash()
   }, [])
 
   const {
