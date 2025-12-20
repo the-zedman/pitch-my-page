@@ -25,7 +25,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 text-balance">
-          The Fairer Product Hunt for Indie Creators
+          Promote Your Content, Build Your Backlinks
         </h1>
         <p className="text-xl md:text-2xl text-primary-100 mb-8 max-w-3xl mx-auto text-balance">
           Ethical dofollow backlinks, transparent voting, and genuine community feedback. 
