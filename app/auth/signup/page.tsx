@@ -111,7 +111,7 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
@@ -222,7 +222,7 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading || success}
-            className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+            className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
           >
             {loading ? (
               <>
@@ -238,7 +238,7 @@ export default function SignupPage() {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-primary-600 hover:text-primary-700 font-semibold">
+            <Link href="/auth/login" className="text-primary-500 hover:text-primary-200 font-semibold">
               Sign in
             </Link>
           </p>
@@ -247,9 +247,9 @@ export default function SignupPage() {
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-xs text-gray-500 text-center">
             By signing up, you agree to our{' '}
-            <Link href="/terms" className="text-primary-600 hover:underline">Terms of Service</Link>
+            <Link href="/terms" className="text-primary-500 hover:underline">Terms of Service</Link>
             {' '}and{' '}
-            <Link href="/privacy" className="text-primary-600 hover:underline">Privacy Policy</Link>
+            <Link href="/privacy" className="text-primary-500 hover:underline">Privacy Policy</Link>
           </p>
         </div>
       </div>

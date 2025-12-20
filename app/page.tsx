@@ -3,18 +3,18 @@ import { ArrowRight, Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
           <div className="text-2xl font-bold text-white">Pitch My Page</div>
           <div className="flex gap-6 items-center">
-            <Link href="/gallery" className="text-white hover:text-primary-100">Gallery</Link>
-            <a href="#pricing" className="text-white hover:text-primary-100">Pricing</a>
-            <Link href="/auth/login" className="text-white hover:text-primary-100">Login</Link>
+            <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
+            <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
+            <Link href="/auth/login" className="text-white hover:text-accent-apricot">Login</Link>
             <Link 
               href="/signup" 
-              className="bg-white text-primary-600 px-4 py-2 rounded-lg font-semibold hover:bg-primary-50 transition"
+              className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
             >
               Get Started
             </Link>
@@ -27,14 +27,14 @@ export default function LandingPage() {
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 text-balance">
           Promote Your Content, Build Your Backlinks
         </h1>
-        <p className="text-xl md:text-2xl text-primary-100 mb-8 max-w-3xl mx-auto text-balance">
+        <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto text-balance">
           Ethical dofollow backlinks, transparent voting, and genuine community feedback. 
           No bots, no pay-to-win, just real value for indie developers and content creators.
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
           <Link 
             href="/signup" 
-            className="bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-50 transition flex items-center gap-2"
+            className="bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition flex items-center gap-2"
           >
             Start Pitching Free
             <ArrowRight className="w-5 h-5" />
@@ -53,15 +53,15 @@ export default function LandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center text-white">
             <div className="text-4xl font-bold mb-2">1,000+</div>
-            <div className="text-primary-100">Active Users</div>
+            <div className="text-white/90">Active Users</div>
           </div>
           <div className="text-center text-white">
             <div className="text-4xl font-bold mb-2">5,000+</div>
-            <div className="text-primary-100">Pitches Submitted</div>
+            <div className="text-white/90">Pitches Submitted</div>
           </div>
           <div className="text-center text-white">
             <div className="text-4xl font-bold mb-2">95%+</div>
-            <div className="text-primary-100">Backlink Uptime</div>
+            <div className="text-white/90">Backlink Uptime</div>
           </div>
         </div>
       </section>
@@ -169,17 +169,17 @@ export default function LandingPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-primary-600 py-16">
+      <section className="bg-primary-400 py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Pitch Your Page?
           </h2>
-          <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join indie creators who are building sustainable growth through ethical link building and community engagement.
           </p>
           <Link 
             href="/signup" 
-            className="inline-block bg-white text-primary-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-primary-50 transition"
+            className="inline-block bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition"
           >
             Get Started Free
           </Link>
@@ -230,7 +230,7 @@ export default function LandingPage() {
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="text-primary-600 mb-4">{icon}</div>
+      <div className="text-primary-500 mb-4">{icon}</div>
       <h3 className="text-xl font-semibold mb-2 text-gray-900">{title}</h3>
       <p className="text-gray-600">{description}</p>
     </div>
@@ -254,7 +254,7 @@ function PricingCard({ name, price, period = '', features, highlighted }: {
       <ul className="space-y-2 mb-6">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start gap-2 text-gray-600">
-            <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+            <CheckCircle className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" />
             <span className="text-sm">{feature}</span>
           </li>
         ))}
@@ -263,7 +263,7 @@ function PricingCard({ name, price, period = '', features, highlighted }: {
         href="/signup"
         className={`block text-center py-2 px-4 rounded-lg font-semibold transition ${
           highlighted
-            ? 'bg-primary-600 text-white hover:bg-primary-700'
+            ? 'bg-primary-500 text-white hover:bg-primary-200'
             : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
         }`}
       >
