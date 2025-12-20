@@ -44,13 +44,13 @@ export default function ResetPasswordPage() {
           // Check if this is a password recovery type
           if (type === 'recovery' && accessToken && refreshToken) {
             // Set the session using the tokens from the hash
-            const { error: setError } = await supabase.auth.setSession({
+            const { error: sessionError } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
             })
             
-            if (setError) {
-              console.error('Session set error:', setError)
+            if (sessionError) {
+              console.error('Session set error:', sessionError)
               setError('Invalid or expired reset token. Please request a new password reset.')
               return
             }
