@@ -53,11 +53,11 @@ export default function ResendVerificationPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8">
         <div className="text-center mb-8">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-8 h-8 text-primary-600" />
+          <div className="w-16 h-16 bg-accent-eggshell rounded-full flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-8 h-8 text-primary-500" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Resend Verification Email</h1>
           <p className="text-gray-600">
@@ -109,7 +109,7 @@ export default function ResendVerificationPage() {
           <button
             type="submit"
             disabled={loading || success}
-            className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+            className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
           >
             {loading ? (
               <>
@@ -125,7 +125,7 @@ export default function ResendVerificationPage() {
         <div className="mt-6 text-center space-y-2">
           <Link
             href="/auth/login"
-            className="block text-sm text-primary-600 hover:text-primary-700 font-semibold"
+            className="block text-sm text-primary-500 hover:text-primary-200 font-semibold"
           >
             Back to Sign In
           </Link>

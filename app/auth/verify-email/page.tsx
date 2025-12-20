@@ -5,11 +5,11 @@ import { Mail, CheckCircle } from 'lucide-react'
 
 export default function VerifyEmailPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-white rounded-lg shadow-xl p-8 text-center">
         <div className="mb-6">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Mail className="w-8 h-8 text-primary-600" />
+          <div className="w-16 h-16 bg-accent-eggshell rounded-full flex items-center justify-center mx-auto mb-4">
+            <Mail className="w-8 h-8 text-primary-500" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Check Your Email</h1>
           <p className="text-gray-600">
@@ -17,12 +17,12 @@ export default function VerifyEmailPage() {
           </p>
         </div>
 
-        <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6">
-          <div className="flex items-start gap-3">
-            <CheckCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
+        <div className="bg-accent-eggshell border border-primary-300 rounded-lg p-4 mb-6">
+            <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-primary-500 flex-shrink-0 mt-0.5" />
             <div className="text-left">
-              <p className="text-sm text-primary-800 font-semibold mb-1">What's next?</p>
-              <ol className="text-sm text-primary-700 space-y-1 list-decimal list-inside">
+              <p className="text-sm text-primary-400 font-semibold mb-1">What's next?</p>
+              <ol className="text-sm text-primary-400 space-y-1 list-decimal list-inside">
                 <li>Check your inbox (and spam folder)</li>
                 <li>Click the verification link in the email</li>
                 <li>Return here to sign in</li>
@@ -34,7 +34,7 @@ export default function VerifyEmailPage() {
         <div className="space-y-3">
           <Link
             href="/auth/login"
-            className="block w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 transition"
+            className="block w-full bg-primary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-200 transition"
           >
             Go to Sign In
           </Link>
@@ -48,7 +48,7 @@ export default function VerifyEmailPage() {
 
         <p className="mt-6 text-xs text-gray-500">
           Didn't receive the email? Check your spam folder or{' '}
-          <Link href="/auth/resend-verification" className="text-primary-600 hover:underline">
+          <Link href="/auth/resend-verification" className="text-primary-500 hover:underline">
             resend verification email
           </Link>
         </p>
