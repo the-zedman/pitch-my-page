@@ -236,13 +236,13 @@ export default function SubmissionForm() {
               {tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm"
+                  className="inline-flex items-center gap-1 px-3 py-1 bg-accent-eggshell text-primary-400 rounded-full text-sm"
                 >
                   #{tag}
                   <button
                     type="button"
                     onClick={() => removeTag(tag)}
-                    className="hover:text-primary-900"
+                    className="hover:text-primary-400"
                   >
                     ×
                   </button>
@@ -266,7 +266,7 @@ export default function SubmissionForm() {
                     type="radio"
                     value={cat}
                     {...register('category')}
-                    className="text-primary-600"
+                    className="text-primary-500"
                   />
                   <span className="text-sm capitalize">{cat.replace('-', ' ')}</span>
                 </label>
@@ -291,8 +291,8 @@ export default function SubmissionForm() {
           )}
 
           {/* Points Reward Info */}
-          <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
-            <p className="text-sm text-primary-800">
+          <div className="bg-accent-eggshell border border-primary-300 rounded-lg p-4">
+            <p className="text-sm text-primary-400">
               <strong>You'll earn {pointsReward} points</strong> for submitting this pitch!
             </p>
           </div>
@@ -301,7 +301,7 @@ export default function SubmissionForm() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-primary-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-primary-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-primary-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
