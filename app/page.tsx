@@ -2,7 +2,6 @@ import Link from 'next/link'
 import { ArrowRight, Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
-import HeaderNav from '@/components/HeaderNav'
 
 export default async function LandingPage() {
   const cookieStore = await cookies()
@@ -55,13 +54,23 @@ export default async function LandingPage() {
           No bots, no pay-to-win, just real value for indie developers and content creators.
         </p>
         <div className="flex gap-4 justify-center flex-wrap">
-          <Link 
-            href="/signup" 
-            className="bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition flex items-center gap-2"
-          >
-            Start Pitching Free
-            <ArrowRight className="w-5 h-5" />
-          </Link>
+          {isLoggedIn ? (
+            <Link 
+              href="/submit" 
+              className="bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition flex items-center gap-2"
+            >
+              Submit Pitch
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          ) : (
+            <Link 
+              href="/auth/signup" 
+              className="bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition flex items-center gap-2"
+            >
+              Start Pitching Free
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          )}
           <Link 
             href="/gallery" 
             className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white/10 transition"
@@ -200,12 +209,21 @@ export default async function LandingPage() {
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
             Join indie creators who are building sustainable growth through ethical link building and community engagement.
           </p>
-          <Link 
-            href="/signup" 
-            className="inline-block bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition"
-          >
-            Get Started Free
-          </Link>
+          {isLoggedIn ? (
+            <Link 
+              href="/dashboard" 
+              className="inline-block bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <Link 
+              href="/auth/signup" 
+              className="inline-block bg-white text-primary-400 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-accent-eggshell transition"
+            >
+              Get Started Free
+            </Link>
+          )}
         </div>
       </section>
 
@@ -283,7 +301,7 @@ function PricingCard({ name, price, period = '', features, highlighted }: {
         ))}
       </ul>
       <Link
-        href="/signup"
+        href="/auth/signup"
         className={`block text-center py-2 px-4 rounded-lg font-semibold transition ${
           highlighted
             ? 'bg-primary-500 text-white hover:bg-primary-200'
