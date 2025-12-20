@@ -125,7 +125,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
       </div>
     )
   }
@@ -139,7 +139,7 @@ export default function DashboardPage() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={() => router.push('/auth/login')}
-            className="bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700"
+            className="bg-primary-500 text-white px-6 py-2 rounded-lg hover:bg-primary-200"
           >
             Back to Login
           </button>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
   if (!profile) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
       </div>
     )
   }
@@ -168,13 +168,13 @@ export default function DashboardPage() {
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-primary-600">
+            <Link href="/" className="text-2xl font-bold text-primary-400">
               Pitch My Page
             </Link>
             <div className="flex items-center gap-4">
               <Link
                 href="/submit"
-                className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 flex items-center gap-2"
+                className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200 flex items-center gap-2"
               >
                 <Plus className="w-4 h-4" />
                 Submit Pitch
@@ -200,11 +200,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Gamification Card */}
-        <div className="bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg shadow-lg p-6 mb-8 text-white">
+        <div className="bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 rounded-lg shadow-lg p-6 mb-8 text-white">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-xl font-semibold mb-1">Level {level}</h2>
-              <p className="text-primary-100 text-sm">
+              <p className="text-white/90 text-sm">
                 {profile.points} points • {pointsToNextLevel} to next level
               </p>
             </div>
@@ -215,7 +215,7 @@ export default function DashboardPage() {
           </div>
           
           {/* Progress Bar */}
-          <div className="w-full bg-primary-400 rounded-full h-3 mb-4">
+          <div className="w-full bg-white/20 rounded-full h-3 mb-4">
             <div
               className="bg-white rounded-full h-3 transition-all"
               style={{ width: `${levelProgress}%` }}
@@ -262,9 +262,9 @@ export default function DashboardPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link
               href="/submit"
-              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition flex items-center gap-3"
+              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition flex items-center gap-3"
             >
-              <Plus className="w-5 h-5 text-primary-600" />
+              <Plus className="w-5 h-5 text-primary-500" />
               <div>
                 <div className="font-semibold">Submit a Pitch</div>
                 <div className="text-sm text-gray-600">Share your content</div>
@@ -272,9 +272,9 @@ export default function DashboardPage() {
             </Link>
             <Link
               href="/dashboard/backlinks"
-              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition flex items-center gap-3"
+              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition flex items-center gap-3"
             >
-              <Link2 className="w-5 h-5 text-primary-600" />
+              <Link2 className="w-5 h-5 text-primary-500" />
               <div>
                 <div className="font-semibold">Manage Backlinks</div>
                 <div className="text-sm text-gray-600">Add or monitor links</div>
@@ -282,9 +282,9 @@ export default function DashboardPage() {
             </Link>
             <Link
               href="/gallery"
-              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition flex items-center gap-3"
+              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition flex items-center gap-3"
             >
-              <Star className="w-5 h-5 text-primary-600" />
+              <Star className="w-5 h-5 text-primary-500" />
               <div>
                 <div className="font-semibold">Browse Gallery</div>
                 <div className="text-sm text-gray-600">Discover new content</div>
@@ -317,7 +317,7 @@ function StatCard({ icon, title, value, link }: {
         <div className="text-gray-600 text-sm mb-1">{title}</div>
         <div className="text-3xl font-bold text-gray-900">{value}</div>
       </div>
-      <div className="text-primary-600">{icon}</div>
+      <div className="text-primary-500">{icon}</div>
     </div>
   )
 

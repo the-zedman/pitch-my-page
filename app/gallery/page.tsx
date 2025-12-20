@@ -61,7 +61,7 @@ export default function GalleryPage() {
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">Pitch Gallery</h1>
             <div className="flex items-center gap-4">
-              <Link href="/submit" className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700">
+              <Link href="/submit" className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200">
                 Submit Pitch
               </Link>
             </div>
@@ -121,12 +121,12 @@ export default function GalleryPage() {
         {/* Gallery Grid */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-primary-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary-500" />
           </div>
         ) : filteredPitches.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-600 text-lg">No pitches found. Be the first to submit!</p>
-            <Link href="/submit" className="inline-block mt-4 bg-primary-600 text-white px-6 py-3 rounded-lg hover:bg-primary-700">
+            <Link href="/submit" className="inline-block mt-4 bg-primary-500 text-white px-6 py-3 rounded-lg hover:bg-primary-200">
               Submit Your First Pitch
             </Link>
           </div>
