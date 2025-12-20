@@ -154,13 +154,13 @@ export default function LandingPage() {
             />
             <PricingCard
               name="Power"
-              price="$20"
+              price="$39"
               period="/month"
               features={[
-                'Unlimited backlinks',
+                'Unlimited dofollow links',
                 'Featured placements',
-                'Priority support',
-                'API access'
+                'White-label options',
+                'Advanced analytics dashboard'
               ]}
               highlighted={false}
             />
