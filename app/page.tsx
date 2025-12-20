@@ -1,23 +1,46 @@
 import Link from 'next/link'
 import { ArrowRight, Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
+import HeaderNav from '@/components/HeaderNav'
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const cookieStore = await cookies()
+  const supabase = createServerSupabaseClient()
+  
+  const { data: { session } } = await supabase.auth.getSession()
+  const isLoggedIn = !!session
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
       {/* Header */}
       <header className="container mx-auto px-4 py-6">
         <nav className="flex items-center justify-between">
-          <div className="text-2xl font-bold text-white">Pitch My Page</div>
+          <Link href="/" className="text-2xl font-bold text-white">Pitch My Page</Link>
           <div className="flex gap-6 items-center">
             <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
             <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
-            <Link href="/auth/login" className="text-white hover:text-accent-apricot">Login</Link>
-            <Link 
-              href="/auth/signup" 
-              className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
-            >
-              Get Started
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link href="/dashboard" className="text-white hover:text-accent-apricot">Dashboard</Link>
+                <Link 
+                  href="/submit" 
+                  className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
+                >
+                  Submit Pitch
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link href="/auth/login" className="text-white hover:text-accent-apricot">Login</Link>
+                <Link 
+                  href="/auth/signup" 
+                  className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </header>
