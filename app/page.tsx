@@ -11,7 +11,7 @@ export default function LandingPage() {
           <div className="flex gap-6 items-center">
             <Link href="/gallery" className="text-white hover:text-primary-100">Gallery</Link>
             <a href="#pricing" className="text-white hover:text-primary-100">Pricing</a>
-            <Link href="/login" className="text-white hover:text-primary-100">Login</Link>
+            <Link href="/auth/login" className="text-white hover:text-primary-100">Login</Link>
             <Link 
               href="/signup" 
               className="bg-white text-primary-600 px-4 py-2 rounded-lg font-semibold hover:bg-primary-50 transition"
