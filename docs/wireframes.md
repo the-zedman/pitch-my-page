@@ -17,7 +17,7 @@ graph TB
 ```
 
 **Key Elements:**
-- Hero: "The Fairer Product Hunt for Indie Creators"
+- Hero: "Promote Your Content, Build Your Backlinks"
 - Value props: Free reciprocal backlinks, Anti-bot voting, Ethical SEO boost
 - Social proof: User count, active pitches, verified backlinks
 - Clear CTA: "Start Pitching Free" button

@@ -4,7 +4,7 @@ Ethical indie content promotion platform with dofollow backlinks, transparent vo
 
 ## Project Overview
 
-Pitch My Page is a SaaS platform that empowers indie developers, content creators, bloggers, and marketers to pitch and promote individual web pages, articles, blog posts, projects, or sites. It serves as a fairer, more ethical alternative to Product Hunt, focusing on:
+Pitch My Page is a SaaS platform that empowers indie developers, content creators, bloggers, and marketers to pitch and promote individual web pages, articles, blog posts, projects, or sites. It focuses on:
 
 - **Ethical dofollow backlinks** - Affordable, penalty-safe SEO boost
 - **Transparent voting** - Anti-bot features and equitable exposure
