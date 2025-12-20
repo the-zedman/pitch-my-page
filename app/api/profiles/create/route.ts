@@ -8,28 +8,40 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { username, email, userId } = body
 
-    // If userId is provided (from client), use it directly with admin client
-    // This bypasses the need for session in API route
+    // Use admin client to verify user exists and get user details
+    const adminSupabase = createAdminSupabaseClient()
+    
+    let userToUse
+    
     if (userId) {
-      return await createProfileWithAdmin({ id: userId, email }, body)
-    }
-
-    // Otherwise, try to get user from session
-    const cookieStore = await cookies()
-    const supabase = createServerSupabaseClient()
-    
-    // Get authenticated user
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
-    
-    if (userError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please log in again' },
-        { status: 401 }
-      )
+      // Verify the user exists in auth.users
+      const { data: authUser, error: authError } = await adminSupabase.auth.admin.getUserById(userId)
+      
+      if (authError || !authUser.user) {
+        return NextResponse.json(
+          { error: 'Invalid user ID' },
+          { status: 401 }
+        )
+      }
+      
+      userToUse = { id: authUser.user.id, email: authUser.user.email || email }
+    } else {
+      // Try to get user from session
+      const supabase = createServerSupabaseClient()
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      
+      if (userError || !user) {
+        return NextResponse.json(
+          { error: 'Unauthorized - Please log in again' },
+          { status: 401 }
+        )
+      }
+      
+      userToUse = user
     }
     
     // Use admin client to create profile
-    return await createProfileWithAdmin(user, body)
+    return await createProfileWithAdmin(userToUse, body)
   } catch (error: any) {
     console.error('Profile creation API error:', error)
     return NextResponse.json(
