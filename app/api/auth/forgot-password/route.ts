@@ -23,17 +23,16 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Password reset error:', error)
-      // Return the actual error in development, generic message in production
-      if (process.env.NODE_ENV === 'development') {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 400 }
-        )
-      }
-      // Don't reveal if email exists or not (security best practice)
-      return NextResponse.json({
-        message: 'If an account exists with this email, a password reset link has been sent.',
-      })
+      console.error('Redirect URL:', redirectUrl)
+      // Return error details to help debug
+      return NextResponse.json(
+        { 
+          error: error.message,
+          details: 'Make sure the redirect URL is added to Supabase allowed redirect URLs',
+          redirectUrl: redirectUrl
+        },
+        { status: 400 }
+      )
     }
 
     return NextResponse.json({
