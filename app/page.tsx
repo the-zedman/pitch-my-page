@@ -1,11 +1,9 @@
 import Link from 'next/link'
 import { ArrowRight, Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
 import { createServerSupabaseClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
 
 export default async function LandingPage() {
-  const cookieStore = await cookies()
-  const supabase = createServerSupabaseClient()
+  const supabase = await createServerSupabaseClient()
   
   const { data: { session } } = await supabase.auth.getSession()
   const isLoggedIn = !!session

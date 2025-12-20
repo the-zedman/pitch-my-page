@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServerSupabaseClient } from '@/lib/supabase/server'
+import { createServerSupabaseClient } from '@/lib/supabase/server-api'
 import { createAdminSupabaseClient } from '@/lib/supabase/admin'
-import { cookies } from 'next/headers'
 
 export async function POST(request: NextRequest) {
   try {
