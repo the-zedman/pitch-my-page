@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Loader2, Link2, Image as ImageIcon, Tag } from 'lucide-react'
+import ReciprocalLinkSection from './ReciprocalLinkSection'
 
 const submissionSchema = z.object({
   url: z.string().url('Please enter a valid URL'),
@@ -28,6 +29,7 @@ export default function SubmissionForm() {
   const [isFetchingOG, setIsFetchingOG] = useState(false)
   const [ogData, setOgData] = useState<OGData | null>(null)
   const [pointsReward, setPointsReward] = useState(10)
+  const [reciprocalVerified, setReciprocalVerified] = useState(false)
 
   const {
     register,
@@ -92,12 +94,26 @@ export default function SubmissionForm() {
   }
 
   const onSubmit = async (data: SubmissionFormData) => {
+    // Warn user if reciprocal link is not verified
+    if (!reciprocalVerified) {
+      const proceed = confirm(
+        'You haven\'t verified a reciprocal dofollow link. Your pitch will receive a nofollow link instead. Do you want to continue?'
+      )
+      if (!proceed) {
+        return
+      }
+    }
+
     setIsLoading(true)
     try {
       const response = await fetch('/api/pitches', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          ...data,
+          source_url: data.url, // Pass the source URL for reciprocal check
+          has_reciprocal: reciprocalVerified,
+        }),
       })
 
       if (response.ok) {
@@ -288,6 +304,14 @@ export default function SubmissionForm() {
                 />
               </div>
             </div>
+          )}
+
+          {/* Reciprocal Backlinks Section */}
+          {url && (
+            <ReciprocalLinkSection
+              sourceUrl={url}
+              onVerificationChange={setReciprocalVerified}
+            />
           )}
 
           {/* Points Reward Info */}
