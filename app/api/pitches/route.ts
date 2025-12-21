@@ -4,18 +4,36 @@ import { verifyReciprocalLinks } from '@/lib/utils/reciprocal'
 
 export async function POST(request: NextRequest) {
   try {
+    // Debug: Log cookies
+    const cookieHeader = request.headers.get('cookie')
+    console.log('Cookies received:', cookieHeader ? 'Yes' : 'No')
+    
     const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
-      console.error('Authentication error in pitches API:', authError)
+      console.error('Authentication error in pitches API:', {
+        error: authError,
+        hasCookies: !!cookieHeader,
+        cookieCount: cookieHeader ? cookieHeader.split(';').length : 0,
+      })
+      
+      // Try to get session to see if that works
+      const { data: { session } } = await supabase.auth.getSession()
+      console.log('Session check:', session ? 'Found' : 'Not found')
+      
       return NextResponse.json(
         { 
           error: 'Unauthorized',
           message: 'Please log in to submit a pitch',
-          details: authError?.message || 'No user session found'
+          details: authError?.message || 'No user session found',
+          debug: process.env.NODE_ENV === 'development' ? {
+            hasCookies: !!cookieHeader,
+            authError: authError?.message,
+            hasSession: !!session,
+          } : undefined,
         },
         { status: 401 }
       )

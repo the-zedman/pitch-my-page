@@ -145,6 +145,7 @@ export default function SubmissionForm() {
       const response = await fetch('/api/pitches', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Include cookies in the request
         body: JSON.stringify({
           ...data,
           source_url: data.url, // Pass the source URL for reciprocal check
