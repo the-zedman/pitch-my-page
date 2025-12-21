@@ -1,7 +1,14 @@
 import { createBrowserClient } from '@supabase/ssr'
 
-// Client-side Supabase client for browser usage
+// Singleton Supabase client for browser usage
+// This prevents multiple GoTrueClient instances
+let supabaseClient: ReturnType<typeof createBrowserClient> | null = null
+
 export const createSupabaseClient = () => {
+  if (supabaseClient) {
+    return supabaseClient
+  }
+  
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   
@@ -9,6 +16,7 @@ export const createSupabaseClient = () => {
     throw new Error('Missing Supabase environment variables')
   }
   
-  return createBrowserClient(supabaseUrl, supabaseKey)
+  supabaseClient = createBrowserClient(supabaseUrl, supabaseKey)
+  return supabaseClient
 }
 
