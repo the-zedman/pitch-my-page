@@ -12,12 +12,11 @@ import {
   Star, 
   Award, 
   Plus,
-  LogOut,
-  Settings,
   Loader2,
   AlertCircle
 } from 'lucide-react'
 import { calculateLevel, getPointsForNextLevel } from '@/lib/utils'
+import DashboardHeader from '@/components/DashboardHeader'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -115,12 +114,6 @@ export default function DashboardPage() {
     }
   }
 
-  const handleLogout = async () => {
-    const supabase = createSupabaseClient()
-    await supabase.auth.signOut()
-    router.push('/')
-    router.refresh()
-  }
 
   if (loading) {
     return (
@@ -164,32 +157,7 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-primary-400">
-              Pitch My Page
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link
-                href="/submit"
-                className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200 flex items-center gap-2"
-              >
-                <Plus className="w-4 h-4" />
-                Submit Pitch
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-gray-900 flex items-center gap-2"
-              >
-                <LogOut className="w-4 h-4" />
-                Logout
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <DashboardHeader />
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">

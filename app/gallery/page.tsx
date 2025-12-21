@@ -5,6 +5,7 @@ import Link from 'next/link'
 import PitchCard from '@/components/PitchCard'
 import { Pitch } from '@/lib/supabase/types'
 import { Loader2, Search, Filter } from 'lucide-react'
+import HeaderNav from '@/components/HeaderNav'
 
 export default function GalleryPage() {
   const [pitches, setPitches] = useState<(Pitch & { profiles?: any })[]>([])
@@ -56,18 +57,14 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">Pitch Gallery</h1>
-            <div className="flex items-center gap-4">
-              <Link href="/submit" className="bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200">
-                Submit Pitch
-              </Link>
-            </div>
-          </div>
+      <header className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-4">
+        <div className="container mx-auto px-4">
+          <HeaderNav />
         </div>
       </header>
+      <div className="container mx-auto px-4 py-4">
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">Pitch Gallery</h1>
+      </div>
 
       {/* Filters */}
       <div className="container mx-auto px-4 py-6">

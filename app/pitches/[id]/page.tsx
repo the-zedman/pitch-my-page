@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Loader2
 } from 'lucide-react'
+import HeaderNav from '@/components/HeaderNav'
 
 export default function PitchDetailPage() {
   const params = useParams()
@@ -119,16 +120,23 @@ export default function PitchDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Back Button */}
-        <Link
-          href="/gallery"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Gallery
-        </Link>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-4">
+        <div className="container mx-auto px-4">
+          <HeaderNav />
+        </div>
+      </header>
+      <div className="py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          {/* Back Button */}
+          <Link
+            href="/gallery"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Gallery
+          </Link>
 
         {/* Pitch Card */}
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
@@ -235,6 +243,7 @@ export default function PitchDetailPage() {
               </div>
             )}
           </div>
+        </div>
         </div>
       </div>
     </div>

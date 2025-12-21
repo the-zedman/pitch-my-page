@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 export default function HeaderNav() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
-  const supabase = createClientComponentClient()
+  const supabase = createSupabaseClient()
 
   useEffect(() => {
     const checkSession = async () => {
