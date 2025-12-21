@@ -3,20 +3,9 @@ import { createServerSupabaseClient } from '@/lib/supabase/server-api'
 import { verifyReciprocalLinks } from '@/lib/utils/reciprocal'
 
 // POST - Verify if user has added reciprocal dofollow links
+// Note: This doesn't require authentication - anyone can verify if links exist on a page
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient()
-    
-    // Get authenticated user
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
-    }
-
     const body = await request.json()
     const { source_url } = body
 
