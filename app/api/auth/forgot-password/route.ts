@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient(request)
 
     // Send password reset email
     const redirectUrl = `${process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'}/auth/reset-password`

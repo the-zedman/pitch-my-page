@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient(request)
 
     // Resend verification email
     const { error } = await supabase.auth.resend({

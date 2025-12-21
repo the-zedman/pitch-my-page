@@ -4,7 +4,7 @@ import { verifyReciprocalLinks } from '@/lib/utils/reciprocal'
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -150,7 +150,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient(request)
     const { searchParams } = new URL(request.url)
     
     const category = searchParams.get('category')

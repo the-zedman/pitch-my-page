@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server-api'
 // GET - Fetch user's backlinks
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
 // POST - Create a new backlink
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
