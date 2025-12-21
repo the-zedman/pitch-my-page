@@ -1,10 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Loader2, Link2, Image as ImageIcon, Tag } from 'lucide-react'
+import { createSupabaseClient } from '@/lib/supabase/client'
 import ReciprocalLinkSection from './ReciprocalLinkSection'
 
 const submissionSchema = z.object({
@@ -25,11 +27,35 @@ interface OGData {
 }
 
 export default function SubmissionForm() {
+  const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [isFetchingOG, setIsFetchingOG] = useState(false)
   const [ogData, setOgData] = useState<OGData | null>(null)
   const [pointsReward, setPointsReward] = useState(10)
   const [verifiedReciprocalUrls, setVerifiedReciprocalUrls] = useState<string[]>([])
+  const [checkingAuth, setCheckingAuth] = useState(true)
+
+  // Check authentication on mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const supabase = createSupabaseClient()
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        if (error || !session) {
+          router.push('/auth/login?redirect=/submit')
+          return
+        }
+      } catch (error) {
+        console.error('Auth check error:', error)
+        router.push('/auth/login?redirect=/submit')
+      } finally {
+        setCheckingAuth(false)
+      }
+    }
+    
+    checkAuth()
+  }, [router])
 
   const {
     register,
@@ -94,6 +120,16 @@ export default function SubmissionForm() {
   }
 
   const onSubmit = async (data: SubmissionFormData) => {
+    // Check authentication before submitting
+    const supabase = createSupabaseClient()
+    const { data: { session }, error: authError } = await supabase.auth.getSession()
+    
+    if (authError || !session) {
+      alert('You must be logged in to submit a pitch. Redirecting to login...')
+      router.push('/auth/login?redirect=/submit')
+      return
+    }
+
     // Warn user if no reciprocal links are verified
     if (verifiedReciprocalUrls.length === 0) {
       const proceed = confirm(
@@ -121,8 +157,13 @@ export default function SubmissionForm() {
         // Redirect to pitch detail page or show success
         window.location.href = `/pitches/${result.id}`
       } else {
-        const error = await response.json()
-        alert(error.message || 'Failed to submit pitch')
+        const errorData = await response.json()
+        if (response.status === 401) {
+          alert('Your session has expired. Please log in again.')
+          router.push('/auth/login?redirect=/submit')
+        } else {
+          alert(errorData.error || errorData.message || 'Failed to submit pitch')
+        }
       }
     } catch (error) {
       console.error('Submission error:', error)
