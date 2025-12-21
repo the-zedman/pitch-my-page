@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       userToUse = { id: authUser.user.id, email: authUser.user.email || email }
     } else {
       // Try to get user from session
-      const supabase = createServerSupabaseClient()
+      const supabase = await createServerSupabaseClient()
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       
       if (userError || !user) {

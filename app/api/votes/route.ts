@@ -4,7 +4,7 @@ import { createServerSupabaseClient } from '@/lib/supabase/server-api'
 // POST - Create a vote (upvote or downvote)
 export async function POST(request: NextRequest) {
   try {
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
 // DELETE - Remove a vote
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     
     // Get authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -180,7 +180,7 @@ export async function DELETE(request: NextRequest) {
 // GET - Get votes for a pitch (or check if user has voted)
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServerSupabaseClient()
+    const supabase = await createServerSupabaseClient()
     const { searchParams } = new URL(request.url)
     const pitch_id = searchParams.get('pitch_id')
 
