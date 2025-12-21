@@ -10,8 +10,13 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
+      console.error('Authentication error in pitches API:', authError)
       return NextResponse.json(
-        { error: 'Unauthorized' },
+        { 
+          error: 'Unauthorized',
+          message: 'Please log in to submit a pitch',
+          details: authError?.message || 'No user session found'
+        },
         { status: 401 }
       )
     }
