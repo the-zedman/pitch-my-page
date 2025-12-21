@@ -94,23 +94,43 @@ export default function DashboardPitchesPage() {
   const handleReVerifyReciprocal = async (pitch: Pitch) => {
     setReVerifyingId(pitch.id)
     try {
+      // First verify the reciprocal links on the user's page
+      const verifyResponse = await fetch('/api/reciprocal/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source_url: pitch.url }),
+      })
+
+      const verifyData = await verifyResponse.json()
+
+      if (!verifyResponse.ok) {
+        alert(verifyData.error || 'Failed to verify reciprocal links')
+        return
+      }
+
+      if (!verifyData.verified || verifyData.verifiedCount === 0) {
+        alert('No reciprocal dofollow links found. Please add dofollow links to Pitch My Page or App Ideas Finder on your page first.')
+        return
+      }
+
+      // Now update the pitch to upgrade backlinks
       const response = await fetch(`/api/pitches/${pitch.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           re_verify_reciprocal: true,
-          source_url: pitch.url, // The pitch URL is the source
+          source_url: pitch.url, // The user's page URL where they added the reciprocal link
         }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        alert(data.error || 'Failed to re-verify reciprocal links')
+        alert(data.error || 'Failed to update backlinks')
         return
       }
 
-      alert('Reciprocal links verified! Your backlinks have been updated to dofollow.')
+      alert(`Success! Found ${verifyData.verifiedCount} reciprocal dofollow link(s). Your backlink(s) have been upgraded to dofollow!`)
       loadPitches()
     } catch (err: any) {
       alert('Error re-verifying reciprocal links: ' + err.message)
