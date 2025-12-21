@@ -29,7 +29,7 @@ export default function SubmissionForm() {
   const [isFetchingOG, setIsFetchingOG] = useState(false)
   const [ogData, setOgData] = useState<OGData | null>(null)
   const [pointsReward, setPointsReward] = useState(10)
-  const [reciprocalVerified, setReciprocalVerified] = useState(false)
+  const [verifiedReciprocalUrls, setVerifiedReciprocalUrls] = useState<string[]>([])
 
   const {
     register,
@@ -94,10 +94,10 @@ export default function SubmissionForm() {
   }
 
   const onSubmit = async (data: SubmissionFormData) => {
-    // Warn user if reciprocal link is not verified
-    if (!reciprocalVerified) {
+    // Warn user if no reciprocal links are verified
+    if (verifiedReciprocalUrls.length === 0) {
       const proceed = confirm(
-        'You haven\'t verified a reciprocal dofollow link. Your pitch will receive a nofollow link instead. Do you want to continue?'
+        'You haven\'t verified any reciprocal dofollow links. Your pitch will receive a nofollow link instead. Do you want to continue?'
       )
       if (!proceed) {
         return
@@ -112,7 +112,7 @@ export default function SubmissionForm() {
         body: JSON.stringify({
           ...data,
           source_url: data.url, // Pass the source URL for reciprocal check
-          has_reciprocal: reciprocalVerified,
+          verified_reciprocal_urls: verifiedReciprocalUrls, // Pass array of verified URLs
         }),
       })
 
@@ -310,7 +310,7 @@ export default function SubmissionForm() {
           {url && (
             <ReciprocalLinkSection
               sourceUrl={url}
-              onVerificationChange={setReciprocalVerified}
+              onVerificationChange={setVerifiedReciprocalUrls}
             />
           )}
 

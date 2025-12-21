@@ -43,11 +43,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       verified,
       verifiedCount,
-      requiredCount: 1, // At least 1 reciprocal link required
+      requiredCount: 0, // Optional - user can submit without reciprocal links (will get nofollow)
       results,
       message: verified
-        ? `Great! Found ${verifiedCount} verified reciprocal dofollow link(s).`
-        : 'No reciprocal dofollow links found. Please add a dofollow link to one of our sites before submitting.',
+        ? `Great! Found ${verifiedCount} verified reciprocal dofollow link(s). You'll receive ${verifiedCount} dofollow backlink(s) for this pitch.`
+        : 'No reciprocal dofollow links found. You can still submit, but your pitch will receive a nofollow link. Add dofollow links to get dofollow backlinks.',
     })
   } catch (error: any) {
     console.error('Error in verify reciprocal API:', error)

@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { url, title, description, tags, category, thumbnail_url, source_url, has_reciprocal } = body
+    const { url, title, description, tags, category, thumbnail_url, source_url, verified_reciprocal_urls } = body
 
     // Validate required fields
     if (!url || !title || !description) {
@@ -27,16 +27,26 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check for reciprocal backlink if provided
-    let reciprocalVerified = false
-    if (source_url && has_reciprocal) {
+    // Verify reciprocal links if provided
+    const verifiedUrls: string[] = verified_reciprocal_urls || []
+    if (source_url && verifiedUrls.length > 0) {
       try {
-        // Verify reciprocal link exists
+        // Double-check verification on server side
         const verification = await verifyReciprocalLinks(source_url)
-        reciprocalVerified = verification.verified
+        const serverVerifiedUrls = verification.results
+          .filter(r => r.found && r.isDofollow)
+          .map(r => r.url)
+        
+        // Use intersection of client and server verified URLs
+        const finalVerifiedUrls = verifiedUrls.filter(url => serverVerifiedUrls.includes(url))
+        
+        // Update verifiedUrls to only include server-verified ones
+        verifiedUrls.length = 0
+        verifiedUrls.push(...finalVerifiedUrls)
       } catch (error) {
         console.error('Error verifying reciprocal link:', error)
-        // Continue with submission even if verification fails
+        // Clear verified URLs if verification fails
+        verifiedUrls.length = 0
       }
     }
 
@@ -72,33 +82,42 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create backlink record if reciprocal link is verified
-    // This represents the backlink FROM pitchmypage.com TO the user's page
-    if (reciprocalVerified && url) {
-      // Get the app URL for the source (pitchmypage.com)
-      const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
-      const sourceUrl = `${appUrl}/pitches/${pitch.id}` // The pitch page on our site
+    // Create backlink records for each verified reciprocal link
+    // Each verified reciprocal link = 1 dofollow backlink
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
+    const pitchPageUrl = `${appUrl}/pitches/${pitch.id}` // The pitch page on our site
+    
+    let backlinksCreated = 0
+    for (const reciprocalUrl of verifiedUrls) {
+      try {
+        // Determine which site the reciprocal link is for
+        const isPitchMyPage = reciprocalUrl.includes('pitchmypage.com')
+        const isAppIdeasFinder = reciprocalUrl.includes('appideasfinder.com')
+        
+        // Create backlink record (this will be verified and active)
+        // source_url = our pitch page URL (where the backlink exists)
+        // target_url = user's submitted page URL (where the link points to)
+        const { error: backlinkError } = await supabase
+          .from('backlinks')
+          .insert({
+            user_id: user.id,
+            pitch_id: pitch.id,
+            source_url: pitchPageUrl,
+            target_url: url, // User's page URL
+            link_type: 'dofollow', // Verified reciprocal = dofollow
+            is_verified: true,
+            verification_status: 'verified',
+            is_active: true,
+            is_reciprocal: true,
+          })
 
-      // Create backlink record (this will be verified and active)
-      // source_url = our pitch page URL (where the backlink exists)
-      // target_url = user's submitted page URL (where the link points to)
-      const { error: backlinkError } = await supabase
-        .from('backlinks')
-        .insert({
-          user_id: user.id,
-          pitch_id: pitch.id,
-          source_url: sourceUrl,
-          target_url: url, // User's page URL
-          link_type: 'dofollow', // Verified reciprocal = dofollow
-          is_verified: true,
-          verification_status: 'verified',
-          is_active: true,
-          is_reciprocal: true,
-        })
-
-      if (backlinkError) {
-        console.error('Error creating reciprocal backlink:', backlinkError)
-        // Don't fail the pitch submission if backlink creation fails
+        if (!backlinkError) {
+          backlinksCreated++
+        } else {
+          console.error('Error creating reciprocal backlink:', backlinkError)
+        }
+      } catch (error) {
+        console.error('Error creating backlink for', reciprocalUrl, error)
       }
     }
 
@@ -106,11 +125,14 @@ export async function POST(request: NextRequest) {
     // TODO: Implement points transaction system
     // For now, we'll just return success
 
+    const message = backlinksCreated > 0
+      ? `Pitch submitted successfully! ${backlinksCreated} reciprocal dofollow backlink(s) created. It will be reviewed before going live.`
+      : 'Pitch submitted successfully! Note: Without verified reciprocal links, your pitch will receive a nofollow link. It will be reviewed before going live.'
+
     return NextResponse.json({
       id: pitch.id,
-      message: reciprocalVerified
-        ? 'Pitch submitted successfully! Reciprocal backlink verified - you\'ll receive a dofollow link. It will be reviewed before going live.'
-        : 'Pitch submitted successfully! Note: Without a verified reciprocal link, your pitch will receive a nofollow link. It will be reviewed before going live.',
+      message,
+      backlinksCreated,
     })
   } catch (error) {
     console.error('Error in pitches API:', error)
