@@ -160,7 +160,11 @@ export default function PitchDetailPage() {
                   </a>
                   <span className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    {new Date(pitch.created_at).toLocaleDateString()}
+                    {new Date(pitch.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric'
+                    })}
                   </span>
                 </div>
               </div>
