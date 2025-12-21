@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Create pitch (status will be 'pending' initially)
+    // Create pitch (auto-approved for now, admin panel coming later)
     const { data: pitch, error: pitchError } = await supabase
       .from('pitches')
       .insert({
@@ -92,7 +92,8 @@ export async function POST(request: NextRequest) {
         tags: tags || [],
         category: category || 'other',
         thumbnail_url: thumbnail_url || null,
-        status: 'pending', // Requires moderation
+        status: 'approved', // Auto-approved (admin panel for moderation coming later)
+        approved_at: new Date().toISOString(),
       })
       .select()
       .single()
@@ -154,7 +155,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       id: pitch.id,
-      message,
+      message: backlinksCreated > 0
+        ? `Pitch submitted successfully! ${backlinksCreated} reciprocal dofollow backlink(s) created. Your pitch is now live!`
+        : 'Pitch submitted successfully! Note: Without verified reciprocal links, your pitch will receive a nofollow link. You can add reciprocal links later and re-verify. Your pitch is now live!',
       backlinksCreated,
     })
   } catch (error) {

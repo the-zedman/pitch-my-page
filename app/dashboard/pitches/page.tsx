@@ -14,14 +14,20 @@ import {
   AlertCircle,
   XCircle,
   RefreshCw,
-  ExternalLink
+  ExternalLink,
+  Trash2,
+  Link2
 } from 'lucide-react'
+import EditPitchModal from '@/components/EditPitchModal'
 
 export default function DashboardPitchesPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [pitches, setPitches] = useState<Pitch[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [editingPitch, setEditingPitch] = useState<Pitch | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [reVerifyingId, setReVerifyingId] = useState<string | null>(null)
 
   useEffect(() => {
     loadPitches()
@@ -56,6 +62,60 @@ export default function DashboardPitchesPage() {
       setError(err.message || 'Failed to load pitches')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleDelete = async (pitchId: string) => {
+    if (!confirm('Are you sure you want to delete this pitch? This action cannot be undone.')) {
+      return
+    }
+
+    setDeletingId(pitchId)
+    try {
+      const response = await fetch(`/api/pitches/${pitchId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        alert(data.error || 'Failed to delete pitch')
+        return
+      }
+
+      // Reload pitches
+      loadPitches()
+    } catch (err: any) {
+      alert('Error deleting pitch: ' + err.message)
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const handleReVerifyReciprocal = async (pitch: Pitch) => {
+    setReVerifyingId(pitch.id)
+    try {
+      const response = await fetch(`/api/pitches/${pitch.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          re_verify_reciprocal: true,
+          source_url: pitch.url, // The pitch URL is the source
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        alert(data.error || 'Failed to re-verify reciprocal links')
+        return
+      }
+
+      alert('Reciprocal links verified! Your backlinks have been updated to dofollow.')
+      loadPitches()
+    } catch (err: any) {
+      alert('Error re-verifying reciprocal links: ' + err.message)
+    } finally {
+      setReVerifyingId(null)
     }
   }
 
@@ -236,6 +296,25 @@ export default function DashboardPitchesPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
+                          <button
+                            onClick={() => setEditingPitch(pitch)}
+                            className="text-gray-600 hover:text-gray-900"
+                            title="Edit"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleReVerifyReciprocal(pitch)}
+                            disabled={reVerifyingId === pitch.id}
+                            className="text-purple-600 hover:text-purple-900 disabled:opacity-50"
+                            title="Re-verify reciprocal links (upgrade to dofollow)"
+                          >
+                            {reVerifyingId === pitch.id ? (
+                              <RefreshCw className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Link2 className="w-4 h-4" />
+                            )}
+                          </button>
                           {pitch.status === 'approved' && (
                             <a
                               href={pitch.url}
@@ -247,6 +326,18 @@ export default function DashboardPitchesPage() {
                               <ExternalLink className="w-4 h-4" />
                             </a>
                           )}
+                          <button
+                            onClick={() => handleDelete(pitch.id)}
+                            disabled={deletingId === pitch.id}
+                            className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                            title="Delete"
+                          >
+                            {deletingId === pitch.id ? (
+                              <RefreshCw className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="w-4 h-4" />
+                            )}
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -257,6 +348,18 @@ export default function DashboardPitchesPage() {
           )}
         </div>
       </div>
+
+      {/* Edit Modal */}
+      {editingPitch && (
+        <EditPitchModal
+          pitch={editingPitch}
+          onClose={() => setEditingPitch(null)}
+          onSuccess={() => {
+            setEditingPitch(null)
+            loadPitches()
+          }}
+        />
+      )}
     </div>
   )
 }
