@@ -309,6 +309,10 @@ CREATE POLICY "Users can update their own pitches"
   ON public.pitches FOR UPDATE
   USING (auth.uid() = user_id);
 
+CREATE POLICY "Users can delete their own pitches"
+  ON public.pitches FOR DELETE
+  USING (auth.uid() = user_id);
+
 -- Votes: Users can vote on approved pitches
 CREATE POLICY "Users can view votes on approved pitches"
   ON public.votes FOR SELECT
