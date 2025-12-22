@@ -6,22 +6,27 @@ import * as cheerio from 'cheerio'
 // Schedule: Daily at 2 AM UTC (configured in vercel.json)
 export async function GET(request: NextRequest) {
   // Verify the request is from Vercel Cron
-  // Vercel sends a signature header, but we can also check for a custom secret
+  // Vercel Cron sends a 'x-vercel-signature' header, but we can also use CRON_SECRET
+  // For security, check if CRON_SECRET is set and verify it via query parameter
   const cronSecret = process.env.CRON_SECRET
   
-  // If CRON_SECRET is set, check for it in Authorization header or as a query param
-  // Vercel Cron can pass it via query parameter: ?secret=xxx
   if (cronSecret) {
-    const authHeader = request.headers.get('authorization')
+    // Check query parameter (you can manually add ?secret=xxx when testing)
+    // Or check Authorization header if you configure it
     const querySecret = request.nextUrl.searchParams.get('secret')
+    const authHeader = request.headers.get('authorization')
     
-    // Allow either Authorization header or query parameter
-    const providedSecret = authHeader?.replace('Bearer ', '') || querySecret
+    // Allow query parameter or Authorization header
+    const providedSecret = querySecret || authHeader?.replace('Bearer ', '')
     
-    if (providedSecret !== cronSecret) {
+    if (!providedSecret || providedSecret !== cronSecret) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
   }
+  
+  // Note: In production, Vercel Cron will call this endpoint automatically.
+  // The CRON_SECRET check is optional but recommended for security.
+  // If you want to test manually, visit: /api/cron/backlinks-monitor?secret=YOUR_SECRET
 
   try {
     // Use service role key for admin access to all backlinks

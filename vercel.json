@@ -4,7 +4,7 @@
   "buildCommand": "npm run build",
   "crons": [
     {
-      "path": "/api/cron/backlinks-monitor?secret=${CRON_SECRET}",
+      "path": "/api/cron/backlinks-monitor",
       "schedule": "0 2 * * *"
     }
   ]
