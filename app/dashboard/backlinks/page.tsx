@@ -349,7 +349,10 @@ export default function BacklinksPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {backlink.last_checked_at 
-                          ? new Date(backlink.last_checked_at).toLocaleTimeString('en-US', { 
+                          ? new Date(backlink.last_checked_at).toLocaleString('en-US', { 
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
                               hour: '2-digit', 
                               minute: '2-digit',
                               hour12: true
