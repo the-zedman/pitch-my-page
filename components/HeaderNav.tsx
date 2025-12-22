@@ -54,7 +54,7 @@ export default function HeaderNav() {
             alt=""
             width={32}
             height={32}
-            className="h-8 w-8 rounded-lg"
+            className="h-8 w-8 rounded-lg bg-white p-1"
             priority
           />
           <Image
@@ -83,7 +83,7 @@ export default function HeaderNav() {
             alt=""
             width={32}
             height={32}
-            className="h-8 w-8 rounded-lg"
+            className="h-8 w-8 rounded-lg bg-white p-1"
             priority
           />
           <Image
