@@ -36,7 +36,7 @@ export default function PitchDetailPage() {
       
       const { data, error: fetchError } = await supabase
         .from('pitches')
-        .select('*')
+        .select('*, profiles(username, avatar_url)')
         .eq('id', pitchId)
         .single()
 
