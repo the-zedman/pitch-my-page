@@ -52,9 +52,9 @@ export default function HeaderNav() {
           <Image
             src="/favicon-96x96.png"
             alt=""
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-lg bg-white p-1"
+            width={64}
+            height={64}
+            className="h-16 w-16 rounded-lg bg-white p-1"
             priority
           />
           <Image
@@ -81,9 +81,9 @@ export default function HeaderNav() {
           <Image
             src="/favicon-96x96.png"
             alt=""
-            width={32}
-            height={32}
-            className="h-8 w-8 rounded-lg bg-white p-1"
+            width={64}
+            height={64}
+            className="h-16 w-16 rounded-lg bg-white p-1"
             priority
           />
           <Image
