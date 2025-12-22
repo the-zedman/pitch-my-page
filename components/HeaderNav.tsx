@@ -7,7 +7,7 @@ import { createSupabaseClient } from '@/lib/supabase/client'
 import { LogOut, Plus } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export default function HeaderNav() {
+export default function HeaderNav({ variant = 'dark' }: { variant?: 'light' | 'dark' }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [loading, setLoading] = useState(true)
   const supabase = createSupabaseClient()
@@ -67,9 +67,9 @@ export default function HeaderNav() {
           />
         </Link>
         <div className="flex gap-6 items-center">
-          <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
-          <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
-          <div className="w-20 h-8 bg-white/20 rounded-lg animate-pulse"></div> {/* Placeholder */}
+          <Link href="/gallery" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Gallery</Link>
+          <a href="#pricing" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Pricing</a>
+          <div className={`w-20 h-8 ${variant === 'light' ? 'bg-gray-200' : 'bg-white/20'} rounded-lg animate-pulse`}></div> {/* Placeholder */}
         </div>
       </nav>
     )
@@ -96,21 +96,21 @@ export default function HeaderNav() {
           />
         </Link>
       <div className="flex gap-6 items-center">
-        <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
-        <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
+        <Link href="/gallery" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Gallery</Link>
+        <a href="#pricing" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Pricing</a>
         {isLoggedIn ? (
           <>
-            <Link href="/dashboard" className="text-white hover:text-accent-apricot">Dashboard</Link>
+            <Link href="/dashboard" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Dashboard</Link>
             <Link 
               href="/submit" 
-              className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition flex items-center gap-2"
+              className={variant === 'light' ? 'bg-primary-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary-200 transition flex items-center gap-2' : 'bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition flex items-center gap-2'}
             >
               <Plus className="w-4 h-4" />
               Submit Pitch
             </Link>
             <button
               onClick={handleLogout}
-              className="text-white hover:text-accent-apricot flex items-center gap-2"
+              className={variant === 'light' ? 'text-gray-700 hover:text-primary-500 flex items-center gap-2' : 'text-white hover:text-accent-apricot flex items-center gap-2'}
             >
               <LogOut className="w-4 h-4" />
               Logout
@@ -118,10 +118,10 @@ export default function HeaderNav() {
           </>
         ) : (
           <>
-            <Link href="/auth/login" className="text-white hover:text-accent-apricot">Login</Link>
+            <Link href="/auth/login" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Login</Link>
             <Link 
               href="/auth/signup" 
-              className="bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition"
+              className={variant === 'light' ? 'bg-primary-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-primary-200 transition' : 'bg-white text-primary-400 px-4 py-2 rounded-lg font-semibold hover:bg-accent-eggshell transition'}
             >
               Get Started
             </Link>

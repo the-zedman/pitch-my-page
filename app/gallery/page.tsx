@@ -57,9 +57,9 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-4">
+      <header className="bg-white py-4">
         <div className="container mx-auto px-4">
-          <HeaderNav />
+          <HeaderNav variant="light" />
         </div>
       </header>
       <div className="container mx-auto px-4 py-4">
