@@ -6,11 +6,21 @@ import * as cheerio from 'cheerio'
 // Schedule: Daily at 2 AM UTC (configured in vercel.json)
 export async function GET(request: NextRequest) {
   // Verify the request is from Vercel Cron
-  const authHeader = request.headers.get('authorization')
+  // Vercel sends a signature header, but we can also check for a custom secret
   const cronSecret = process.env.CRON_SECRET
   
-  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  // If CRON_SECRET is set, check for it in Authorization header or as a query param
+  // Vercel Cron can pass it via query parameter: ?secret=xxx
+  if (cronSecret) {
+    const authHeader = request.headers.get('authorization')
+    const querySecret = request.nextUrl.searchParams.get('secret')
+    
+    // Allow either Authorization header or query parameter
+    const providedSecret = authHeader?.replace('Bearer ', '') || querySecret
+    
+    if (providedSecret !== cronSecret) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
   }
 
   try {
