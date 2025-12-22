@@ -54,7 +54,7 @@ export default function HeaderNav({ variant = 'dark' }: { variant?: 'light' | 'd
             alt=""
             width={64}
             height={64}
-            className="h-16 w-16 rounded-lg bg-white p-1"
+            className={`h-16 w-16 rounded-lg ${variant === 'light' ? 'bg-white p-1' : ''}`}
             priority
           />
           <Image
@@ -83,7 +83,7 @@ export default function HeaderNav({ variant = 'dark' }: { variant?: 'light' | 'd
             alt=""
             width={64}
             height={64}
-            className="h-16 w-16 rounded-lg bg-white p-1"
+            className={`h-16 w-16 rounded-lg ${variant === 'light' ? 'bg-white p-1' : ''}`}
             priority
           />
           <Image
