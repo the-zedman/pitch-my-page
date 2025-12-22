@@ -63,21 +63,6 @@ export default function BacklinksPage() {
       }
       const { backlinks: backlinksData } = await backlinksRes.json()
       setBacklinks(backlinksData || [])
-
-      // Fetch user's pitches directly (we need all pitches, not just approved ones)
-      const { data: pitchesData, error: pitchesError } = await supabase
-        .from('pitches')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
-
-      if (pitchesError) {
-        console.error('Error fetching pitches:', pitchesError)
-        // Don't fail the whole load if pitches fail
-        setPitches([])
-      } else {
-        setPitches(pitchesData || [])
-      }
     } catch (err: any) {
       console.error('Error loading data:', err)
       setError(err.message || 'Failed to load data')
@@ -463,7 +448,6 @@ export default function BacklinksPage() {
       {/* Add/Edit Form Modal */}
       {(showAddForm || selectedBacklink) && (
         <BacklinkFormModal
-          pitches={pitches}
           backlink={selectedBacklink}
           onClose={() => {
             setShowAddForm(false)

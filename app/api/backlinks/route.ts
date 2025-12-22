@@ -74,12 +74,12 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { pitch_id, source_url, target_url, anchor_text, link_type, expires_at } = body
+    const { source_url, target_url, link_type } = body
 
     // Validate required fields
-    if (!pitch_id || !source_url || !target_url) {
+    if (!source_url || !target_url) {
       return NextResponse.json(
-        { error: 'Missing required fields: pitch_id, source_url, and target_url are required' },
+        { error: 'Missing required fields: source_url and target_url are required' },
         { status: 400 }
       )
     }
@@ -92,21 +92,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: 'Invalid URL format' },
         { status: 400 }
-      )
-    }
-
-    // Verify the pitch belongs to the user
-    const { data: pitch, error: pitchError } = await supabase
-      .from('pitches')
-      .select('id, user_id')
-      .eq('id', pitch_id)
-      .eq('user_id', user.id)
-      .single()
-
-    if (pitchError || !pitch) {
-      return NextResponse.json(
-        { error: 'Pitch not found or access denied' },
-        { status: 404 }
       )
     }
 
@@ -130,15 +115,12 @@ export async function POST(request: NextRequest) {
       .from('backlinks')
       .insert({
         user_id: user.id,
-        pitch_id,
         source_url,
         target_url,
-        anchor_text: anchor_text || null,
         link_type: link_type || 'dofollow',
         is_verified: false,
         verification_status: 'pending',
         is_active: false, // Will be set to true after verification
-        expires_at: expires_at ? new Date(expires_at).toISOString() : null,
       })
       .select()
       .single()
