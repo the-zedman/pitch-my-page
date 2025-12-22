@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 import HeroCTA from '@/components/HeroCTA'
@@ -160,11 +161,17 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div>
-              <div className="text-xl font-bold text-white mb-4">Pitch My Page</div>
-              <p className="text-sm">Ethical indie content promotion platform</p>
-            </div>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div>
+                      <Image
+                        src="/pitch-my-page-logo-compressed.png"
+                        alt="Pitch My Page"
+                        width={150}
+                        height={40}
+                        className="h-8 w-auto mb-4"
+                      />
+                      <p className="text-sm">Ethical indie content promotion platform</p>
+                    </div>
             <div>
               <h3 className="text-white font-semibold mb-4">Product</h3>
               <ul className="space-y-2 text-sm">

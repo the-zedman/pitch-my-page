@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter, usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { createSupabaseClient } from '@/lib/supabase/client'
@@ -40,8 +41,15 @@ export default function DashboardHeader() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-primary-500 hover:text-primary-200 transition">
-            Pitch My Page
+          <Link href="/" className="flex items-center hover:opacity-80 transition">
+            <Image
+              src="/pitch-my-page-logo-compressed.png"
+              alt="Pitch My Page"
+              width={150}
+              height={40}
+              className="h-8 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

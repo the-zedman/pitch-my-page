@@ -34,11 +34,20 @@ export default function HeaderNav() {
     }
   }, [supabase])
 
-  if (loading) {
-    // Show a neutral state while loading
-    return (
-      <nav className="flex items-center justify-between">
-        <Link href="/" className="text-2xl font-bold text-white">Pitch My Page</Link>
+          if (loading) {
+            // Show a neutral state while loading
+            return (
+              <nav className="flex items-center justify-between">
+                <Link href="/" className="flex items-center hover:opacity-80 transition">
+                  <Image
+                    src="/pitch-my-page-logo-compressed.png"
+                    alt="Pitch My Page"
+                    width={150}
+                    height={40}
+                    className="h-8 w-auto"
+                    priority
+                  />
+                </Link>
         <div className="flex gap-6 items-center">
           <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
           <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
@@ -54,9 +63,18 @@ export default function HeaderNav() {
     )
   }
 
-  return (
-    <nav className="flex items-center justify-between">
-      <Link href="/" className="text-2xl font-bold text-white">Pitch My Page</Link>
+          return (
+            <nav className="flex items-center justify-between">
+              <Link href="/" className="flex items-center hover:opacity-80 transition">
+                <Image
+                  src="/pitch-my-page-logo-compressed.png"
+                  alt="Pitch My Page"
+                  width={150}
+                  height={40}
+                  className="h-8 w-auto"
+                  priority
+                />
+              </Link>
       <div className="flex gap-6 items-center">
         <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
         <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>
