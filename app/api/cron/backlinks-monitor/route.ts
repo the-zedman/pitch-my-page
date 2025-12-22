@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
     // Process in batches to avoid timeout
     const { data: backlinks, error: fetchError } = await supabaseAdmin
       .from('backlinks')
-      .select('id, user_id, source_url, target_url, link_type, is_active')
+      .select('id, user_id, source_url, target_url, link_type, is_active, failure_count')
       .eq('is_verified', true)
       .order('last_checked_at', { ascending: true, nullsFirst: true })
       .limit(50) // Process 50 at a time to avoid timeout
