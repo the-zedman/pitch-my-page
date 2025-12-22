@@ -48,7 +48,15 @@ export default function HeaderNav() {
     // Show a neutral state while loading
     return (
       <nav className="flex items-center justify-between">
-        <Link href="/" className="flex items-center hover:opacity-80 transition">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+          <Image
+            src="/favicon-96x96.png"
+            alt=""
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-lg"
+            priority
+          />
           <Image
             src="/pitch-my-page-logo-compressed.png"
             alt="Pitch My Page"
@@ -68,17 +76,25 @@ export default function HeaderNav() {
   }
 
   return (
-    <nav className="flex items-center justify-between">
-      <Link href="/" className="flex items-center hover:opacity-80 transition">
-        <Image
-          src="/pitch-my-page-logo-compressed.png"
-          alt="Pitch My Page"
-          width={200}
-          height={60}
-          className="h-12 w-auto rounded-lg"
-          priority
-        />
-      </Link>
+      <nav className="flex items-center justify-between">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+          <Image
+            src="/favicon-96x96.png"
+            alt=""
+            width={32}
+            height={32}
+            className="h-8 w-8 rounded-lg"
+            priority
+          />
+          <Image
+            src="/pitch-my-page-logo-compressed.png"
+            alt="Pitch My Page"
+            width={200}
+            height={60}
+            className="h-12 w-auto rounded-lg"
+            priority
+          />
+        </Link>
       <div className="flex gap-6 items-center">
         <Link href="/gallery" className="text-white hover:text-accent-apricot">Gallery</Link>
         <a href="#pricing" className="text-white hover:text-accent-apricot">Pricing</a>

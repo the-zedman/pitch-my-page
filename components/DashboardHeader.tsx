@@ -41,7 +41,15 @@ export default function DashboardHeader() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center hover:opacity-80 transition">
+          <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition">
+            <Image
+              src="/favicon-96x96.png"
+              alt=""
+              width={32}
+              height={32}
+              className="h-8 w-8 rounded-lg"
+              priority
+            />
             <Image
               src="/pitch-my-page-logo-compressed.png"
               alt="Pitch My Page"
