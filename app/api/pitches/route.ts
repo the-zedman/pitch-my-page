@@ -208,7 +208,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from('pitches')
-      .select('*')
+      .select('*, profiles(username, avatar_url)')
       .eq('status', 'approved') // Only show approved pitches
 
     if (category && category !== 'all') {
