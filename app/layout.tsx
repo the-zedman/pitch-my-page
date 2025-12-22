@@ -81,9 +81,44 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Pitch My Page',
+    url: 'https://www.pitchmypage.com',
+    description: 'Ethical content promotion platform with dofollow backlinks, transparent voting, and community-driven promotion for indie creators.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://www.pitchmypage.com/gallery?search={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+
+  const organizationData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Pitch My Page',
+    url: 'https://www.pitchmypage.com',
+    logo: 'https://www.pitchmypage.com/pitch-my-page-logo-compressed.png',
+    description: 'Ethical content promotion platform with dofollow backlinks for indie creators.',
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+        />
+        {children}
+      </body>
     </html>
   )
 }

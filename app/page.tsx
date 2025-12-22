@@ -49,42 +49,8 @@ export const metadata: Metadata = {
 }
 
 export default function LandingPage() {
-  const structuredData = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: 'Pitch My Page',
-    url: 'https://www.pitchmypage.com',
-    description: 'Ethical content promotion platform with dofollow backlinks, transparent voting, and community-driven promotion for indie creators.',
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: 'https://www.pitchmypage.com/gallery?search={search_term_string}',
-      },
-      'query-input': 'required name=search_term_string',
-    },
-  }
-
-  const organizationData = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: 'Pitch My Page',
-    url: 'https://www.pitchmypage.com',
-    logo: 'https://www.pitchmypage.com/pitch-my-page-logo-compressed.png',
-    description: 'Ethical content promotion platform with dofollow backlinks for indie creators.',
-  }
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
-      />
-      <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
         {/* Header */}
         <header className="container mx-auto px-4 py-6">
           <HeaderNav />
