@@ -423,3 +423,4 @@ CREATE TRIGGER pitch_comment_count_trigger
   AFTER INSERT OR DELETE ON public.comments
   FOR EACH ROW EXECUTE FUNCTION update_pitch_comment_count();
 
+

@@ -370,6 +370,7 @@ export default function DashboardPitchesPage() {
             </div>
           )}
         </div>
+        </div>
       </div>
 
       {/* Edit Modal */}
