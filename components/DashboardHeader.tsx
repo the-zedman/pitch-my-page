@@ -30,6 +30,7 @@ export default function DashboardHeader() {
     { href: '/dashboard', label: 'Dashboard', active: pathname === '/dashboard' },
     { href: '/dashboard/pitches', label: 'My Pitches', active: pathname?.startsWith('/dashboard/pitches') },
     { href: '/dashboard/backlinks', label: 'Backlinks', active: pathname?.startsWith('/dashboard/backlinks') },
+    { href: '/dashboard/settings', label: 'Settings', active: pathname?.startsWith('/dashboard/settings') },
     { href: '/submit', label: 'Submit Pitch', active: pathname === '/submit' },
     { href: '/gallery', label: 'Gallery', active: pathname === '/gallery' },
   ]
