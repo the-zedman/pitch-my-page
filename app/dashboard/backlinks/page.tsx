@@ -277,14 +277,6 @@ export default function BacklinksPage() {
             </div>
             <div className="text-sm text-gray-600 mt-1">Dofollow Active</div>
           </div>
-          <div className="bg-white rounded-lg shadow p-6">
-            <div className="text-2xl font-bold text-gray-900">
-              {backlinks.length > 0 
-                ? Math.round(backlinks.reduce((sum, b) => sum + (b.uptime_percentage || 0), 0) / backlinks.length)
-                : 0}%
-            </div>
-            <div className="text-sm text-gray-600 mt-1">Avg Uptime</div>
-          </div>
         </div>
 
         {/* Backlinks Table */}
@@ -318,9 +310,6 @@ export default function BacklinksPage() {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Type
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Uptime
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Last Checked
@@ -358,12 +347,13 @@ export default function BacklinksPage() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getLinkTypeBadge(backlink.link_type)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {backlink.uptime_percentage.toFixed(1)}%
-                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {backlink.last_checked_at 
-                          ? new Date(backlink.last_checked_at).toLocaleDateString()
+                          ? new Date(backlink.last_checked_at).toLocaleTimeString('en-US', { 
+                              hour: '2-digit', 
+                              minute: '2-digit',
+                              hour12: true
+                            })
                           : 'Never'
                         }
                       </td>
