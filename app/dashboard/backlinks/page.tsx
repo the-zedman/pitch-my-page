@@ -49,9 +49,16 @@ export default function BacklinksPage() {
       }
 
       // Fetch backlinks
-      const backlinksRes = await fetch('/api/backlinks')
+      const backlinksRes = await fetch('/api/backlinks', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
       if (!backlinksRes.ok) {
-        throw new Error('Failed to load backlinks')
+        const errorData = await backlinksRes.json().catch(() => ({}))
+        console.error('Backlinks API error:', errorData)
+        throw new Error(errorData.error || 'Failed to load backlinks')
       }
       const { backlinks: backlinksData } = await backlinksRes.json()
       setBacklinks(backlinksData || [])
