@@ -29,8 +29,7 @@ export default function BacklinksPage() {
   const [error, setError] = useState<string | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [selectedBacklink, setSelectedBacklink] = useState<Backlink | null>(null)
-  const [verifyingId, setVerifyingId] = useState<string | null>(null)
-  const [monitoringId, setMonitoringId] = useState<string | null>(null)
+  const [checkingId, setCheckingId] = useState<string | null>(null)
   const [checkingAll, setCheckingAll] = useState(false)
 
   useEffect(() => {
@@ -393,27 +392,13 @@ export default function BacklinksPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end gap-2">
-                          {!backlink.is_verified && (
-                            <button
-                              onClick={() => handleVerify(backlink.id)}
-                              disabled={verifyingId === backlink.id}
-                              className="text-blue-600 hover:text-blue-900 disabled:opacity-50"
-                              title="Verify backlink"
-                            >
-                              {verifyingId === backlink.id ? (
-                                <RefreshCw className="w-4 h-4 animate-spin" />
-                              ) : (
-                                <CheckCircle className="w-4 h-4" />
-                              )}
-                            </button>
-                          )}
                           <button
-                            onClick={() => handleMonitor(backlink.id)}
-                            disabled={monitoringId === backlink.id || checkingAll}
+                            onClick={() => handleCheck(backlink.id)}
+                            disabled={checkingId === backlink.id || checkingAll}
                             className="text-green-600 hover:text-green-900 disabled:opacity-50"
-                            title="Recheck backlink"
+                            title="Check backlink status"
                           >
-                            {monitoringId === backlink.id ? (
+                            {checkingId === backlink.id ? (
                               <RefreshCw className="w-4 h-4 animate-spin" />
                             ) : (
                               <RefreshCw className="w-4 h-4" />
