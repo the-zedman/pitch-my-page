@@ -1,17 +1,94 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import type { Metadata } from 'next'
 import { Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 import HeroCTA from '@/components/HeroCTA'
 import CTASection from '@/components/CTASection'
 
+export const metadata: Metadata = {
+  title: 'Pitch My Page - Ethical Indie Content Promotion Platform',
+  description: 'Promote your content and build ethical dofollow backlinks. Transparent voting, genuine community feedback, and affordable SEO solutions for indie developers and content creators. Start free with 2 reciprocal backlinks.',
+  keywords: 'dofollow backlinks, ethical SEO, indie content promotion, page pitching platform, content promotion, backlink building, SEO backlinks, ethical link building',
+  openGraph: {
+    title: 'Pitch My Page - Ethical Indie Content Promotion Platform',
+    description: 'Promote your content and build ethical dofollow backlinks. Transparent voting, genuine community feedback, and affordable SEO solutions for indie developers.',
+    url: 'https://www.pitchmypage.com',
+    siteName: 'Pitch My Page',
+    images: [
+      {
+        url: '/og_image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Pitch My Page - Ethical Indie Content Promotion',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Pitch My Page - Ethical Indie Content Promotion Platform',
+    description: 'Promote your content and build ethical dofollow backlinks. Transparent voting, genuine community feedback.',
+    images: ['/og_image.png'],
+  },
+  alternates: {
+    canonical: 'https://www.pitchmypage.com',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+}
+
 export default function LandingPage() {
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Pitch My Page',
+    url: 'https://www.pitchmypage.com',
+    description: 'Ethical content promotion platform with dofollow backlinks, transparent voting, and community-driven promotion for indie creators.',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: 'https://www.pitchmypage.com/gallery?search={search_term_string}',
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+
+  const organizationData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Pitch My Page',
+    url: 'https://www.pitchmypage.com',
+    logo: 'https://www.pitchmypage.com/pitch-my-page-logo-compressed.png',
+    description: 'Ethical content promotion platform with dofollow backlinks for indie creators.',
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
-      {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <HeaderNav />
-      </header>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationData) }}
+      />
+      <div className="min-h-screen bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600">
+        {/* Header */}
+        <header className="container mx-auto px-4 py-6">
+          <HeaderNav />
+        </header>
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">

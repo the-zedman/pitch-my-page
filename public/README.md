@@ -12,3 +12,4 @@ Files in this folder are accessible from the root URL:
 - `/logo.png` → `public/logo.png`
 - `/favicon.ico` → `public/favicon.ico`
 
+
