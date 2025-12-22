@@ -76,11 +76,12 @@ export default function BacklinkFormModal({
     }
   }
 
-  // Auto-fill target_url when pitch is selected
+  // Auto-fill target_url when pitch is selected (optional helper)
   useEffect(() => {
-    if (formData.pitch_id && !backlink) {
+    if (formData.pitch_id && !backlink && !formData.target_url) {
       const selectedPitch = pitches.find(p => p.id === formData.pitch_id)
       if (selectedPitch) {
+        // Pre-fill with pitch URL as a starting point, but user can change it
         setFormData(prev => ({ ...prev, target_url: selectedPitch.url }))
       }
     }
@@ -119,30 +120,32 @@ export default function BacklinkFormModal({
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Source URL (where the link is placed) *
+              Source URL (page that has the backlink) *
             </label>
             <input
               type="url"
               value={formData.source_url}
               onChange={(e) => setFormData(prev => ({ ...prev, source_url: e.target.value }))}
               required
-              placeholder="https://yoursite.com/page"
+              placeholder="https://cnn.com/article or https://bbc.co.uk/page"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
+            <p className="mt-1 text-xs text-gray-500">The page where your backlink exists (e.g., cnn.com, bbc.co.uk, etc.)</p>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Target URL (the pitch URL) *
+              Target URL (where the backlink points to) *
             </label>
             <input
               type="url"
               value={formData.target_url}
               onChange={(e) => setFormData(prev => ({ ...prev, target_url: e.target.value }))}
               required
-              placeholder="https://pitchmypage.com/pitch/..."
+              placeholder="https://yoursite.com or https://yoursite.com/page"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
             />
+            <p className="mt-1 text-xs text-gray-500">Your site/page that the backlink points to</p>
           </div>
 
           <div>

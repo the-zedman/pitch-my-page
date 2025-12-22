@@ -149,12 +149,34 @@ export async function POST(
         updates.is_active = false
         updates.failure_count = (backlink.failure_count || 0) + 1
         updates.last_failed_at = new Date().toISOString()
+        
+        // Send alert email if backlink was previously active and is now removed
+        if (backlink.is_active) {
+          try {
+            const { data: { user: authUser } } = await supabase.auth.getUser()
+            if (authUser?.email) {
+              const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+              await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+            }
+          } catch (emailError) {
+            console.error('Error sending backlink removed alert email:', emailError)
+          }
+        }
       }
 
       // Check if link type changed from dofollow to nofollow (critical alert)
       if (linkFound && backlink.link_type === 'dofollow' && detectedLinkType === 'nofollow') {
         updates.link_type = 'nofollow'
-        // TODO: Send alert email about type change
+        // Send alert email about type change
+        try {
+          const { data: { user: authUser } } = await supabase.auth.getUser()
+          if (authUser?.email) {
+            const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+            await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'nofollow')
+          }
+        } catch (emailError) {
+          console.error('Error sending nofollow alert email:', emailError)
+        }
       }
 
       const { data: updatedBacklink, error: updateError } = await supabase
@@ -230,10 +252,26 @@ export async function POST(
         updates.uptime_percentage = Math.round((successfulChecks / recentLogs.length) * 100 * 100) / 100
       }
 
+      // Check if backlink was previously active
+      const wasActive = backlink.is_active
+
       await supabase
         .from('backlinks')
         .update(updates)
         .eq('id', id)
+
+      // Send alert email if backlink was previously active and is now down
+      if (wasActive) {
+        try {
+          const { data: { user: authUser } } = await supabase.auth.getUser()
+          if (authUser?.email) {
+            const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+            await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+          }
+        } catch (emailError) {
+          console.error('Error sending backlink down alert email:', emailError)
+        }
+      }
 
       console.error('Error monitoring backlink:', fetchError)
       

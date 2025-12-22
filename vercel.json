@@ -1,6 +1,11 @@
 {
   "version": 2,
   "framework": "nextjs",
-  "buildCommand": "npm run build"
+  "buildCommand": "npm run build",
+  "crons": [
+    {
+      "path": "/api/cron/backlinks-monitor",
+      "schedule": "0 2 * * *"
+    }
+  ]
 }
-
