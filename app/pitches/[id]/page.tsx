@@ -142,11 +142,11 @@ export default function PitchDetailPage() {
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Thumbnail */}
           {pitch.thumbnail_url && (
-            <div className="w-full h-64 bg-gray-200">
+            <div className="w-full min-h-64 bg-gray-200 flex items-center justify-center">
               <img
                 src={pitch.thumbnail_url}
                 alt={pitch.title}
-                className="w-full h-full object-cover"
+                className="max-w-full max-h-96 object-contain"
               />
             </div>
           )}

@@ -21,11 +21,11 @@ export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       {/* Thumbnail */}
       {pitch.thumbnail_url && (
-        <div className="w-full h-48 bg-gray-200 overflow-hidden">
+        <div className="w-full min-h-48 bg-gray-200 overflow-hidden flex items-center justify-center">
           <img
             src={pitch.thumbnail_url}
             alt={pitch.title}
-            className="w-full h-full object-cover"
+            className="max-w-full max-h-96 object-contain"
           />
         </div>
       )}

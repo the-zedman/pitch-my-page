@@ -338,11 +338,11 @@ export default function SubmissionForm() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Thumbnail Preview
               </label>
-              <div className="relative w-full h-48 bg-gray-100 rounded-lg overflow-hidden">
+              <div className="relative w-full min-h-48 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
                 <img
                   src={watch('thumbnail_url') || ''}
                   alt="Thumbnail preview"
-                  className="w-full h-full object-cover"
+                  className="max-w-full max-h-96 object-contain"
                 />
               </div>
             </div>
