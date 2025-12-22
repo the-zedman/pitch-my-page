@@ -11,11 +11,18 @@ interface PitchCardProps {
     }
   }
   onVote?: (pitchId: string, voteType: 'upvote') => void
-  userVote?: 'upvote' | null
+  userVote?: 'upvote' | 'downvote' | null
+  isVoting?: boolean
 }
 
-export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
+export default function PitchCard({ pitch, onVote, userVote, isVoting }: PitchCardProps) {
   const voteCount = pitch.upvotes || 0
+  const hasVoted = userVote === 'upvote'
+
+  const handleVoteClick = () => {
+    if (isVoting) return // Prevent double-clicking
+    onVote?.(pitch.id, 'upvote')
+  }
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -67,15 +74,16 @@ export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
           <div className="flex items-center gap-4">
             {/* Upvote Button */}
             <button
-              onClick={() => onVote?.(pitch.id, 'upvote')}
+              onClick={handleVoteClick}
+              disabled={isVoting}
               className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${
-                userVote === 'upvote'
+                hasVoted
                   ? 'bg-red-50 text-red-600 border border-red-200'
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent'
-              }`}
+              } ${isVoting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               aria-label="Upvote"
             >
-              <Heart className={`w-4 h-4 ${userVote === 'upvote' ? 'fill-current' : ''}`} />
+              <Heart className={`w-4 h-4 ${hasVoted ? 'fill-current' : ''}`} />
               <span className="text-sm font-medium">{voteCount}</span>
             </button>
 

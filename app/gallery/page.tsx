@@ -8,11 +8,12 @@ import { Loader2, Search, Filter } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 
 export default function GalleryPage() {
-  const [pitches, setPitches] = useState<(Pitch & { profiles?: any })[]>([])
+  const [pitches, setPitches] = useState<(Pitch & { profiles?: any; userVote?: 'upvote' | 'downvote' | null })[]>([])
   const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState('all')
   const [sort, setSort] = useState('newest')
   const [searchQuery, setSearchQuery] = useState('')
+  const [votingId, setVotingId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchPitches()
@@ -30,7 +31,33 @@ export default function GalleryPage() {
       const response = await fetch(`/api/pitches?${params}`)
       if (response.ok) {
         const data = await response.json()
-        setPitches(data.pitches || [])
+        const pitchesData = data.pitches || []
+        
+        // Fetch user votes for each pitch
+        const pitchesWithVotes = await Promise.all(
+          pitchesData.map(async (pitch: Pitch) => {
+            try {
+              const voteResponse = await fetch(`/api/votes?pitch_id=${pitch.id}`)
+              if (voteResponse.ok) {
+                const voteData = await voteResponse.json()
+                return {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              }
+            } catch (error) {
+              console.error(`Error fetching votes for pitch ${pitch.id}:`, error)
+            }
+            return {
+              ...pitch,
+              upvotes: pitch.upvotes || 0,
+              userVote: null,
+            }
+          })
+        )
+        
+        setPitches(pitchesWithVotes)
       }
     } catch (error) {
       console.error('Error fetching pitches:', error)
@@ -40,8 +67,55 @@ export default function GalleryPage() {
   }
 
   const handleVote = async (pitchId: string, voteType: 'upvote') => {
-    // TODO: Implement voting API
-    console.log('Vote:', pitchId, voteType)
+    if (votingId === pitchId) return // Prevent double-clicking
+    
+    setVotingId(pitchId)
+    try {
+      const response = await fetch('/api/votes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pitch_id: pitchId,
+          vote_type: voteType,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          // User not logged in - redirect to login
+          window.location.href = '/auth/login?redirect=/gallery'
+          return
+        }
+        alert(data.error || 'Failed to vote')
+        return
+      }
+
+      // Update the pitch with new vote count and user vote status
+      const voteResponse = await fetch(`/api/votes?pitch_id=${pitchId}`)
+      if (voteResponse.ok) {
+        const voteData = await voteResponse.json()
+        setPitches((prevPitches) =>
+          prevPitches.map((pitch) =>
+            pitch.id === pitchId
+              ? {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              : pitch
+          )
+        )
+      }
+    } catch (error: any) {
+      console.error('Error voting:', error)
+      alert('Failed to vote. Please try again.')
+    } finally {
+      setVotingId(null)
+    }
   }
 
   const filteredPitches = pitches.filter((pitch) => {
@@ -134,6 +208,8 @@ export default function GalleryPage() {
                 key={pitch.id}
                 pitch={pitch}
                 onVote={handleVote}
+                userVote={pitch.userVote || null}
+                isVoting={votingId === pitch.id}
               />
             ))}
           </div>
