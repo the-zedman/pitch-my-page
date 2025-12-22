@@ -5,9 +5,10 @@ import * as cheerio from 'cheerio'
 // POST - Monitor a backlink (check uptime and link status)
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
@@ -24,7 +25,7 @@ export async function POST(
     const { data: backlink, error: fetchError } = await supabase
       .from('backlinks')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -92,7 +93,7 @@ export async function POST(
 
       // Create monitoring log entry
       const logData = {
-        backlink_id: params.id,
+        backlink_id: id,
         check_status: linkFound ? 'success' : 'failed',
         http_status_code: response.status,
         response_time_ms: responseTime,
@@ -119,7 +120,7 @@ export async function POST(
       const { data: recentLogs, error: logsError } = await supabase
         .from('monitoring_logs')
         .select('check_status')
-        .eq('backlink_id', params.id)
+        .eq('backlink_id', id)
         .gte('checked_at', thirtyDaysAgo.toISOString())
         .order('checked_at', { ascending: false })
         .limit(100)
@@ -159,7 +160,7 @@ export async function POST(
       const { data: updatedBacklink, error: updateError } = await supabase
         .from('backlinks')
         .update(updates)
-        .eq('id', params.id)
+        .eq('id', id)
         .select()
         .single()
 
@@ -189,7 +190,7 @@ export async function POST(
 
       // Create monitoring log entry for failure
       const logData = {
-        backlink_id: params.id,
+        backlink_id: id,
         check_status: 'failed',
         http_status_code: null,
         response_time_ms: responseTime,
@@ -219,7 +220,7 @@ export async function POST(
       const { data: recentLogs } = await supabase
         .from('monitoring_logs')
         .select('check_status')
-        .eq('backlink_id', params.id)
+        .eq('backlink_id', id)
         .gte('checked_at', thirtyDaysAgo.toISOString())
         .order('checked_at', { ascending: false })
         .limit(100)
@@ -232,7 +233,7 @@ export async function POST(
       await supabase
         .from('backlinks')
         .update(updates)
-        .eq('id', params.id)
+        .eq('id', id)
 
       console.error('Error monitoring backlink:', fetchError)
       

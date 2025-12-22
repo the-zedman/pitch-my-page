@@ -31,6 +31,7 @@ export default function BacklinksPage() {
   const [selectedBacklink, setSelectedBacklink] = useState<Backlink | null>(null)
   const [verifyingId, setVerifyingId] = useState<string | null>(null)
   const [monitoringId, setMonitoringId] = useState<string | null>(null)
+  const [checkingAll, setCheckingAll] = useState(false)
 
   useEffect(() => {
     loadData()
@@ -113,6 +114,10 @@ export default function BacklinksPage() {
     try {
       const response = await fetch(`/api/backlinks/${backlinkId}/monitor`, {
         method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
 
       const data = await response.json()
@@ -122,12 +127,52 @@ export default function BacklinksPage() {
         return
       }
 
-      alert(data.message || 'Monitoring check completed')
+      // Silently update - no alert for individual checks
       loadData() // Reload to show updated status
     } catch (err: any) {
       alert('Error monitoring backlink: ' + err.message)
     } finally {
       setMonitoringId(null)
+    }
+  }
+
+  const handleCheckAll = async () => {
+    if (backlinks.length === 0) return
+    
+    setCheckingAll(true)
+    let successCount = 0
+    let failCount = 0
+
+    try {
+      // Check all backlinks sequentially
+      for (const backlink of backlinks) {
+        try {
+          const response = await fetch(`/api/backlinks/${backlink.id}/monitor`, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
+
+          if (response.ok) {
+            successCount++
+          } else {
+            failCount++
+          }
+        } catch (err) {
+          failCount++
+        }
+      }
+
+      // Reload data to show updated "Last Checked" times
+      await loadData()
+      
+      alert(`Checked ${backlinks.length} backlink(s). ${successCount} successful, ${failCount} failed.`)
+    } catch (err: any) {
+      alert('Error checking all backlinks: ' + err.message)
+    } finally {
+      setCheckingAll(false)
     }
   }
 
@@ -215,13 +260,34 @@ export default function BacklinksPage() {
               <h1 className="text-3xl font-bold text-gray-900">Backlink Management</h1>
               <p className="text-gray-600 mt-1">Manage your dofollow and nofollow backlinks</p>
             </div>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="flex items-center gap-2 bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200 transition"
-            >
-              <Plus className="w-5 h-5" />
-              Add Backlink
-            </button>
+            <div className="flex items-center gap-3">
+              {backlinks.length > 0 && (
+                <button
+                  onClick={handleCheckAll}
+                  disabled={checkingAll}
+                  className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {checkingAll ? (
+                    <>
+                      <RefreshCw className="w-5 h-5 animate-spin" />
+                      Checking...
+                    </>
+                  ) : (
+                    <>
+                      <RefreshCw className="w-5 h-5" />
+                      Check All
+                    </>
+                  )}
+                </button>
+              )}
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="flex items-center gap-2 bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200 transition"
+              >
+                <Plus className="w-5 h-5" />
+                Add Backlink
+              </button>
+            </div>
           </div>
         </div>
 
@@ -358,14 +424,14 @@ export default function BacklinksPage() {
                           )}
                           <button
                             onClick={() => handleMonitor(backlink.id)}
-                            disabled={monitoringId === backlink.id}
+                            disabled={monitoringId === backlink.id || checkingAll}
                             className="text-green-600 hover:text-green-900 disabled:opacity-50"
-                            title="Check status"
+                            title="Recheck backlink"
                           >
                             {monitoringId === backlink.id ? (
                               <RefreshCw className="w-4 h-4 animate-spin" />
                             ) : (
-                              <Eye className="w-4 h-4" />
+                              <RefreshCw className="w-4 h-4" />
                             )}
                           </button>
                           <button
