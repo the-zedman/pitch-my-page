@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server-api'
 import { verifyReciprocalLinks } from '@/lib/utils/reciprocal'
+import { sendPitchSubmissionEmail } from '@/lib/email/ses'
 
 export async function POST(request: NextRequest) {
   try {
@@ -145,13 +146,39 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Get user's email and pitch count for email
+    const userEmail = user.email
+    
+    // Count user's total pitches (including this one)
+    const { count: pitchCount } = await supabase
+      .from('pitches')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+    
+    const userPitchCount = pitchCount || 0
+    const hasReciprocalLinks = backlinksCreated > 0
+
+    // Send submission email
+    if (userEmail) {
+      try {
+        await sendPitchSubmissionEmail(
+          userEmail,
+          pitch.title,
+          pitch.url,
+          pitch.id,
+          userPitchCount,
+          hasReciprocalLinks,
+          source_url || url
+        )
+      } catch (emailError) {
+        console.error('Error sending pitch submission email:', emailError)
+        // Don't fail the submission if email fails
+      }
+    }
+
     // Award points for submission
     // TODO: Implement points transaction system
     // For now, we'll just return success
-
-    const message = backlinksCreated > 0
-      ? `Pitch submitted successfully! ${backlinksCreated} reciprocal dofollow backlink(s) created. It will be reviewed before going live.`
-      : 'Pitch submitted successfully! Note: Without verified reciprocal links, your pitch will receive a nofollow link. It will be reviewed before going live.'
 
     return NextResponse.json({
       id: pitch.id,
