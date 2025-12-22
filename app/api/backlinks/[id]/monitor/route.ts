@@ -139,6 +139,8 @@ export async function POST(
 
       if (linkFound) {
         updates.is_active = true
+        updates.is_verified = true
+        updates.verification_status = 'verified'
         updates.failure_count = 0
         
         // Update link_type if it changed
