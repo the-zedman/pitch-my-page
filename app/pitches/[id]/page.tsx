@@ -215,17 +215,13 @@ export default function PitchDetailPage() {
             )}
 
             {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-gray-200">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 pt-6 border-t border-gray-200">
               <div>
-                <div className="text-2xl font-bold text-gray-900">{pitch.upvotes}</div>
+                <div className="text-2xl font-bold text-gray-900">{pitch.upvotes || 0}</div>
                 <div className="text-sm text-gray-600">Upvotes</div>
               </div>
               <div>
-                <div className="text-2xl font-bold text-gray-900">{pitch.downvotes}</div>
-                <div className="text-sm text-gray-600">Downvotes</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-gray-900">{pitch.comments_count}</div>
+                <div className="text-2xl font-bold text-gray-900">{pitch.comments_count || 0}</div>
                 <div className="text-sm text-gray-600">Comments</div>
               </div>
               <div>

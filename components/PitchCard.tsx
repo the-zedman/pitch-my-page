@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { ThumbsUp, ThumbsDown, MessageCircle, Eye } from 'lucide-react'
+import { Heart, MessageSquare, Eye } from 'lucide-react'
 import { Pitch } from '@/lib/supabase/types'
 import { formatDate } from '@/lib/utils'
 
@@ -10,12 +10,12 @@ interface PitchCardProps {
       avatar_url: string | null
     }
   }
-  onVote?: (pitchId: string, voteType: 'upvote' | 'downvote') => void
-  userVote?: 'upvote' | 'downvote' | null
+  onVote?: (pitchId: string, voteType: 'upvote') => void
+  userVote?: 'upvote' | null
 }
 
 export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
-  const voteCount = pitch.upvotes - pitch.downvotes
+  const voteCount = pitch.upvotes || 0
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
@@ -65,40 +65,28 @@ export default function PitchCard({ pitch, onVote, userVote }: PitchCardProps) {
         {/* Engagement Metrics */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-200">
           <div className="flex items-center gap-4">
-            {/* Vote Buttons */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => onVote?.(pitch.id, 'upvote')}
-                className={`p-2 rounded-lg transition ${
-                  userVote === 'upvote'
-                    ? 'bg-accent-eggshell text-primary-500'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-                aria-label="Upvote"
-              >
-                <ThumbsUp className="w-4 h-4" />
-              </button>
-              <span className="text-sm font-medium text-gray-700 min-w-[2rem] text-center">
-                {voteCount > 0 ? '+' : ''}{voteCount}
-              </span>
-              <button
-                onClick={() => onVote?.(pitch.id, 'downvote')}
-                className={`p-2 rounded-lg transition ${
-                  userVote === 'downvote'
-                    ? 'bg-red-100 text-red-600'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-                aria-label="Downvote"
-              >
-                <ThumbsDown className="w-4 h-4" />
-              </button>
-            </div>
+            {/* Upvote Button */}
+            <button
+              onClick={() => onVote?.(pitch.id, 'upvote')}
+              className={`flex items-center gap-2 px-3 py-2 rounded-lg transition ${
+                userVote === 'upvote'
+                  ? 'bg-red-50 text-red-600 border border-red-200'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 border border-transparent'
+              }`}
+              aria-label="Upvote"
+            >
+              <Heart className={`w-4 h-4 ${userVote === 'upvote' ? 'fill-current' : ''}`} />
+              <span className="text-sm font-medium">{voteCount}</span>
+            </button>
 
             {/* Comments */}
-            <div className="flex items-center gap-1 text-gray-600">
-              <MessageCircle className="w-4 h-4" />
-              <span className="text-sm">{pitch.comments_count || 0}</span>
-            </div>
+            <Link
+              href={`/pitches/${pitch.id}#comments`}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition border border-transparent"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span className="text-sm font-medium">{pitch.comments_count || 0}</span>
+            </Link>
 
             {/* Views */}
             <div className="flex items-center gap-1 text-gray-600">

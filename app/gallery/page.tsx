@@ -39,7 +39,7 @@ export default function GalleryPage() {
     }
   }
 
-  const handleVote = async (pitchId: string, voteType: 'upvote' | 'downvote') => {
+  const handleVote = async (pitchId: string, voteType: 'upvote') => {
     // TODO: Implement voting API
     console.log('Vote:', pitchId, voteType)
   }
