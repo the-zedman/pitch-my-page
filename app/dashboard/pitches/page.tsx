@@ -57,7 +57,33 @@ export default function DashboardPitchesPage() {
         throw pitchesError
       }
 
-      setPitches(pitchesData || [])
+      // Fetch backlinks for all pitches to check reciprocal link status
+      const pitchIds = pitchesData?.map(p => p.id) || []
+      let backlinksMap: Record<string, boolean> = {}
+      
+      if (pitchIds.length > 0) {
+        const { data: backlinksData } = await supabase
+          .from('backlinks')
+          .select('pitch_id, link_type, is_reciprocal, is_verified')
+          .in('pitch_id', pitchIds)
+          .eq('is_reciprocal', true)
+          .eq('link_type', 'dofollow')
+          .eq('is_verified', true)
+
+        // Create a map of pitch_id -> has reciprocal link
+        backlinksMap = {}
+        backlinksData?.forEach(backlink => {
+          backlinksMap[backlink.pitch_id] = true
+        })
+      }
+
+      // Add reciprocal link status to each pitch
+      const pitchesWithStatus = pitchesData?.map(pitch => ({
+        ...pitch,
+        hasReciprocalLink: !!backlinksMap[pitch.id]
+      })) || []
+
+      setPitches(pitchesWithStatus as any)
     } catch (err: any) {
       console.error('Error loading pitches:', err)
       setError(err.message || 'Failed to load pitches')
@@ -280,6 +306,9 @@ export default function DashboardPitchesPage() {
                       Status
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Reciprocal Link
+                    </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Upvotes
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -308,6 +337,19 @@ export default function DashboardPitchesPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {getStatusBadge(pitch.status)}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {(pitch as any).hasReciprocalLink ? (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            <CheckCircle className="w-3 h-3" />
+                            Active
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                            <Clock className="w-3 h-3" />
+                            Not Added
+                          </span>
+                        )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         {pitch.upvotes}
