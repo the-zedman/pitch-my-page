@@ -193,9 +193,9 @@ export async function sendPitchSubmissionEmail(
   const pitchPageUrl = `${appUrl}/pitches/${pitchId}`
   const reVerifyUrl = `${appUrl}/dashboard/pitches`
   
-  // HTML snippets for reciprocal links
-  const pitchMyPageHtml = `<a href="${appUrl}" rel="dofollow">Pitch My Page</a>`
-  const appIdeasFinderHtml = `<a href="https://www.appideasfinder.com" rel="dofollow">App Ideas Finder</a>`
+  // HTML snippets for reciprocal links (display the actual HTML code)
+  const pitchMyPageHtmlCode = `<a href="${appUrl}" rel="dofollow">Pitch My Page</a>`
+  const appIdeasFinderHtmlCode = `<a href="https://www.appideasfinder.com" rel="dofollow">App Ideas Finder</a>`
   
   let reciprocalSection = ''
   let thankYouSection = ''
@@ -220,11 +220,11 @@ export async function sendPitchSubmissionEmail(
         </ol>
         <div style="background: #fff; padding: 15px; margin: 15px 0; border-radius: 4px; border: 1px solid #d1d5db;">
           <p style="margin: 0 0 10px 0; color: #374151; font-weight: 600; font-size: 14px;">Option 1: Link to Pitch My Page</p>
-          <code style="display: block; background: #f3f4f6; padding: 10px; border-radius: 4px; font-size: 12px; color: #1f2937; word-break: break-all;">${pitchMyPageHtml}</code>
+          <pre style="background: #f3f4f6; padding: 15px; border-radius: 4px; font-size: 13px; color: #1f2937; margin: 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #e5e7eb;">${pitchMyPageHtmlCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
         </div>
         <div style="background: #fff; padding: 15px; margin: 15px 0; border-radius: 4px; border: 1px solid #d1d5db;">
           <p style="margin: 0 0 10px 0; color: #374151; font-weight: 600; font-size: 14px;">Option 2: Link to App Ideas Finder</p>
-          <code style="display: block; background: #f3f4f6; padding: 10px; border-radius: 4px; font-size: 12px; color: #1f2937; word-break: break-all;">${appIdeasFinderHtml}</code>
+          <pre style="background: #f3f4f6; padding: 15px; border-radius: 4px; font-size: 13px; color: #1f2937; margin: 0; overflow-x: auto; font-family: 'Courier New', Courier, monospace; white-space: pre-wrap; word-wrap: break-word; border: 1px solid #e5e7eb;">${appIdeasFinderHtmlCode.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
         </div>
         <p style="margin: 15px 0 10px 0; color: #92400e;">2. Once you've added the link, click the button below to re-verify and upgrade your backlink to DOFOLLOW:</p>
         <div style="text-align: center; margin: 20px 0;">
