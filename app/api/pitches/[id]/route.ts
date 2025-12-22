@@ -5,9 +5,10 @@ import { verifyReciprocalLinks } from '@/lib/utils/reciprocal'
 // PUT - Update a pitch
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
@@ -27,7 +28,7 @@ export async function PUT(
     const { data: existingPitch, error: fetchError } = await supabase
       .from('pitches')
       .select('id, user_id, url')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -60,11 +61,11 @@ export async function PUT(
           const { data: existingBacklinks } = await supabase
             .from('backlinks')
             .select('*')
-            .eq('pitch_id', params.id)
+            .eq('pitch_id', id)
             .eq('is_reciprocal', true)
 
           const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
-          const pitchPageUrl = `${appUrl}/pitches/${params.id}`
+          const pitchPageUrl = `${appUrl}/pitches/${id}`
 
           // Update or create backlinks for verified reciprocal URLs
           // Create one backlink per verified reciprocal URL
@@ -93,7 +94,7 @@ export async function PUT(
                 .from('backlinks')
                 .insert({
                   user_id: user.id,
-                  pitch_id: params.id,
+                  pitch_id: id,
                   source_url: pitchPageUrl,
                   target_url: existingPitch.url,
                   link_type: 'dofollow',
@@ -119,7 +120,7 @@ export async function PUT(
     const { data: pitch, error: updateError } = await supabase
       .from('pitches')
       .update(updates)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single()
 
@@ -147,9 +148,10 @@ export async function PUT(
 // DELETE - Delete a pitch
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const supabase = await createServerSupabaseClient(request)
     
     // Get authenticated user
@@ -166,7 +168,7 @@ export async function DELETE(
     const { data: existingPitch, error: fetchError } = await supabase
       .from('pitches')
       .select('id, user_id')
-      .eq('id', params.id)
+      .eq('id', id)
       .eq('user_id', user.id)
       .single()
 
@@ -181,7 +183,7 @@ export async function DELETE(
     const { error: deleteError } = await supabase
       .from('pitches')
       .delete()
-      .eq('id', params.id)
+      .eq('id', id)
 
     if (deleteError) {
       console.error('Error deleting pitch:', deleteError)

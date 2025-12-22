@@ -75,6 +75,10 @@ export default function DashboardPitchesPage() {
     try {
       const response = await fetch(`/api/pitches/${pitchId}`, {
         method: 'DELETE',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       })
 
       if (!response.ok) {
@@ -83,9 +87,13 @@ export default function DashboardPitchesPage() {
         return
       }
 
+      const data = await response.json()
+      console.log('Delete response:', data)
+
       // Reload pitches
       loadPitches()
     } catch (err: any) {
+      console.error('Delete error:', err)
       alert('Error deleting pitch: ' + err.message)
     } finally {
       setDeletingId(null)
