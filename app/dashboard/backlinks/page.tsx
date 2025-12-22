@@ -71,7 +71,7 @@ export default function BacklinksPage() {
   }
 
   const handleCheck = async (backlinkId: string) => {
-    setMonitoringId(backlinkId)
+    setCheckingId(backlinkId)
     try {
       const response = await fetch(`/api/backlinks/${backlinkId}/monitor`, {
         method: 'POST',
@@ -84,16 +84,16 @@ export default function BacklinksPage() {
       const data = await response.json()
 
       if (!response.ok) {
-        alert(data.error || 'Monitoring check failed')
+        alert(data.error || 'Check failed')
         return
       }
 
       // Silently update - no alert for individual checks
       loadData() // Reload to show updated status
     } catch (err: any) {
-      alert('Error monitoring backlink: ' + err.message)
+      alert('Error checking backlink: ' + err.message)
     } finally {
-      setMonitoringId(null)
+      setCheckingId(null)
     }
   }
 
