@@ -168,7 +168,7 @@ export default function LandingPage() {
                         alt="Pitch My Page"
                         width={150}
                         height={40}
-                        className="h-8 w-auto mb-4"
+                        className="h-8 w-auto mb-4 rounded-lg"
                       />
                       <p className="text-sm">Ethical indie content promotion platform</p>
                     </div>

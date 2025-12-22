@@ -47,7 +47,7 @@ export default function DashboardHeader() {
               alt="Pitch My Page"
               width={200}
               height={60}
-              className="h-12 w-auto"
+              className="h-12 w-auto rounded-lg"
               priority
             />
           </Link>
