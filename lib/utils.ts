@@ -12,9 +12,8 @@ export function formatDate(date: string | Date): string {
   const year = d.getFullYear()
   const hours = String(d.getHours()).padStart(2, '0')
   const minutes = String(d.getMinutes()).padStart(2, '0')
-  const seconds = String(d.getSeconds()).padStart(2, '0')
   
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+  return `${day}/${month}/${year} ${hours}:${minutes}`
 }
 
 export function formatCurrency(amount: number): string {
