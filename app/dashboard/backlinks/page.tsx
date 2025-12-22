@@ -70,30 +70,7 @@ export default function BacklinksPage() {
     }
   }
 
-  const handleVerify = async (backlinkId: string) => {
-    setVerifyingId(backlinkId)
-    try {
-      const response = await fetch(`/api/backlinks/${backlinkId}/verify`, {
-        method: 'POST',
-      })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        alert(data.error || 'Verification failed')
-        return
-      }
-
-      alert(data.message || 'Backlink verified successfully!')
-      loadData() // Reload to show updated status
-    } catch (err: any) {
-      alert('Error verifying backlink: ' + err.message)
-    } finally {
-      setVerifyingId(null)
-    }
-  }
-
-  const handleMonitor = async (backlinkId: string) => {
+  const handleCheck = async (backlinkId: string) => {
     setMonitoringId(backlinkId)
     try {
       const response = await fetch(`/api/backlinks/${backlinkId}/monitor`, {
