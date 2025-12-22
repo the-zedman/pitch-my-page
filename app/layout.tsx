@@ -71,9 +71,6 @@ export const metadata: Metadata = {
     // Add Google Search Console verification when available
     // google: 'your-google-verification-code',
   },
-  other: {
-    'apple-mobile-web-app-title': 'Pitch My Page',
-  },
 }
 
 export default function RootLayout({
