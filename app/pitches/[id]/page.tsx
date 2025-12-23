@@ -29,7 +29,23 @@ export default function PitchDetailPage() {
 
   useEffect(() => {
     loadPitch()
+    incrementView()
   }, [pitchId])
+
+  const incrementView = async () => {
+    try {
+      // Increment view count (fire and forget, don't wait for response)
+      fetch(`/api/pitches/${pitchId}/view`, {
+        method: 'POST',
+      }).catch(error => {
+        console.error('Error incrementing view:', error)
+        // Silently fail - don't interrupt user experience
+      })
+    } catch (error) {
+      // Silently fail
+      console.error('Error incrementing view:', error)
+    }
+  }
 
   const loadPitch = async () => {
     try {
