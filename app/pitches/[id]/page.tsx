@@ -16,6 +16,7 @@ import {
   Loader2
 } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
+import CommentsSection from '@/components/CommentsSection'
 
 export default function PitchDetailPage() {
   const params = useParams()
@@ -240,6 +241,9 @@ export default function PitchDetailPage() {
             )}
           </div>
         </div>
+
+        {/* Comments Section */}
+        <CommentsSection pitchId={pitchId} />
         </div>
       </div>
     </div>
