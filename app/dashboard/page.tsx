@@ -88,7 +88,7 @@ export default function DashboardPage() {
       setProfile(profileData)
 
       // Get stats
-      const [pitchesResult, backlinksResult] = await Promise.all([
+      const [pitchesResult, backlinksResult, commentsResult] = await Promise.all([
         supabase
           .from('pitches')
           .select('id', { count: 'exact', head: true })
@@ -98,13 +98,18 @@ export default function DashboardPage() {
           .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id)
           .eq('is_active', true),
+        supabase
+          .from('comments')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', user.id)
+          .eq('is_deleted', false),
       ])
 
       setStats({
         pitches: pitchesResult.count || 0,
         backlinks: backlinksResult.count || 0,
         votes_received: profileData.points || 0, // Simplified for now
-        comments_received: 0, // TODO: Calculate from comments
+        comments_received: commentsResult.count || 0,
       })
 
     } catch (error) {
