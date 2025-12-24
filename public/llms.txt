@@ -19,12 +19,9 @@ Pitch My Page is a SaaS platform designed to empower founders, creators, blogger
 - **Power ($29/month)**: Everything in Basic, plus hourly monitoring alerts, auto-submit pitches on schedule, bulk CSV upload for pitches, unlimited dofollow backlinks
 
 ### Important Features
-1. **Reciprocal Link Verification**: Uses Cheerio to parse HTML and verify reciprocal links are dofollow
+1. **Reciprocal Link Verification**: Parses HTML and verifies reciprocal links are dofollow
 2. **Backlink Monitoring**: Daily cron job checks backlinks and sends email alerts based on subscription tier (weekly/daily/hourly)
-3. **Image Uploads**: Supports thumbnail (1200x630px required) and favicon uploads via Supabase Storage
-4. **Auto-Approval**: Pitches are auto-approved on submission
-5. **Row Level Security (RLS)**: Supabase RLS policies control access to data
-6. **Admin Panel**: Role-based admin access for platform management
+3. **Image Uploads**: Supports thumbnail (1200x630px required) and favicon uploads
 
 ## Business Model
 - Free tier with 2 reciprocal dofollow backlinks
