@@ -253,7 +253,7 @@ BEGIN
     <a href="/auth/signup" style="background: white; color: #667eea; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">Create Your Account →</a>
   </div>
 </div>',
-        'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&h=630&fit=crop',
+        'https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=1200&h=630&fit=crop',
         admin_user_id,
         'published',
         '2025-12-25 00:00:00+00',
