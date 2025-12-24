@@ -187,7 +187,7 @@ export default function LandingPage() {
             Ready to Pitch Your Page?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join indie creators who are building sustainable growth through ethical link building and community engagement.
+            Join indie creators who are building sustainable growth through community engagement and ethical link building.
           </p>
           <CTASection />
         </div>
