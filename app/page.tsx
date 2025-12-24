@@ -59,10 +59,10 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20 text-center">
         <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 text-balance">
-          Get Your Content Discovered and Ranked
+          Pitch Your Page, Get Discovered, Rank Higher
         </h1>
         <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto text-balance">
-          Transparent voting, genuine community feedback, and authentic rankings that surface quality content. 
+          Pitch your page to an engaged community. Transparent voting, genuine feedback, and authentic rankings surface quality content. 
           No bots, no pay-to-win, just real value for indie developers and content creators.
         </p>
         <HeroCTA />
