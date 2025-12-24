@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { X, Loader2, Tag } from 'lucide-react'
+import { X, Loader2, Tag, Upload } from 'lucide-react'
 import { Pitch } from '@/lib/supabase/types'
 import ReciprocalLinkSection from './ReciprocalLinkSection'
 
@@ -42,6 +42,10 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [verifiedReciprocalUrls, setVerifiedReciprocalUrls] = useState<string[]>([])
+  const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
+  const [uploadingFavicon, setUploadingFavicon] = useState(false)
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null)
+  const [faviconPreview, setFaviconPreview] = useState<string | null>(null)
 
   const {
     register,
@@ -80,6 +84,94 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
 
   const removeTag = (tagToRemove: string) => {
     setValue('tags', tags.filter(tag => tag !== tagToRemove))
+  }
+
+  // Initialize previews from pitch data
+  useEffect(() => {
+    if (pitch.thumbnail_url) {
+      setThumbnailPreview(pitch.thumbnail_url)
+    }
+    if ((pitch as any).favicon_url) {
+      setFaviconPreview((pitch as any).favicon_url)
+    }
+  }, [pitch])
+
+  const handleImageUpload = async (file: File, type: 'thumbnail' | 'favicon') => {
+    if (type === 'thumbnail') {
+      setUploadingThumbnail(true)
+    } else {
+      setUploadingFavicon(true)
+    }
+
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('type', type)
+
+      const response = await fetch('/api/upload-image', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        alert(error.error || 'Failed to upload image')
+        return
+      }
+
+      const data = await response.json()
+      
+      if (type === 'thumbnail') {
+        setValue('thumbnail_url', data.url)
+        setThumbnailPreview(data.url)
+      } else {
+        setValue('favicon_url', data.url)
+        setFaviconPreview(data.url)
+      }
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Failed to upload image. Please try again.')
+    } finally {
+      if (type === 'thumbnail') {
+        setUploadingThumbnail(false)
+      } else {
+        setUploadingFavicon(false)
+      }
+    }
+  }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'thumbnail' | 'favicon') => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert(`File size exceeds 5MB limit. Current size: ${(file.size / 1024 / 1024).toFixed(2)}MB`)
+      return
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+    if (type === 'favicon') {
+      allowedTypes.push('image/x-icon', 'image/vnd.microsoft.icon')
+    }
+    
+    if (!allowedTypes.includes(file.type)) {
+      alert(`Invalid file type. Allowed types: ${allowedTypes.join(', ')}`)
+      return
+    }
+
+    handleImageUpload(file, type)
+  }
+
+  const clearImage = (type: 'thumbnail' | 'favicon') => {
+    if (type === 'thumbnail') {
+      setValue('thumbnail_url', null)
+      setThumbnailPreview(null)
+    } else {
+      setValue('favicon_url', null)
+      setFaviconPreview(null)
+    }
   }
 
   const onSubmit = async (data: EditPitchFormData) => {
@@ -302,6 +394,98 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
               )}
             </div>
           )}
+
+          {/* Thumbnail Image */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Thumbnail Image
+              <span className="text-xs text-gray-500 ml-2">(Optional)</span>
+            </label>
+            <div className="space-y-2">
+              {(watch('thumbnail_url') || thumbnailPreview) && (
+                <div className="relative w-full min-h-48 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center p-4">
+                  <img
+                    src={thumbnailPreview || watch('thumbnail_url') || ''}
+                    alt="Thumbnail preview"
+                    className="max-w-full max-h-96 object-contain"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => clearImage('thumbnail')}
+                    className="absolute top-2 right-2 p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                    title="Remove image"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <Upload className="w-4 h-4" />
+                  <span className="text-sm">
+                    {uploadingThumbnail ? 'Uploading...' : (watch('thumbnail_url') || thumbnailPreview ? 'Change Image' : 'Upload Image')}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                    onChange={(e) => handleImageChange(e, 'thumbnail')}
+                    className="hidden"
+                    disabled={uploadingThumbnail}
+                  />
+                </label>
+                {uploadingThumbnail && <Loader2 className="w-4 h-4 animate-spin text-primary-500" />}
+              </div>
+              <p className="text-xs text-gray-500">
+                Max file size: 5MB. Required dimensions: 1200x630px (OG image standard). Formats: JPEG, PNG, GIF, or WebP
+              </p>
+            </div>
+          </div>
+
+          {/* Favicon/Logo Icon */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Favicon/Logo Icon
+              <span className="text-xs text-gray-500 ml-2">(Optional)</span>
+            </label>
+            <div className="space-y-2">
+              {(watch('favicon_url') || faviconPreview) && (
+                <div className="relative w-24 h-24 bg-gray-100 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-gray-300">
+                  <img
+                    src={faviconPreview || watch('favicon_url') || ''}
+                    alt="Favicon preview"
+                    className="w-full h-full object-contain"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => clearImage('favicon')}
+                    className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                    title="Remove favicon"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                  <Upload className="w-4 h-4" />
+                  <span className="text-sm">
+                    {uploadingFavicon ? 'Uploading...' : (watch('favicon_url') || faviconPreview ? 'Change Favicon' : 'Upload Favicon')}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp,image/x-icon,image/vnd.microsoft.icon"
+                    onChange={(e) => handleImageChange(e, 'favicon')}
+                    className="hidden"
+                    disabled={uploadingFavicon}
+                  />
+                </label>
+                {uploadingFavicon && <Loader2 className="w-4 h-4 animate-spin text-primary-500" />}
+              </div>
+              <p className="text-xs text-gray-500">
+                Max file size: 5MB. Recommended dimensions: up to 512x512px (JPEG, PNG, GIF, WebP, or ICO)
+              </p>
+            </div>
+          </div>
 
           {/* Reciprocal Backlinks Section */}
           <div>
