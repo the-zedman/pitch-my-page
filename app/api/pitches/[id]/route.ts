@@ -22,7 +22,7 @@ export async function PUT(
     }
 
     const body = await request.json()
-    const { url, title, description, tags, category, thumbnail_url, source_url, re_verify_reciprocal, launch_status, launch_date } = body
+    const { url, title, description, tags, category, thumbnail_url, favicon_url, source_url, re_verify_reciprocal, launch_status, launch_date } = body
 
     // Verify the pitch belongs to the user
     const { data: existingPitch, error: fetchError } = await supabase
@@ -51,6 +51,7 @@ export async function PUT(
     if (launch_date !== undefined) {
       updates.launch_date = launch_status === 'launching_soon' && launch_date ? launch_date : null
     }
+    if (favicon_url !== undefined) updates.favicon_url = favicon_url
 
     // If re-verifying reciprocal links
     if (re_verify_reciprocal && source_url) {

@@ -16,6 +16,7 @@ const editPitchSchema = z.object({
   tags: z.array(z.string()).min(1, 'Please add at least one tag').max(10, 'Maximum 10 tags allowed'),
   category: z.enum(['ai', 'content', 'dev-tools', 'saas', 'design', 'marketing', 'other']),
   thumbnail_url: z.string().url().optional().nullable(),
+  favicon_url: z.string().url().optional().nullable(),
   launch_status: z.enum(['live', 'launching_soon']).default('live'),
   launch_date: z.string().optional().nullable(),
 }).refine((data) => {
@@ -57,6 +58,7 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
       tags: pitch.tags || [],
       category: pitch.category || 'other',
       thumbnail_url: pitch.thumbnail_url || null,
+      favicon_url: (pitch as any).favicon_url || null,
       launch_status: (pitch as any).launch_status || 'live',
       launch_date: (pitch as any).launch_date ? new Date((pitch as any).launch_date).toISOString().split('T')[0] : null,
     },

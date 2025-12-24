@@ -52,10 +52,32 @@ export async function POST(request: NextRequest) {
       imageUrl = new URL(imageUrl, baseUrl.origin).href
     }
 
+    // Extract favicon - try multiple methods
+    let faviconUrl = $('link[rel="icon"]').attr('href') ||
+                     $('link[rel="shortcut icon"]').attr('href') ||
+                     $('link[rel="apple-touch-icon"]').attr('href') ||
+                     $('link[rel="apple-touch-icon-precomposed"]').attr('href') ||
+                     null
+    
+    // Also try common favicon paths
+    if (!faviconUrl) {
+      const baseUrl = new URL(url)
+      const commonFaviconPaths = ['/favicon.ico', '/favicon.png', '/apple-touch-icon.png']
+      // We'll just return the most common path and let the client try to fetch it
+      faviconUrl = `${baseUrl.origin}/favicon.ico`
+    }
+
+    // Resolve relative favicon URLs
+    if (faviconUrl && !faviconUrl.startsWith('http')) {
+      const baseUrl = new URL(url)
+      faviconUrl = new URL(faviconUrl, baseUrl.origin).href
+    }
+
     return NextResponse.json({
       title: ogTitle.trim(),
       description: ogDescription.trim(),
       image: imageUrl || null,
+      favicon: faviconUrl || null,
     })
   } catch (error) {
     console.error('Error fetching OG data:', error)

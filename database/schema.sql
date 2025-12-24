@@ -47,6 +47,7 @@ CREATE TABLE public.pitches (
   title TEXT NOT NULL,
   description TEXT NOT NULL CHECK (char_length(description) >= 100),
   thumbnail_url TEXT,
+  favicon_url TEXT, -- Favicon/logo icon for the pitch
   
   -- Metadata
   tags TEXT[] DEFAULT '{}',
