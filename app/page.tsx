@@ -100,8 +100,8 @@ export default function LandingPage() {
             />
             <FeatureCard
               icon={<Shield className="w-8 h-8" />}
-              title="Anti-Bot Transparency"
-              description="Verified voting, transparent logs, and fairness handicaps ensure equitable exposure for indie creators, not just VC-backed giants."
+              title="Community-Driven Rankings"
+              description="Your content rises based on real votes from real people. No pay-to-play, no hidden algorithms—just genuine community engagement that determines what gets seen."
             />
             <FeatureCard
               icon={<Users className="w-8 h-8" />}
@@ -110,18 +110,18 @@ export default function LandingPage() {
             />
             <FeatureCard
               icon={<TrendingUp className="w-8 h-8" />}
-              title="SEO Analytics"
-              description="Track your traffic, domain authority impact, and conversion metrics. See real ROI beyond temporary hype."
+              title="Perfect for Writers & Bloggers"
+              description="Get your articles, blog posts, and content discovered by an engaged audience. Whether you're a solo blogger or part of a content team, showcase your best work and build real readership."
             />
             <FeatureCard
               icon={<Star className="w-8 h-8" />}
-              title="Gamified Engagement"
-              description="Earn points, unlock badges, maintain streaks, and compete on leaderboards. Make promotion fun and rewarding."
+              title="Transparent Voting System"
+              description="Every vote is public and authentic. See what the community loves, engage with comments, and watch your content climb the rankings organically—no shortcuts, just real engagement."
             />
             <FeatureCard
               icon={<CheckCircle className="w-8 h-8" />}
-              title="Quality Assurance"
-              description="Advanced moderation, spam detection, and quality scoring. We maintain high standards so you don't have to worry."
+              title="For All Content Creators"
+              description="Whether you're an indie developer launching a product, a writer sharing your latest article, or a marketer promoting content—our platform gives everyone an equal chance to be discovered."
             />
           </div>
         </div>
