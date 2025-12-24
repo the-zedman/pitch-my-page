@@ -49,37 +49,7 @@ export async function GET(request: NextRequest) {
       .from('profiles')
       .select('*', { count: 'exact', head: true })
 
-    // Get active users (users who have been active within the time period)
-    // We'll use last_active_date from profiles, or created_at as fallback
-    const [activeLastHour, activeLastDay, activeLastWeek, activeLastMonth] = await Promise.all([
-      supabaseAdmin
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .or(`last_active_date.gte.${oneHourAgo.toISOString().split('T')[0]},created_at.gte.${oneHourAgo.toISOString()}`),
-      supabaseAdmin
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .or(`last_active_date.gte.${oneDayAgo.toISOString().split('T')[0]},created_at.gte.${oneDayAgo.toISOString()}`),
-      supabaseAdmin
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .or(`last_active_date.gte.${oneWeekAgo.toISOString().split('T')[0]},created_at.gte.${oneWeekAgo.toISOString()}`),
-      supabaseAdmin
-        .from('profiles')
-        .select('id', { count: 'exact', head: true })
-        .or(`last_active_date.gte.${oneMonthAgo.toISOString().split('T')[0]},created_at.gte.${oneMonthAgo.toISOString()}`),
-    ])
-
-    // Better approach: Check activity from auth sessions or user actions
-    // For now, let's use a simpler approach - check users who have created pitches/comments/votes recently
-    const activeUsersHourQuery = supabaseAdmin
-      .from('pitches')
-      .select('user_id', { count: 'exact' })
-      .gte('created_at', oneHourAgo.toISOString())
-      .union(
-        supabaseAdmin.from('comments').select('user_id').gte('created_at', oneHourAgo.toISOString()).limit(1000),
-        supabaseAdmin.from('votes').select('user_id').gte('created_at', oneHourAgo.toISOString()).limit(1000)
-      )
+    // For active users, count unique user_ids from recent activity across pitches, comments, and votes
 
     // Get pitch stats
     const [totalPitches, approvedPitches, pendingPitches, rejectedPitches] = await Promise.all([
