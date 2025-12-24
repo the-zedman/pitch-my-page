@@ -90,14 +90,22 @@ export async function POST(request: NextRequest) {
       
       // If we got dimensions, validate them
       if (width > 0 && height > 0) {
-        const maxWidth = imageType === 'favicon' ? FAVICON_MAX_WIDTH : THUMBNAIL_MAX_WIDTH
-        const maxHeight = imageType === 'favicon' ? FAVICON_MAX_HEIGHT : THUMBNAIL_MAX_HEIGHT
-        
-        if (width > maxWidth || height > maxHeight) {
-          return NextResponse.json(
-            { error: `Image dimensions exceed limits. Max dimensions for ${imageType}: ${maxWidth}x${maxHeight}px. Your image: ${width}x${height}px` },
-            { status: 400 }
-          )
+        if (imageType === 'thumbnail') {
+          // Thumbnail should be exactly 1200x630 (OG image standard)
+          if (width !== THUMBNAIL_WIDTH || height !== THUMBNAIL_HEIGHT) {
+            return NextResponse.json(
+              { error: `Thumbnail must be exactly ${THUMBNAIL_WIDTH}x${THUMBNAIL_HEIGHT}px (OG image standard). Your image: ${width}x${height}px` },
+              { status: 400 }
+            )
+          }
+        } else if (imageType === 'favicon') {
+          // Favicon can be up to 512x512
+          if (width > FAVICON_MAX_WIDTH || height > FAVICON_MAX_HEIGHT) {
+            return NextResponse.json(
+              { error: `Favicon dimensions exceed limits. Max dimensions: ${FAVICON_MAX_WIDTH}x${FAVICON_MAX_HEIGHT}px. Your image: ${width}x${height}px` },
+              { status: 400 }
+            )
+          }
         }
       }
     } catch (dimError) {
