@@ -482,7 +482,7 @@ export default function SubmissionForm() {
                 {uploadingThumbnail && <Loader2 className="w-4 h-4 animate-spin text-primary-500" />}
               </div>
               <p className="text-xs text-gray-500">
-                Max file size: 5MB. Recommended dimensions: up to 2000x2000px (JPEG, PNG, GIF, or WebP)
+                Max file size: 5MB. Required dimensions: 1200x630px (OG image standard). Formats: JPEG, PNG, GIF, or WebP
               </p>
             </div>
           </div>

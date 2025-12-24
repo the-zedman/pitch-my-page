@@ -5,9 +5,9 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
 const ALLOWED_FAVICON_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'image/x-icon', 'image/vnd.microsoft.icon']
 
-// Recommended dimensions
-const THUMBNAIL_MAX_WIDTH = 2000
-const THUMBNAIL_MAX_HEIGHT = 2000
+// Recommended dimensions (OG image standard: 1200x630)
+const THUMBNAIL_WIDTH = 1200
+const THUMBNAIL_HEIGHT = 630
 const FAVICON_MAX_WIDTH = 512
 const FAVICON_MAX_HEIGHT = 512
 
