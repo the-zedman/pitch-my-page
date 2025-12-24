@@ -68,24 +68,6 @@ export default function LandingPage() {
         <HeroCTA />
       </section>
 
-      {/* Stats */}
-      <section className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          <div className="text-center text-white">
-            <div className="text-4xl font-bold mb-2">1,000+</div>
-            <div className="text-white/90">Active Users</div>
-          </div>
-          <div className="text-center text-white">
-            <div className="text-4xl font-bold mb-2">5,000+</div>
-            <div className="text-white/90">Pitches Submitted</div>
-          </div>
-          <div className="text-center text-white">
-            <div className="text-4xl font-bold mb-2">95%+</div>
-            <div className="text-white/90">Backlink Uptime</div>
-          </div>
-        </div>
-      </section>
-
       {/* Features */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
