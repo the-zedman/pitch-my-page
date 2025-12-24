@@ -170,7 +170,7 @@ export default function LandingPage() {
                 'Everything in the BASIC plan, plus',
                 'Hourly backlink monitoring and alerts',
                 'Auto-submit pitches on schedule',
-                'Bulk upload (CSV) of pitchs',
+                'Bulk upload (CSV) of pitches',
                 'Unlimited DOFOLLOW backlinks'
               ]}
               highlighted={false}
