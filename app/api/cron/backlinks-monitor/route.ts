@@ -216,13 +216,46 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Send alert emails
+    // Send alert emails based on subscription tier (weekly for free, daily for paid)
     for (const alert of alerts) {
       try {
+        // Get user profile to check subscription tier
+        const { data: profile } = await supabaseAdmin
+          .from('profiles')
+          .select('subscription_tier')
+          .eq('id', alert.userId)
+          .single()
+
+        const subscriptionTier = profile?.subscription_tier || 'free'
+        
+        // Get the backlink to check last alert sent date
+        const { data: backlinkData } = await supabaseAdmin
+          .from('backlinks')
+          .select('last_alert_sent_at')
+          .eq('id', alert.backlinkId)
+          .single()
+
+        const lastAlertSent = backlinkData?.last_alert_sent_at ? new Date(backlinkData.last_alert_sent_at) : null
+        
+        // Determine alert frequency: weekly for free, daily for paid
+        const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
+        const shouldSendAlert = !lastAlertSent || 
+          (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
+
+        if (!shouldSendAlert) {
+          continue // Skip alert if not enough time has passed
+        }
+
         const { data: user } = await supabaseAdmin.auth.admin.getUserById(alert.userId)
         if (user?.user?.email) {
           const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
           await sendBacklinkAlertEmail(user.user.email, alert.sourceUrl, alert.type)
+          
+          // Update last_alert_sent_at
+          await supabaseAdmin
+            .from('backlinks')
+            .update({ last_alert_sent_at: new Date().toISOString() })
+            .eq('id', alert.backlinkId)
         }
       } catch (emailError) {
         console.error(`Error sending alert email for backlink ${alert.backlinkId}:`, emailError)

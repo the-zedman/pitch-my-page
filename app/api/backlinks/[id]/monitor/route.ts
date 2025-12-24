@@ -153,12 +153,35 @@ export async function POST(
         updates.last_failed_at = new Date().toISOString()
         
         // Send alert email if backlink was previously active and is now removed
+        // Check subscription tier for alert frequency
         if (backlink.is_active) {
           try {
-            const { data: { user: authUser } } = await supabase.auth.getUser()
-            if (authUser?.email) {
-              const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
-              await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('subscription_tier')
+              .eq('id', user.id)
+              .single()
+
+            const subscriptionTier = profile?.subscription_tier || 'free'
+            const lastAlertSent = backlink.last_alert_sent_at ? new Date(backlink.last_alert_sent_at) : null
+            
+            // Determine alert frequency: weekly for free, daily for paid
+            const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
+            const shouldSendAlert = !lastAlertSent || 
+              (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
+
+            if (shouldSendAlert) {
+              const { data: { user: authUser } } = await supabase.auth.getUser()
+              if (authUser?.email) {
+                const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+                await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+                
+                // Update last_alert_sent_at
+                await supabase
+                  .from('backlinks')
+                  .update({ last_alert_sent_at: new Date().toISOString() })
+                  .eq('id', id)
+              }
             }
           } catch (emailError) {
             console.error('Error sending backlink removed alert email:', emailError)
@@ -169,12 +192,31 @@ export async function POST(
       // Check if link type changed from dofollow to nofollow (critical alert)
       if (linkFound && backlink.link_type === 'dofollow' && detectedLinkType === 'nofollow') {
         updates.link_type = 'nofollow'
-        // Send alert email about type change
+        // Send alert email about type change (check subscription tier for frequency)
         try {
-          const { data: { user: authUser } } = await supabase.auth.getUser()
-          if (authUser?.email) {
-            const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
-            await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'nofollow')
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('subscription_tier')
+            .eq('id', user.id)
+            .single()
+
+          const subscriptionTier = profile?.subscription_tier || 'free'
+          const lastAlertSent = backlink.last_alert_sent_at ? new Date(backlink.last_alert_sent_at) : null
+          
+          // Determine alert frequency: weekly for free, daily for paid
+          const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
+          const shouldSendAlert = !lastAlertSent || 
+            (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
+
+          if (shouldSendAlert) {
+            const { data: { user: authUser } } = await supabase.auth.getUser()
+            if (authUser?.email) {
+              const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+              await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'nofollow')
+              
+              // Update last_alert_sent_at
+              updates.last_alert_sent_at = new Date().toISOString()
+            }
           }
         } catch (emailError) {
           console.error('Error sending nofollow alert email:', emailError)
@@ -263,12 +305,35 @@ export async function POST(
         .eq('id', id)
 
       // Send alert email if backlink was previously active and is now down
+      // Check subscription tier for alert frequency
       if (wasActive) {
         try {
-          const { data: { user: authUser } } = await supabase.auth.getUser()
-          if (authUser?.email) {
-            const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
-            await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('subscription_tier')
+            .eq('id', user.id)
+            .single()
+
+          const subscriptionTier = profile?.subscription_tier || 'free'
+          const lastAlertSent = backlink.last_alert_sent_at ? new Date(backlink.last_alert_sent_at) : null
+          
+          // Determine alert frequency: weekly for free, daily for paid
+          const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
+          const shouldSendAlert = !lastAlertSent || 
+            (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
+
+          if (shouldSendAlert) {
+            const { data: { user: authUser } } = await supabase.auth.getUser()
+            if (authUser?.email) {
+              const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+              await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+              
+              // Update last_alert_sent_at
+              await supabase
+                .from('backlinks')
+                .update({ last_alert_sent_at: new Date().toISOString() })
+                .eq('id', id)
+            }
           }
         } catch (emailError) {
           console.error('Error sending backlink down alert email:', emailError)

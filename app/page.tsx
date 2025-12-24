@@ -142,39 +142,27 @@ export default function LandingPage() {
               price="$0"
               features={[
                 'Submit unlimited pitches',
-                'Community Voting and Comments',
-                'Unlimited backlink monitoring with daily alerts',
+                'Community voting and comments',
+                'Unlimited backlink monitoring with weekly alerts',
                 '2 reciprocal DOFOLLOW backlinks'
               ]}
               highlighted={false}
             />
             <PricingCard
               name="Basic"
-              price="$1"
-              period="/month"
-              features={[
-                '1 extra dofollow link',
-                'Full community access',
-                'Email alerts',
-                'Basic analytics'
-              ]}
-              highlighted={false}
-            />
-            <PricingCard
-              name="Plus"
               price="$5"
               period="/month"
               features={[
-                '10 dofollow links',
-                'Advanced analytics',
-                'Collaboration tools',
-                'Bulk upload (CSV)'
+                'Everything in the FREE plan, plus',
+                'Daily backlink monitoring and alerts',
+                'Bulk upload (CSV) of backlinks to monitor',
+                '10 extra DOFOLLOW links'
               ]}
               highlighted={true}
             />
             <PricingCard
               name="Power"
-              price="$39"
+              price="$29"
               period="/month"
               features={[
                 'Unlimited dofollow links',

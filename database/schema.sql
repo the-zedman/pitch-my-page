@@ -24,7 +24,7 @@ CREATE TABLE public.profiles (
   last_active_date DATE,
   
   -- Subscription
-  subscription_tier TEXT DEFAULT 'free' CHECK (subscription_tier IN ('free', 'basic', 'plus', 'power')),
+  subscription_tier TEXT DEFAULT 'free' CHECK (subscription_tier IN ('free', 'basic', 'power')),
   subscription_status TEXT DEFAULT 'active' CHECK (subscription_status IN ('active', 'canceled', 'past_due')),
   stripe_customer_id TEXT UNIQUE,
   subscription_ends_at TIMESTAMPTZ,
