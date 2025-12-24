@@ -52,6 +52,10 @@ CREATE TABLE public.pitches (
   tags TEXT[] DEFAULT '{}',
   category TEXT CHECK (category IN ('ai', 'content', 'dev-tools', 'saas', 'design', 'marketing', 'other')),
   
+  -- Launch status
+  launch_status TEXT DEFAULT 'live' CHECK (launch_status IN ('live', 'launching_soon')),
+  launch_date TIMESTAMPTZ, -- Required if launch_status is 'launching_soon'
+  
   -- Status & Moderation
   status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'flagged')),
   quality_score INTEGER DEFAULT 50 CHECK (quality_score >= 0 AND quality_score <= 100),

@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Heart, MessageSquare, Eye } from 'lucide-react'
+import { Heart, MessageSquare, Eye, Rocket } from 'lucide-react'
 import { Pitch } from '@/lib/supabase/types'
 import { formatDate } from '@/lib/utils'
 
@@ -40,6 +40,21 @@ export default function PitchCard({ pitch, onVote, userVote, isVoting }: PitchCa
       )}
 
       <div className="p-6">
+        {/* Launch Status Badge */}
+        {(pitch as any).launch_status === 'launching_soon' && (
+          <div className="mb-3">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+              <Rocket className="w-3 h-3" />
+              Launching Soon
+              {(pitch as any).launch_date && (
+                <span className="ml-1">
+                  {new Date((pitch as any).launch_date).toLocaleDateString()}
+                </span>
+              )}
+            </span>
+          </div>
+        )}
+
         {/* Title */}
         <Link href={`/pitches/${pitch.id}`}>
               <h3 className="text-xl font-semibold text-gray-900 mb-2 hover:text-primary-500 transition">

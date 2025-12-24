@@ -13,7 +13,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
-  Loader2
+  Loader2,
+  Rocket
 } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 import CommentsSection from '@/components/CommentsSection'
@@ -172,7 +173,20 @@ export default function PitchDetailPage() {
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
               <div className="flex-1">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">{pitch.title}</h1>
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-bold text-gray-900">{pitch.title}</h1>
+                  {(pitch as any).launch_status === 'launching_soon' && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                      <Rocket className="w-4 h-4" />
+                      Launching Soon
+                      {(pitch as any).launch_date && (
+                        <span className="ml-1">
+                          {new Date((pitch as any).launch_date).toLocaleDateString()}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </div>
                 <div className="flex items-center gap-4 text-sm text-gray-600 mb-4">
                   <a
                     href={pitch.url}

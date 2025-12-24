@@ -16,6 +16,17 @@ const editPitchSchema = z.object({
   tags: z.array(z.string()).min(1, 'Please add at least one tag').max(10, 'Maximum 10 tags allowed'),
   category: z.enum(['ai', 'content', 'dev-tools', 'saas', 'design', 'marketing', 'other']),
   thumbnail_url: z.string().url().optional().nullable(),
+  launch_status: z.enum(['live', 'launching_soon']).default('live'),
+  launch_date: z.string().optional().nullable(),
+}).refine((data) => {
+  // If launching_soon, launch_date is required
+  if (data.launch_status === 'launching_soon' && !data.launch_date) {
+    return false
+  }
+  return true
+}, {
+  message: 'Launch date is required when status is "Launching Soon"',
+  path: ['launch_date'],
 })
 
 type EditPitchFormData = z.infer<typeof editPitchSchema>
@@ -46,6 +57,8 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
       tags: pitch.tags || [],
       category: pitch.category || 'other',
       thumbnail_url: pitch.thumbnail_url || null,
+      launch_status: (pitch as any).launch_status || 'live',
+      launch_date: (pitch as any).launch_date ? new Date((pitch as any).launch_date).toISOString().split('T')[0] : null,
     },
   })
 
@@ -79,6 +92,8 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
           source_url: data.url, // Pass the source URL for reciprocal check
           verified_reciprocal_urls: verifiedReciprocalUrls, // Pass array of verified URLs
           re_verify_reciprocal: verifiedReciprocalUrls.length > 0, // Flag to re-verify
+          launch_status: data.launch_status,
+          launch_date: data.launch_status === 'launching_soon' && data.launch_date ? data.launch_date : null,
         }),
       })
 
@@ -238,6 +253,52 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
               ))}
             </div>
           </div>
+
+          {/* Launch Status */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <div className="flex gap-4">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="live"
+                  {...register('launch_status')}
+                  className="text-primary-500"
+                />
+                <span className="text-sm">Live</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="launching_soon"
+                  {...register('launch_status')}
+                  className="text-primary-500"
+                />
+                <span className="text-sm">Launching Soon</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Launch Date (if launching soon) */}
+          {watch('launch_status') === 'launching_soon' && (
+            <div>
+              <label htmlFor="edit-launch_date" className="block text-sm font-medium text-gray-700 mb-2">
+                Launch Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                id="edit-launch_date"
+                type="date"
+                {...register('launch_date')}
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              />
+              {errors.launch_date && (
+                <p className="mt-1 text-sm text-red-600">{errors.launch_date.message}</p>
+              )}
+            </div>
+          )}
 
           {/* Reciprocal Backlinks Section */}
           <div>
