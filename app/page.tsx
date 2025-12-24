@@ -136,7 +136,7 @@ export default function LandingPage() {
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
             Start free, upgrade when you see value. No pay-to-win mechanics—just transparent pricing.
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             <PricingCard
               name="Free"
               price="$0"
@@ -146,7 +146,8 @@ export default function LandingPage() {
                 'Unlimited backlink monitoring with weekly alerts',
                 '2 reciprocal DOFOLLOW backlinks'
               ]}
-              highlighted={false}
+              highlighted={true}
+              comingSoon={false}
             />
             <PricingCard
               name="Basic"
@@ -158,7 +159,8 @@ export default function LandingPage() {
                 'Bulk upload (CSV) of backlinks to monitor',
                 '10 extra DOFOLLOW links'
               ]}
-              highlighted={true}
+              highlighted={false}
+              comingSoon={true}
             />
             <PricingCard
               name="Power"
@@ -171,6 +173,7 @@ export default function LandingPage() {
                 'Advanced analytics dashboard'
               ]}
               highlighted={false}
+              comingSoon={true}
             />
           </div>
         </div>
@@ -246,12 +249,13 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
   )
 }
 
-function PricingCard({ name, price, period = '', features, highlighted }: { 
+function PricingCard({ name, price, period = '', features, highlighted, comingSoon = false }: { 
   name: string
   price: string
   period?: string
   features: string[]
   highlighted: boolean
+  comingSoon?: boolean
 }) {
   return (
     <div className={`bg-white p-6 rounded-lg shadow-md ${highlighted ? 'ring-2 ring-primary-500' : ''}`}>
@@ -268,16 +272,25 @@ function PricingCard({ name, price, period = '', features, highlighted }: {
           </li>
         ))}
       </ul>
-      <Link
-        href="/auth/signup"
-        className={`block text-center py-2 px-4 rounded-lg font-semibold transition ${
-          highlighted
-            ? 'bg-primary-500 text-white hover:bg-primary-200'
-            : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-        }`}
-      >
-        Get Started
-      </Link>
+      {comingSoon ? (
+        <button
+          disabled
+          className="block w-full text-center py-2 px-4 rounded-lg font-semibold transition bg-gray-200 text-gray-500 cursor-not-allowed"
+        >
+          COMING SOON
+        </button>
+      ) : (
+        <Link
+          href="/auth/signup"
+          className={`block text-center py-2 px-4 rounded-lg font-semibold transition ${
+            highlighted
+              ? 'bg-primary-500 text-white hover:bg-primary-200'
+              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+          }`}
+        >
+          Get Started
+        </Link>
+      )}
     </div>
   )
 }
