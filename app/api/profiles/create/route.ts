@@ -111,29 +111,14 @@ async function createProfileWithAdmin(user: any, body: any) {
     if (admins && admins.length > 0) {
       const adminEmails = admins.map(admin => admin.email).filter(Boolean) as string[]
       
-      // Send email to all admins
-      await Promise.all(
-        adminEmails.map(adminEmail =>
-          sendNewUserNotificationEmail(
-            email || user.email || '',
-            username || null,
-            user.id,
-            new Date().toISOString()
-          ).catch(err => {
-            // Use admin email as recipient (sendEmail will handle it)
-            console.error(`Failed to send admin notification to ${adminEmail}:`, err)
-          })
-        )
-      )
-
-      // Also send to the admin email addresses directly
-      // We need to modify sendEmail to accept a custom recipient
-      // For now, let's send one email with all admins in the to field
+      // Send email to all admins using the sendEmail function with multiple recipients
       if (adminEmails.length > 0) {
         const { sendEmail } = await import('@/lib/email/ses')
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
+        
         await sendEmail({
           to: adminEmails,
-          subject: `🆕 New User Signup: ${username || email || 'New User'}`,
+          subject: `🆕 New User Signup: ${username || email || user.email || 'New User'}`,
           html: `
             <!DOCTYPE html>
             <html>
@@ -170,7 +155,7 @@ async function createProfileWithAdmin(user: any, body: any) {
                   </div>
                   
                   <div style="text-align: center; margin: 30px 0;">
-                    <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'}/admin/users" style="display: inline-block; background: #E07A5F; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600;">View in Admin Dashboard</a>
+                    <a href="${appUrl}/admin/users" style="display: inline-block; background: #E07A5F; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600;">View in Admin Dashboard</a>
                   </div>
                   
                   <p style="color: #6b7280; font-size: 14px; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
@@ -180,7 +165,7 @@ async function createProfileWithAdmin(user: any, body: any) {
               </body>
             </html>
           `,
-          text: `New user signup:\n\nUsername: ${username || 'Not set'}\nEmail: ${email || user.email || 'N/A'}\nUser ID: ${user.id}\nSignup Date: ${new Date().toLocaleString()}\n\nView in admin dashboard: ${process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'}/admin/users`,
+          text: `New user signup:\n\nUsername: ${username || 'Not set'}\nEmail: ${email || user.email || 'N/A'}\nUser ID: ${user.id}\nSignup Date: ${new Date().toLocaleString()}\n\nView in admin dashboard: ${appUrl}/admin/users`,
         }).catch(err => {
           console.error('Failed to send admin notification email:', err)
         })
