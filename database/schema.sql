@@ -102,6 +102,7 @@ CREATE TABLE public.backlinks (
   uptime_percentage NUMERIC(5,2) DEFAULT 100.00,
   last_checked_at TIMESTAMPTZ,
   last_failed_at TIMESTAMPTZ,
+  last_alert_sent_at TIMESTAMPTZ, -- Track when alerts were last sent for frequency control
   failure_count INTEGER DEFAULT 0,
   
   -- Quality metrics
