@@ -171,7 +171,6 @@ export default function PrivacyPage() {
               <ul className="space-y-2 text-sm">
                 <li><Link href="/blog" className="hover:text-white">SEO Blog</Link></li>
                 <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
-                <li><Link href="/api" className="hover:text-white">API</Link></li>
                 <li><Link href="/llms.txt" className="hover:text-white">llms.txt</Link></li>
               </ul>
             </div>
