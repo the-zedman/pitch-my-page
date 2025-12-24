@@ -42,6 +42,32 @@ BEGIN
         'pitch-my-page-launch-christmas-day-2025',
         'On Christmas Day 2025, Pitch My Page was launched to democratize content promotion and ethical SEO. Discover how this community-driven platform benefits content writers and indie developers.',
         '<div class="blog-post-content">
+  <style>
+    .blog-post-content p {
+      margin-bottom: 1.5rem;
+      line-height: 1.8;
+    }
+    .blog-post-content h2 {
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+    }
+    .blog-post-content h3 {
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .blog-post-content h4 {
+      margin-top: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .blog-post-content ul, .blog-post-content ol {
+      margin-bottom: 1.5rem;
+      padding-left: 2rem;
+    }
+    .blog-post-content li {
+      margin-bottom: 0.75rem;
+      line-height: 1.8;
+    }
+  </style>
   <h2>🎉 A Christmas Day Launch: Introducing Pitch My Page</h2>
   
   <p>On Christmas Day 2025, something special happened in the world of content promotion and SEO—Pitch My Page was born. As we unwrap the possibilities of this new platform, let''s explore what it means for content creators, writers, bloggers, and indie developers who have long struggled to get their work noticed in an increasingly crowded digital landscape.</p>
