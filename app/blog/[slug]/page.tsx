@@ -165,8 +165,35 @@ export default function BlogPostPage() {
         {/* Post Content */}
         <div 
           className="prose prose-lg max-w-none mb-12"
-          dangerouslySetInnerHTML={{ __html: post.content }}
-        />
+          style={{
+            lineHeight: '1.8'
+          }}
+        >
+          <style jsx>{`
+            .prose p {
+              margin-bottom: 1.5rem !important;
+            }
+            .prose h2 {
+              margin-top: 3rem !important;
+              margin-bottom: 1.5rem !important;
+            }
+            .prose h3 {
+              margin-top: 2.5rem !important;
+              margin-bottom: 1rem !important;
+            }
+            .prose h4 {
+              margin-top: 2rem !important;
+              margin-bottom: 0.75rem !important;
+            }
+            .prose ul, .prose ol {
+              margin-bottom: 1.5rem !important;
+            }
+            .prose li {
+              margin-bottom: 0.75rem !important;
+            }
+          `}</style>
+          <div dangerouslySetInnerHTML={{ __html: post.content }} />
+        </div>
       </article>
 
       {/* Footer */}
