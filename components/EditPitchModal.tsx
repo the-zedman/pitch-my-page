@@ -96,6 +96,7 @@ export default function EditPitchModal({ pitch, onClose, onSuccess }: EditPitchM
           re_verify_reciprocal: verifiedReciprocalUrls.length > 0, // Flag to re-verify
           launch_status: data.launch_status,
           launch_date: data.launch_status === 'launching_soon' && data.launch_date ? data.launch_date : null,
+          favicon_url: data.favicon_url || null,
         }),
       })
 
