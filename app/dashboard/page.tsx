@@ -294,8 +294,8 @@ export default function DashboardPage() {
           <p className="text-gray-600">Manage your pitches, backlinks, and track your progress</p>
         </div>
 
-        {/* Gamification Card */}
-        <div className="bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 rounded-lg shadow-lg p-6 mb-8 text-white">
+        {/* Gamification Card - Hidden for now */}
+        <div className="hidden bg-gradient-to-br from-primary-500 via-primary-400 to-primary-600 rounded-lg shadow-lg p-6 mb-8 text-white">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-xl font-semibold mb-1">Level {level}</h2>
