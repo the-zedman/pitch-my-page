@@ -141,10 +141,10 @@ export default function LandingPage() {
               name="Free"
               price="$0"
               features={[
-                '2 reciprocal backlinks',
-                'Basic monitoring',
-                'Gallery access',
-                'Community voting'
+                'Submit unlimited pitches',
+                'Community Voting and Comments',
+                'Unlimited backlink monitoring with daily alerts',
+                '2 reciprocal DOFOLLOW backlinks'
               ]}
               highlighted={false}
             />
