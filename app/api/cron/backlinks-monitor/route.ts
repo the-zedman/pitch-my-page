@@ -237,10 +237,20 @@ export async function GET(request: NextRequest) {
 
         const lastAlertSent = backlinkData?.last_alert_sent_at ? new Date(backlinkData.last_alert_sent_at) : null
         
-        // Determine alert frequency: weekly for free, daily for paid
-        const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
+        // Determine alert frequency: weekly for free, daily for basic, hourly for power
+        let alertFrequencyMs: number
+        if (subscriptionTier === 'free') {
+          alertFrequencyMs = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+        } else if (subscriptionTier === 'basic') {
+          alertFrequencyMs = 24 * 60 * 60 * 1000 // 1 day in milliseconds
+        } else if (subscriptionTier === 'power') {
+          alertFrequencyMs = 60 * 60 * 1000 // 1 hour in milliseconds
+        } else {
+          alertFrequencyMs = 7 * 24 * 60 * 60 * 1000 // Default to weekly
+        }
+        
         const shouldSendAlert = !lastAlertSent || 
-          (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
+          (Date.now() - lastAlertSent.getTime()) >= alertFrequencyMs
 
         if (!shouldSendAlert) {
           continue // Skip alert if not enough time has passed

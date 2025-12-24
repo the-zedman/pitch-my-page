@@ -157,7 +157,7 @@ export default function LandingPage() {
                 'Everything in the FREE plan, plus',
                 'Daily backlink monitoring and alerts',
                 'Bulk upload (CSV) of backlinks to monitor',
-                '10 extra DOFOLLOW links'
+                '10 extra DOFOLLOW backlinks'
               ]}
               highlighted={false}
               comingSoon={true}
@@ -167,10 +167,11 @@ export default function LandingPage() {
               price="$29"
               period="/month"
               features={[
-                'Unlimited dofollow links',
-                'Featured placements',
-                'White-label options',
-                'Advanced analytics dashboard'
+                'Everything in the BASIC plan, plus',
+                'Hourly backlink monitoring and alerts',
+                'Auto-submit pitches on schedule',
+                'Bulk upload (CSV) of pitch submissions',
+                'Unlimited DOFOLLOW backlinks'
               ]}
               highlighted={false}
               comingSoon={true}
