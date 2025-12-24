@@ -94,24 +94,9 @@ export default function LandingPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <FeatureCard
-              icon={<Link2 className="w-8 h-8" />}
-              title="Ethical Dofollow Backlinks"
-              description="Get affordable, penalty-safe dofollow backlinks starting at $1/month or free via reciprocity. Monitor uptime and quality with 95% SLA."
-            />
-            <FeatureCard
               icon={<Shield className="w-8 h-8" />}
               title="Community-Driven Rankings"
               description="Your content rises based on real votes from real people. No pay-to-play, no hidden algorithms—just genuine community engagement that determines what gets seen."
-            />
-            <FeatureCard
-              icon={<Users className="w-8 h-8" />}
-              title="Genuine Community"
-              description="Real feedback, networking opportunities, and collaboration tools. No spam, no scams—just authentic community engagement."
-            />
-            <FeatureCard
-              icon={<TrendingUp className="w-8 h-8" />}
-              title="Perfect for Writers & Bloggers"
-              description="Get your articles, blog posts, and content discovered by an engaged audience. Whether you're a solo blogger or part of a content team, showcase your best work and build real readership."
             />
             <FeatureCard
               icon={<Star className="w-8 h-8" />}
@@ -119,9 +104,24 @@ export default function LandingPage() {
               description="Every vote is public and authentic. See what the community loves, engage with comments, and watch your content climb the rankings organically—no shortcuts, just real engagement."
             />
             <FeatureCard
+              icon={<Users className="w-8 h-8" />}
+              title="Genuine Community"
+              description="Real feedback, networking opportunities, and collaboration tools. No spam, no scams—just authentic community engagement."
+            />
+            <FeatureCard
               icon={<CheckCircle className="w-8 h-8" />}
               title="For All Content Creators"
               description="Whether you're an indie developer launching a product, a writer sharing your latest article, or a marketer promoting content—our platform gives everyone an equal chance to be discovered."
+            />
+            <FeatureCard
+              icon={<TrendingUp className="w-8 h-8" />}
+              title="Perfect for Writers & Bloggers"
+              description="Get your articles, blog posts, and content discovered by an engaged audience. Whether you're a solo blogger or part of a content team, showcase your best work and build real readership."
+            />
+            <FeatureCard
+              icon={<Link2 className="w-8 h-8" />}
+              title="Ethical Dofollow Backlinks"
+              description="Build valuable SEO backlinks the right way. Get 2 free dofollow backlinks with reciprocal linking, or unlock unlimited backlinks with our affordable plans starting at $5/month. All backlinks are verified, ethical, and penalty-safe—no black hat tactics, just genuine link building that search engines trust."
             />
           </div>
         </div>
