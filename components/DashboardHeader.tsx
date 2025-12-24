@@ -12,6 +12,27 @@ export default function DashboardHeader() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const supabase = createSupabaseClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          setIsAdmin(profile?.role === 'admin')
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
+    }
+    checkAdmin()
+  }, [])
 
   const handleLogout = async () => {
     setLoading(true)
@@ -27,6 +48,28 @@ export default function DashboardHeader() {
     }
   }
 
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const supabase = createSupabaseClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .single()
+          setIsAdmin(profile?.role === 'admin')
+        }
+      } catch (error) {
+        console.error('Error checking admin status:', error)
+      }
+    }
+    checkAdmin()
+  }, [])
+
   const navLinks = [
     { href: '/dashboard', label: 'Dashboard', active: pathname === '/dashboard' },
     { href: '/dashboard/pitches', label: 'My Pitches', active: pathname?.startsWith('/dashboard/pitches') },
@@ -34,6 +77,7 @@ export default function DashboardHeader() {
     { href: '/dashboard/settings', label: 'Settings', active: pathname?.startsWith('/dashboard/settings') },
     { href: '/submit', label: 'Submit Pitch', active: pathname === '/submit' },
     { href: '/gallery', label: 'Gallery', active: pathname === '/gallery' },
+    ...(isAdmin ? [{ href: '/admin', label: 'Admin', active: pathname?.startsWith('/admin') }] : []),
   ]
 
   return (
