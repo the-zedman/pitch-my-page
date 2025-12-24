@@ -213,10 +213,20 @@ export async function POST(
           const subscriptionTier = profile?.subscription_tier || 'free'
           const lastAlertSent = backlink.last_alert_sent_at ? new Date(backlink.last_alert_sent_at) : null
           
-          // Determine alert frequency: weekly for free, daily for paid
-          const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
+          // Determine alert frequency: weekly for free, daily for basic, hourly for power
+          let alertFrequencyMs: number
+          if (subscriptionTier === 'free') {
+            alertFrequencyMs = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+          } else if (subscriptionTier === 'basic') {
+            alertFrequencyMs = 24 * 60 * 60 * 1000 // 1 day in milliseconds
+          } else if (subscriptionTier === 'power') {
+            alertFrequencyMs = 60 * 60 * 1000 // 1 hour in milliseconds
+          } else {
+            alertFrequencyMs = 7 * 24 * 60 * 60 * 1000 // Default to weekly
+          }
+          
           const shouldSendAlert = !lastAlertSent || 
-            (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
+            (Date.now() - lastAlertSent.getTime()) >= alertFrequencyMs
 
           if (shouldSendAlert) {
             const { data: { user: authUser } } = await supabase.auth.getUser()
@@ -324,27 +334,37 @@ export async function POST(
             .eq('id', user.id)
             .single()
 
-          const subscriptionTier = profile?.subscription_tier || 'free'
-          const lastAlertSent = backlink.last_alert_sent_at ? new Date(backlink.last_alert_sent_at) : null
-          
-          // Determine alert frequency: weekly for free, daily for paid
-          const alertFrequency = subscriptionTier === 'free' ? 7 : 1 // days
-          const shouldSendAlert = !lastAlertSent || 
-            (Date.now() - lastAlertSent.getTime()) >= (alertFrequency * 24 * 60 * 60 * 1000)
-
-          if (shouldSendAlert) {
-            const { data: { user: authUser } } = await supabase.auth.getUser()
-            if (authUser?.email) {
-              const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
-              await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
-              
-              // Update last_alert_sent_at
-              await supabase
-                .from('backlinks')
-                .update({ last_alert_sent_at: new Date().toISOString() })
-                .eq('id', id)
+            const subscriptionTier = profile?.subscription_tier || 'free'
+            const lastAlertSent = backlink.last_alert_sent_at ? new Date(backlink.last_alert_sent_at) : null
+            
+            // Determine alert frequency: weekly for free, daily for basic, hourly for power
+            let alertFrequencyMs: number
+            if (subscriptionTier === 'free') {
+              alertFrequencyMs = 7 * 24 * 60 * 60 * 1000 // 7 days in milliseconds
+            } else if (subscriptionTier === 'basic') {
+              alertFrequencyMs = 24 * 60 * 60 * 1000 // 1 day in milliseconds
+            } else if (subscriptionTier === 'power') {
+              alertFrequencyMs = 60 * 60 * 1000 // 1 hour in milliseconds
+            } else {
+              alertFrequencyMs = 7 * 24 * 60 * 60 * 1000 // Default to weekly
             }
-          }
+            
+            const shouldSendAlert = !lastAlertSent || 
+              (Date.now() - lastAlertSent.getTime()) >= alertFrequencyMs
+
+            if (shouldSendAlert) {
+              const { data: { user: authUser } } = await supabase.auth.getUser()
+              if (authUser?.email) {
+                const { sendBacklinkAlertEmail } = await import('@/lib/email/ses')
+                await sendBacklinkAlertEmail(authUser.email, backlink.source_url, 'down')
+                
+                // Update last_alert_sent_at
+                await supabase
+                  .from('backlinks')
+                  .update({ last_alert_sent_at: new Date().toISOString() })
+                  .eq('id', id)
+              }
+            }
         } catch (emailError) {
           console.error('Error sending backlink down alert email:', emailError)
         }
