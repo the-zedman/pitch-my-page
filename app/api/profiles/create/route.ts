@@ -111,9 +111,8 @@ async function createProfileWithAdmin(user: any, body: any) {
     if (admins && admins.length > 0) {
       const adminEmails = admins.map(admin => admin.email).filter(Boolean) as string[]
       
-      // Send email to all admins using the sendEmail function with multiple recipients
+      // Send email to all admins
       if (adminEmails.length > 0) {
-        const { sendEmail } = await import('@/lib/email/ses')
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
         
         await sendEmail({
