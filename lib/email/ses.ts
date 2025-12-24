@@ -288,4 +288,66 @@ export async function sendPitchSubmissionEmail(
   })
 }
 
+export async function sendNewUserNotificationEmail(
+  userEmail: string,
+  username: string | null,
+  userId: string,
+  signupDate: string
+): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
+  const adminDashboardUrl = `${appUrl}/admin/users`
+
+  await sendEmail({
+    to: process.env.ADMIN_EMAIL || 'admin@pitchmypage.com', // Will be overridden with actual admin emails
+    subject: `🆕 New User Signup: ${username || userEmail}`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #E07A5F 0%, #3D405B 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: white; margin: 0;">🆕 New User Signup</h1>
+          </div>
+          <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
+            <h2 style="color: #1f2937; margin-top: 0;">A new user has joined Pitch My Page!</h2>
+            
+            <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151; width: 140px;">Username:</td>
+                  <td style="padding: 8px 0; color: #1f2937;">${username ? `@${username}` : 'Not set'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151;">Email:</td>
+                  <td style="padding: 8px 0; color: #1f2937;">${userEmail}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151;">User ID:</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-family: monospace; font-size: 12px;">${userId}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151;">Signup Date:</td>
+                  <td style="padding: 8px 0; color: #1f2937;">${new Date(signupDate).toLocaleString()}</td>
+                </tr>
+              </table>
+            </div>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${adminDashboardUrl}" style="display: inline-block; background: #E07A5F; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600;">View in Admin Dashboard</a>
+            </div>
+            
+            <p style="color: #6b7280; font-size: 14px; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+              This is an automated notification from Pitch My Page.
+            </p>
+          </div>
+        </body>
+      </html>
+    `,
+    text: `New user signup:\n\nUsername: ${username || 'Not set'}\nEmail: ${userEmail}\nUser ID: ${userId}\nSignup Date: ${new Date(signupDate).toLocaleString()}\n\nView in admin dashboard: ${adminDashboardUrl}`,
+  })
+}
+
 
