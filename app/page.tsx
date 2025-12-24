@@ -221,6 +221,7 @@ export default function LandingPage() {
                 <li><Link href="/blog" className="hover:text-white">SEO Blog</Link></li>
                 <li><Link href="/docs" className="hover:text-white">Documentation</Link></li>
                 <li><Link href="/api" className="hover:text-white">API</Link></li>
+                <li><Link href="/llms.txt" className="hover:text-white">llms.txt</Link></li>
               </ul>
             </div>
             <div>
