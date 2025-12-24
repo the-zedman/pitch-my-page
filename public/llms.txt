@@ -22,6 +22,7 @@ Pitch My Page is a SaaS platform designed to empower founders, creators, blogger
 1. **Reciprocal Link Verification**: Parses HTML and verifies reciprocal links are dofollow
 2. **Backlink Monitoring**: Daily cron job checks backlinks and sends email alerts based on subscription tier (weekly/daily/hourly)
 3. **Image Uploads**: Supports thumbnail (1200x630px required) and favicon uploads
+4. **Blog System**: Content marketing blog with SEO-focused articles covering platform features, benefits for content creators and indie developers
 
 ## Business Model
 - Free tier with 2 reciprocal dofollow backlinks
