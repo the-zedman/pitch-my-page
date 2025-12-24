@@ -79,6 +79,8 @@ export default function SubmissionForm() {
     defaultValues: {
       tags: [],
       category: 'other',
+      launch_status: 'live',
+      launch_date: null,
     },
   })
 
