@@ -35,6 +35,59 @@ export default function FAQPage() {
         </div>
       </header>
 
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: [
+              {
+                '@type': 'Question',
+                name: 'What is Pitch My Page?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Pitch My Page is a community-driven platform that helps content creators, writers, bloggers, and indie developers promote their work while building valuable SEO backlinks. You can submit pitches, get discovered through community voting, and earn dofollow backlinks through reciprocal linking.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'How do I earn dofollow backlinks?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Add a reciprocal link to Pitch My Page on your website. Copy the HTML code provided when submitting your pitch, add it to your site, and click "Verify". Once verified, you receive a dofollow backlink. Free users get 2 free reciprocal dofollow backlinks.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'How does voting work?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Users can vote on any pitch in the gallery. Click the heart icon to upvote content. All votes are public and transparent. Pitches with more votes rank higher, ensuring quality content rises to the top.'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'What are the image requirements?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Thumbnails must be exactly 1200x630px (max 5MB). Favicons recommended up to 512x512px (max 5MB). Formats: JPEG, PNG, GIF, WebP (or ICO for favicon).'
+                }
+              },
+              {
+                '@type': 'Question',
+                name: 'How often are backlinks monitored?',
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: 'Free tier: weekly monitoring. Basic ($5/month): daily monitoring. Power ($29/month): hourly monitoring. You receive alerts when backlinks change status or are removed.'
+                }
+              }
+            ]
+          })
+        }}
+      />
+
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         <div className="text-center mb-12">
           <HelpCircle className="w-16 h-16 text-primary-500 mx-auto mb-4" />
