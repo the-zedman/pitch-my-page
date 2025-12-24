@@ -1,7 +1,7 @@
 # Pitch My Page - LLMs.txt
 
 ## Overview
-Pitch My Page is a SaaS platform designed to empower founders, creators, bloggers, and marketers to pitch and promote individual web pages, articles, blog posts, projects, or entire sites. By submitting their content, users gain visibility, feedback, community attention, and valuable SEO benefits through dofollow backlinks. The platform combines elements of a content submission directory, a promotion hub similar to Product Hunt for single pages, and a backlink management and monitoring tool.
+Pitch My Page is a SaaS platform designed to empower founders, creators, bloggers, and marketers to pitch and promote individual web pages, articles, blog posts, projects, or entire sites. By submitting their content, users gain visibility, feedback, community attention, and valuable SEO benefits through dofollow backlinks. The platform combines elements of a content submission directory, a promotion hub for single pages, and a backlink management and monitoring tool.
 
 ## Key Features
 
@@ -18,72 +18,7 @@ Pitch My Page is a SaaS platform designed to empower founders, creators, blogger
 - **Basic ($5/month)**: Everything in Free, plus daily monitoring alerts, bulk CSV upload for backlinks, 10 extra dofollow backlinks
 - **Power ($29/month)**: Everything in Basic, plus hourly monitoring alerts, auto-submit pitches on schedule, bulk CSV upload for pitches, unlimited dofollow backlinks
 
-### Technical Stack
-- **Framework**: Next.js 14+ (App Router)
-- **Database**: PostgreSQL (via Supabase)
-- **Authentication**: Supabase Auth
-- **Storage**: Supabase Storage (for image uploads)
-- **Email**: AWS SES (transactional emails)
-- **Hosting**: Vercel
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
-
-## Project Structure
-
-### Key Directories
-- `app/` - Next.js App Router pages and API routes
-  - `api/` - API endpoints (pitches, votes, comments, backlinks, admin, upload, cron jobs)
-  - `dashboard/` - User dashboard pages
-  - `admin/` - Admin panel pages
-  - `gallery/` - Public gallery of pitches
-  - `pitches/[id]/` - Individual pitch detail pages
-  - `submit/` - Pitch submission form
-  - `auth/` - Authentication pages
-  - `terms/`, `privacy/` - Legal pages
-- `components/` - React components
-  - `SubmissionForm.tsx` - Pitch submission form
-  - `EditPitchModal.tsx` - Edit pitch modal
-  - `PitchCard.tsx` - Pitch card component for gallery
-  - `CommentsSection.tsx` - Comments UI component
-  - `DashboardHeader.tsx` - Dashboard header navigation
-  - `HeaderNav.tsx` - Public page header navigation
-  - `ReciprocalLinkSection.tsx` - Reciprocal link verification UI
-  - `BacklinkFormModal.tsx` - Backlink form modal
-- `lib/` - Utility libraries
-  - `supabase/` - Supabase client configuration (server and client)
-  - `email/` - Email sending functions (AWS SES)
-  - `utils/` - Utility functions (reciprocal link verification, date formatting, etc.)
-- `database/` - Database schema and migrations
-  - `schema.sql` - Complete database schema
-  - `migrations/` - Database migration files
-- `public/` - Static assets (images, favicons, etc.)
-
-## Important Files
-
-### Database Schema
-- `database/schema.sql` - Complete PostgreSQL schema with tables for:
-  - profiles (users)
-  - pitches (submissions)
-  - votes (user votes on pitches)
-  - comments (comments on pitches)
-  - backlinks (reciprocal link tracking)
-  - monitoring_logs (backlink monitoring history)
-  - achievements, leaderboards (gamification features - currently hidden)
-
-### API Routes
-- `app/api/pitches/` - Create and list pitches
-- `app/api/pitches/[id]/` - Update and delete individual pitches
-- `app/api/pitches/[id]/view/` - Track pitch views
-- `app/api/votes/` - Handle pitch voting
-- `app/api/comments/` - Handle comments (CRUD)
-- `app/api/backlinks/` - Backlink management
-- `app/api/backlinks/[id]/monitor/` - Monitor individual backlinks
-- `app/api/upload-image/` - Image and favicon uploads
-- `app/api/fetch-og-data/` - Fetch Open Graph data from URLs
-- `app/api/cron/backlinks-monitor/` - Scheduled backlink monitoring (runs daily at 2 AM UTC)
-- `app/api/admin/` - Admin panel APIs
-
-### Key Features to Note
+### Important Features
 1. **Reciprocal Link Verification**: Uses Cheerio to parse HTML and verify reciprocal links are dofollow
 2. **Backlink Monitoring**: Daily cron job checks backlinks and sends email alerts based on subscription tier (weekly/daily/hourly)
 3. **Image Uploads**: Supports thumbnail (1200x630px required) and favicon uploads via Supabase Storage
@@ -102,13 +37,4 @@ Pitch My Page is a SaaS platform designed to empower founders, creators, blogger
 - Writers and bloggers promoting articles/content
 - Content creators and marketers
 - Anyone wanting to promote individual pages or content and build backlinks ethically
-
-## Current Status
-- Core features implemented and working
-- Community voting system active
-- Comments system functional
-- Backlink monitoring with tiered alert frequencies
-- Image/favicon uploads implemented
-- Admin panel available for platform management
-- Gamification features present but hidden (work in progress)
 
