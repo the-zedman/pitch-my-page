@@ -121,7 +121,7 @@ export default function LandingPage() {
             <FeatureCard
               icon={<Link2 className="w-8 h-8" />}
               title="Ethical Dofollow Backlinks"
-              description="Build valuable SEO backlinks the right way. Get 2 free dofollow backlinks with reciprocal linking, or unlock unlimited backlinks with our affordable plans starting at $5/month. All backlinks are verified, ethical, and penalty-safe—no black hat tactics, just genuine link building that search engines trust."
+              description="Build valuable SEO backlinks the right way. Get 2 free dofollow backlinks with reciprocal linking, or unlock unlimited backlinks with our affordable plans starting at $5/month."
             />
           </div>
         </div>
