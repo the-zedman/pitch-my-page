@@ -92,7 +92,7 @@ export default function DashboardPage() {
       setProfile(profileData)
 
       // Get stats
-      const [pitchesResult, backlinksResult, commentsResult] = await Promise.all([
+      const [pitchesResult, backlinksResult, commentsResult, votesResult] = await Promise.all([
         supabase
           .from('pitches')
           .select('id', { count: 'exact', head: true })
@@ -107,12 +107,22 @@ export default function DashboardPage() {
           .select('id', { count: 'exact', head: true })
           .eq('user_id', user.id)
           .eq('is_deleted', false),
+        // Count votes on user's pitches
+        supabase
+          .from('votes')
+          .select(`
+            id,
+            pitches!inner (
+              user_id
+            )
+          `, { count: 'exact', head: true })
+          .eq('pitches.user_id', user.id),
       ])
 
       setStats({
         pitches: pitchesResult.count || 0,
         backlinks: backlinksResult.count || 0,
-        votes_received: profileData.points || 0, // Simplified for now
+        votes_received: votesResult.count || 0,
         comments_received: commentsResult.count || 0,
       })
 
