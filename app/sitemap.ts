@@ -37,6 +37,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.3,
     },
     {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
       url: `${baseUrl}/auth/login`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
@@ -67,7 +73,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     }))
 
-    return [...staticRoutes, ...pitchRoutes]
+    // Fetch published blog posts
+    const { data: blogPosts } = await supabase
+      .from('blog_posts')
+      .select('slug, published_at')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .limit(100)
+
+    const blogRoutes: MetadataRoute.Sitemap = (blogPosts || []).map((post) => ({
+      url: `${baseUrl}/blog/${post.slug}`,
+      lastModified: post.published_at ? new Date(post.published_at) : new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    }))
+
+    return [...staticRoutes, ...pitchRoutes, ...blogRoutes]
   } catch (error) {
     console.error('Error generating sitemap:', error)
     // Return static routes if dynamic fetch fails
