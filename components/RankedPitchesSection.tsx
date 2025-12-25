@@ -61,13 +61,16 @@ export default function RankedPitchesSection() {
   }
 
   // Debug: Log when component renders
-  if (typeof window !== 'undefined') {
-    console.log('RankedPitchesSection rendering', { weekPitches: weekPitches.length, monthPitches: monthPitches.length, loading, error })
-  }
+  useEffect(() => {
+    console.log('RankedPitchesSection mounted', { weekPitches: weekPitches.length, monthPitches: monthPitches.length, loading, error })
+  }, [weekPitches.length, monthPitches.length, loading, error])
 
   return (
-    <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px', border: '2px solid red' }}>
+    <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px', border: '3px solid red', backgroundColor: '#fff' }}>
       <div className="container mx-auto px-4">
+        <div style={{ padding: '20px', backgroundColor: 'yellow', marginBottom: '20px' }}>
+          DEBUG: Ranked Pitches Section is rendering!
+        </div>
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
           Top Ranked Pitches
         </h2>
