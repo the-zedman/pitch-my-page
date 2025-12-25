@@ -18,6 +18,7 @@ export default function RankedPitchesSection() {
   const [weekPitches, setWeekPitches] = useState<RankedPitch[]>([])
   const [monthPitches, setMonthPitches] = useState<RankedPitch[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchRankedPitches()
@@ -25,22 +26,30 @@ export default function RankedPitchesSection() {
 
   const fetchRankedPitches = async () => {
     try {
+      setError(null)
       const [weekRes, monthRes] = await Promise.all([
         fetch('/api/pitches/ranked?period=week&limit=10'),
         fetch('/api/pitches/ranked?period=month&limit=10'),
       ])
 
-      if (weekRes.ok) {
+      if (!weekRes.ok) {
+        const weekError = await weekRes.json().catch(() => ({}))
+        console.error('Week pitches error:', weekError)
+      } else {
         const weekData = await weekRes.json()
         setWeekPitches(weekData.pitches || [])
       }
 
-      if (monthRes.ok) {
+      if (!monthRes.ok) {
+        const monthError = await monthRes.json().catch(() => ({}))
+        console.error('Month pitches error:', monthError)
+      } else {
         const monthData = await monthRes.json()
         setMonthPitches(monthData.pitches || [])
       }
     } catch (error) {
       console.error('Error fetching ranked pitches:', error)
+      setError('Failed to load ranked pitches')
     } finally {
       setLoading(false)
     }
