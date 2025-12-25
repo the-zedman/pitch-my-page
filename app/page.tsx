@@ -1,10 +1,11 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { Shield, Users, TrendingUp, Link2, CheckCircle, Star } from 'lucide-react'
+import { Shield, Users, TrendingUp, Link2, CheckCircle, Star, Heart, MessageSquare, ArrowRight } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 import HeroCTA from '@/components/HeroCTA'
 import CTASection from '@/components/CTASection'
+import RankedPitchesSection from '@/components/RankedPitchesSection'
 
 export const metadata: Metadata = {
   title: 'Pitch My Page - Ethical Indie Content Promotion Platform',
