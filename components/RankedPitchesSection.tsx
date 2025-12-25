@@ -61,11 +61,17 @@ export default function RankedPitchesSection() {
   }
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-white py-16" id="ranked-pitches">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
           Top Ranked Pitches
         </h2>
+        
+        {error && (
+          <div className="text-center py-4 text-red-500 mb-4">
+            {error}
+          </div>
+        )}
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
           {/* This Week */}
@@ -135,7 +141,7 @@ export default function RankedPitchesSection() {
           </div>
 
           {/* This Month */}
-          <div className="bg-gray-50 rounded-lg p-6">
+          <div className="bg-gray-50 rounded-lg p-6 min-h-[300px]">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">Top This Month</h3>
               <Link 
