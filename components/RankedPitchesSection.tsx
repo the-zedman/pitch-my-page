@@ -61,15 +61,15 @@ export default function RankedPitchesSection() {
   }
 
   return (
-    <section className="bg-white py-16" id="ranked-pitches">
+    <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px' }}>
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
           Top Ranked Pitches
         </h2>
         
         {error && (
-          <div className="text-center py-4 text-red-500 mb-4">
-            {error}
+          <div className="text-center py-4 text-red-500 mb-4 bg-red-50 rounded p-4">
+            Error: {error}
           </div>
         )}
         
