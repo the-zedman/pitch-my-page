@@ -53,7 +53,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Sort by: upvotes (desc), then comments (desc), then longest-held rank
-    // For longest-held rank, we'll use created_at as a tiebreaker (older = held longer)
+    // For longest-held rank, we use updated_at - older updated_at means the pitch
+    // has held its current upvote count longer (hasn't been updated recently)
     const sortedPitches = (pitches || []).sort((a, b) => {
       // First: upvotes
       if (b.upvotes !== a.upvotes) {
@@ -63,8 +64,8 @@ export async function GET(request: NextRequest) {
       if (b.comments_count !== a.comments_count) {
         return b.comments_count - a.comments_count
       }
-      // Third: longest-held rank (older pitch = held rank longer)
-      return new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      // Third: longest-held rank (older updated_at = held current rank longer)
+      return new Date(a.updated_at || a.created_at).getTime() - new Date(b.updated_at || b.created_at).getTime()
     })
 
     // Return top N
