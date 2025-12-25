@@ -60,8 +60,13 @@ export default function RankedPitchesSection() {
     return category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
   }
 
+  // Debug: Log when component renders
+  if (typeof window !== 'undefined') {
+    console.log('RankedPitchesSection rendering', { weekPitches: weekPitches.length, monthPitches: monthPitches.length, loading, error })
+  }
+
   return (
-    <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px' }}>
+    <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px', border: '2px solid red' }}>
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
           Top Ranked Pitches
