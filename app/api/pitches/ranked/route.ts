@@ -28,6 +28,8 @@ export async function GET(request: NextRequest) {
     }
 
     // Fetch approved pitches with engagement metrics
+    // Note: We filter by created_at for the period, but if no pitches in that period,
+    // we'll still return empty array (component will show "No pitches this week/month yet")
     const { data: pitches, error } = await supabase
       .from('pitches')
       .select(`
@@ -45,6 +47,8 @@ export async function GET(request: NextRequest) {
       .order('upvotes', { ascending: false })
       .order('comments_count', { ascending: false })
       .limit(limit * 2) // Get more to sort properly
+
+    console.log(`[Ranked Pitches API] Period: ${period}, Found: ${pitches?.length || 0} pitches`)
 
     if (error) {
       console.error('Error fetching ranked pitches:', error)
