@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Heart, MessageSquare, ArrowRight } from 'lucide-react'
+import { Heart, MessageSquare, ArrowRight, Loader2 } from 'lucide-react'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 interface RankedPitch {
   id: string
@@ -12,6 +13,7 @@ interface RankedPitch {
   category: string | null
   upvotes: number
   comments_count: number
+  userVote?: 'upvote' | 'downvote' | null
 }
 
 export default function RankedPitchesSection() {
@@ -19,6 +21,7 @@ export default function RankedPitchesSection() {
   const [monthPitches, setMonthPitches] = useState<RankedPitch[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [votingId, setVotingId] = useState<string | null>(null)
 
   useEffect(() => {
     fetchRankedPitches()
@@ -33,26 +36,134 @@ export default function RankedPitchesSection() {
         fetch('/api/pitches/ranked?period=month&limit=10'),
       ])
 
-      if (!weekRes.ok) {
+      let weekData: RankedPitch[] = []
+      let monthData: RankedPitch[] = []
+
+      if (weekRes.ok) {
+        const data = await weekRes.json()
+        weekData = data.pitches || []
+      } else {
         const weekError = await weekRes.json().catch(() => ({}))
         console.error('Week pitches error:', weekError)
-      } else {
-        const weekData = await weekRes.json()
-        setWeekPitches(weekData.pitches || [])
       }
 
-      if (!monthRes.ok) {
+      if (monthRes.ok) {
+        const data = await monthRes.json()
+        monthData = data.pitches || []
+      } else {
         const monthError = await monthRes.json().catch(() => ({}))
         console.error('Month pitches error:', monthError)
+      }
+
+      // Fetch user votes for all pitches
+      const supabase = createSupabaseClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        // Fetch votes for week pitches
+        const weekPitchesWithVotes = await Promise.all(
+          weekData.map(async (pitch) => {
+            try {
+              const voteResponse = await fetch(`/api/votes?pitch_id=${pitch.id}`)
+              if (voteResponse.ok) {
+                const voteData = await voteResponse.json()
+                return {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              }
+            } catch (error) {
+              console.error(`Error fetching votes for pitch ${pitch.id}:`, error)
+            }
+            return { ...pitch, userVote: null }
+          })
+        )
+
+        // Fetch votes for month pitches
+        const monthPitchesWithVotes = await Promise.all(
+          monthData.map(async (pitch) => {
+            try {
+              const voteResponse = await fetch(`/api/votes?pitch_id=${pitch.id}`)
+              if (voteResponse.ok) {
+                const voteData = await voteResponse.json()
+                return {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              }
+            } catch (error) {
+              console.error(`Error fetching votes for pitch ${pitch.id}:`, error)
+            }
+            return { ...pitch, userVote: null }
+          })
+        )
+
+        setWeekPitches(weekPitchesWithVotes)
+        setMonthPitches(monthPitchesWithVotes)
       } else {
-        const monthData = await monthRes.json()
-        setMonthPitches(monthData.pitches || [])
+        setWeekPitches(weekData)
+        setMonthPitches(monthData)
       }
     } catch (error) {
       console.error('Error fetching ranked pitches:', error)
       setError('Failed to load ranked pitches')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleVote = async (pitchId: string, pitches: RankedPitch[], setPitches: React.Dispatch<React.SetStateAction<RankedPitch[]>>) => {
+    if (votingId === pitchId) return
+    
+    setVotingId(pitchId)
+    try {
+      const response = await fetch('/api/votes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pitch_id: pitchId,
+          vote_type: 'upvote',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          window.location.href = '/auth/login?redirect=/'
+          return
+        }
+        alert(data.error || 'Failed to vote')
+        return
+      }
+
+      // Refresh votes for this pitch
+      const voteResponse = await fetch(`/api/votes?pitch_id=${pitchId}`)
+      if (voteResponse.ok) {
+        const voteData = await voteResponse.json()
+        setPitches((prevPitches) =>
+          prevPitches.map((pitch) =>
+            pitch.id === pitchId
+              ? {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              : pitch
+          )
+        )
+        // Also refresh the ranked pitches API to get updated counts
+        fetchRankedPitches()
+      }
+    } catch (error: any) {
+      console.error('Error voting:', error)
+      alert('Failed to vote. Please try again.')
+    } finally {
+      setVotingId(null)
     }
   }
 

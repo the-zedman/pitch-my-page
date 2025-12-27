@@ -4,8 +4,9 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Heart, MessageSquare, ArrowLeft, Trophy, Calendar } from 'lucide-react'
+import { Heart, MessageSquare, ArrowLeft, Trophy, Calendar, Loader2 } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 interface RankedPitch {
   id: string
@@ -14,6 +15,7 @@ interface RankedPitch {
   category: string | null
   upvotes: number
   comments_count: number
+  userVote?: 'upvote' | 'downvote' | null
 }
 
 export default function RankingsPage() {
@@ -23,6 +25,7 @@ export default function RankingsPage() {
   const [pitches, setPitches] = useState<RankedPitch[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [votingId, setVotingId] = useState<string | null>(null)
 
   useEffect(() => {
     if (period && (period === 'week' || period === 'month')) {
@@ -217,16 +220,36 @@ export default function RankingsPage() {
                             {getCategoryLabel(pitch.category)}
                           </span>
                           <div className="flex items-center gap-4 text-gray-600">
-                            <span className="flex items-center gap-2">
-                              <Heart className="w-5 h-5 text-red-500" />
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handleVote(pitch.id)
+                              }}
+                              disabled={votingId === pitch.id}
+                              className={`flex items-center gap-2 px-3 py-1 rounded-lg transition ${
+                                pitch.userVote === 'upvote'
+                                  ? 'text-red-500 bg-red-50 hover:bg-red-100'
+                                  : 'hover:text-red-500 hover:bg-gray-100'
+                              } disabled:opacity-50`}
+                            >
+                              {votingId === pitch.id ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                              ) : (
+                                <Heart className={`w-5 h-5 ${pitch.userVote === 'upvote' ? 'fill-current text-red-500' : 'text-red-500'}`} />
+                              )}
                               <span className="font-semibold">{pitch.upvotes || 0}</span>
                               <span className="text-sm">upvotes</span>
-                            </span>
-                            <span className="flex items-center gap-2">
+                            </button>
+                            <Link
+                              href={`/pitches/${pitch.id}#comments`}
+                              onClick={(e) => e.stopPropagation()}
+                              className="flex items-center gap-2 px-3 py-1 rounded-lg hover:text-blue-500 hover:bg-gray-100 transition"
+                            >
                               <MessageSquare className="w-5 h-5 text-blue-500" />
                               <span className="font-semibold">{pitch.comments_count || 0}</span>
                               <span className="text-sm">comments</span>
-                            </span>
+                            </Link>
                           </div>
                         </div>
                       </div>
