@@ -10,22 +10,21 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: '#F0F7F3',   // Very light English Pear tint
-          100: '#E0EFE7',   // Light English Pear tint
-          200: '#C1DFCF',   // Lighter English Pear (hover states)
-          300: '#B8D9C6',   // Light English Pear
-          400: '#B0D5C0',   // English Pear (gradient middle)
-          500: '#B0D5C0',   // English Pear (main)
-          600: '#9EC1AD',   // Darker English Pear (gradient end)
-          700: '#8CAD9A',   // Dark English Pear
-          800: '#7A9987',   // Darker English Pear
-          900: '#688574',   // Darkest English Pear
+          50: '#E8F4FA',   // Very light Rich Cerulean tint
+          100: '#D1E9F5',   // Light Rich Cerulean tint
+          200: '#A3D3EB',   // Lighter Rich Cerulean (hover states)
+          300: '#75BDE1',   // Light Rich Cerulean
+          400: '#4799D7',   // Medium Rich Cerulean (gradient middle)
+          500: '#2274A5',   // Rich Cerulean (main)
+          600: '#1B5C84',   // Darker Rich Cerulean (gradient end)
+          700: '#144463',   // Dark Rich Cerulean
+          800: '#0D2C42',   // Darker Rich Cerulean
+          900: '#061421',   // Darkest Rich Cerulean
         },
         accent: {
-          ivory: '#FFFFF8',     // Ivory Crepe
-          springPoppy: '#FCB2A9', // Spring Poppy
-          englishPear: '#B0D5C0', // English Pear
-          nimble: '#989CA0',     // Nimble
+          richCerulean: '#2274A5', // Rich Cerulean
+          blazeOrange: '#F75C03',   // Blaze Orange
+          brightAmber: '#F1C40F',   // Bright Amber
         },
         // Adding English Pear as a secondary color option
         secondary: {
