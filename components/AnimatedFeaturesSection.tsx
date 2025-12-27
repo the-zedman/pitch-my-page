@@ -26,7 +26,7 @@ const features = [
   {
     icon: CheckCircle,
     title: 'For All Content Creators',
-    description: "Whether you're an indie developer launching a product, a writer sharing your latest article, or a marketer promoting content—our platform gives everyone an equal chance to be discovered.",
+    description: 'Whether you\'re an indie developer launching a product, a writer sharing your latest article, or a marketer promoting content—our platform gives everyone an equal chance to be discovered.',
     color: 'from-green-500 to-emerald-500',
   },
   {
