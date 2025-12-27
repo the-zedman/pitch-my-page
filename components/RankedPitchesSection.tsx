@@ -21,7 +21,12 @@ export default function RankedPitchesSection() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchRankedPitches()
+    // Only fetch in browser
+    if (typeof window !== 'undefined') {
+      fetchRankedPitches()
+    } else {
+      setLoading(false)
+    }
   }, [])
 
   const fetchRankedPitches = async () => {
