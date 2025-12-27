@@ -130,8 +130,14 @@ export async function POST(request: NextRequest) {
     if (uploadError) {
       console.error('Upload error:', uploadError)
       console.error('Upload error details:', JSON.stringify(uploadError, null, 2))
+      console.error('Upload error message:', uploadError.message)
+      console.error('Upload file path:', filePath)
+      console.error('Upload user ID:', user.id)
+      
       // Provide more specific error messages
       const errorMessage = uploadError.message || uploadError.toString() || ''
+      
+      // Check for bucket-related errors
       if (errorMessage.includes('bucket') || errorMessage.includes('not found') || errorMessage.includes('The resource was not found')) {
         return NextResponse.json(
           { 
@@ -141,7 +147,20 @@ export async function POST(request: NextRequest) {
           { status: 500 }
         )
       }
-      if (uploadError.message?.includes('already exists')) {
+      
+      // Check for permission errors (RLS policies)
+      if (errorMessage.includes('permission') || errorMessage.includes('denied') || errorMessage.includes('policy') || errorMessage.includes('403')) {
+        return NextResponse.json(
+          { 
+            error: 'Permission denied. Please ensure the storage bucket has proper RLS policies allowing authenticated users to upload files.',
+            details: uploadError.message || errorMessage
+          },
+          { status: 403 }
+        )
+      }
+      
+      // Check for file already exists
+      if (uploadError.message?.includes('already exists') || uploadError.message?.includes('duplicate')) {
         // If file exists, try with a new timestamp and random suffix
         const newTimestamp = Date.now()
         const newRandomSuffix = Math.random().toString(36).substring(7)
@@ -155,6 +174,7 @@ export async function POST(request: NextRequest) {
           })
         
         if (retryUploadError) {
+          console.error('Retry upload error:', retryUploadError)
           return NextResponse.json(
             { error: 'Failed to upload image', details: retryUploadError.message },
             { status: 500 }
@@ -172,8 +192,14 @@ export async function POST(request: NextRequest) {
           type: file.type,
         })
       }
+      
+      // Generic error with detailed message
       return NextResponse.json(
-        { error: 'Failed to upload image', details: uploadError.message },
+        { 
+          error: 'Failed to upload image', 
+          details: uploadError.message || errorMessage,
+          code: (uploadError as any).statusCode || (uploadError as any).code
+        },
         { status: 500 }
       )
     }
