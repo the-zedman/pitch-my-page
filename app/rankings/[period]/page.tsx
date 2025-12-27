@@ -74,7 +74,12 @@ export default function RankingsPage() {
   if (!period || (period !== 'week' && period !== 'month')) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <HeaderNav />
+        {/* Header */}
+        <header className="bg-white py-4">
+          <div className="container mx-auto px-4">
+            <HeaderNav variant="light" />
+          </div>
+        </header>
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">Invalid Page</h1>
           <p className="text-gray-600 mb-8">The requested rankings page does not exist.</p>
