@@ -40,8 +40,7 @@ const pricingPlans = [
       'Everything in the BASIC plan, plus',
       'Hourly backlink monitoring and alerts',
       'Auto-submit pitches on schedule',
-      'Unlimited DOFOLLOW backlinks',
-      'Priority support'
+      'Unlimited DOFOLLOW backlinks'
     ],
     highlighted: false,
     comingSoon: true,
