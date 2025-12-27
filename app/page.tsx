@@ -6,7 +6,8 @@ import HeaderNav from '@/components/HeaderNav'
 import AnimatedHero from '@/components/AnimatedHero'
 import AnimatedFeaturesSection from '@/components/AnimatedFeaturesSection'
 import AnimatedPricingSection from '@/components/AnimatedPricingSection'
-import CTASection from '@/components/CTASection'
+import AnimatedFeaturesListSection from '@/components/AnimatedFeaturesListSection'
+import AnimatedCTASection from '@/components/AnimatedCTASection'
 import RankedPitchesSection from '@/components/RankedPitchesSection'
 
 export const metadata: Metadata = {
