@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Heart, MessageSquare, ArrowLeft, Trophy, Calendar } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 
@@ -91,7 +92,9 @@ export default function RankingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HeaderNav />
+      <header className="container mx-auto px-4 py-6">
+        <HeaderNav />
+      </header>
       
       <div className="container mx-auto px-4 py-12">
         {/* Header */}
@@ -232,6 +235,53 @@ export default function RankingsPage() {
           )}
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-12 mt-20">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <Image
+                src="/pitch-my-page-logo-compressed.png"
+                alt="Pitch My Page"
+                width={150}
+                height={40}
+                className="h-8 w-auto mb-4 rounded-lg"
+              />
+              <p className="text-sm">Ethical indie content promotion platform</p>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/gallery" className="hover:text-white">Gallery</Link></li>
+                <li><Link href="/#pricing" className="hover:text-white">Pricing</Link></li>
+                <li><Link href="/#features" className="hover:text-white">Features</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Resources</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/blog" className="hover:text-white">SEO Blog</Link></li>
+                <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
+                <li><Link href="/auth/login" className="hover:text-white">Login</Link></li>
+                <li><Link href="/auth/signup" className="hover:text-white">Sign Up</Link></li>
+                <li><Link href="/auth/forgot-password" className="hover:text-white">Forgot Password</Link></li>
+                <li><Link href="/llms.txt" className="hover:text-white">llms.txt</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-white font-semibold mb-4">Legal</h3>
+              <ul className="space-y-2 text-sm">
+                <li><Link href="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+                <li><Link href="/terms" className="hover:text-white">Terms of Service</Link></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+            <p>&copy; {new Date().getFullYear()} Pitch My Page. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }
