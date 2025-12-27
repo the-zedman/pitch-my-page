@@ -92,8 +92,11 @@ export default function RankingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="container mx-auto px-4 py-6">
-        <HeaderNav />
+      {/* Header */}
+      <header className="bg-white py-4">
+        <div className="container mx-auto px-4">
+          <HeaderNav variant="light" />
+        </div>
       </header>
       
       <div className="container mx-auto px-4 py-12">
@@ -254,6 +257,8 @@ export default function RankingsPage() {
               <h3 className="text-white font-semibold mb-4">Product</h3>
               <ul className="space-y-2 text-sm">
                 <li><Link href="/gallery" className="hover:text-white">Gallery</Link></li>
+                <li><Link href="/rankings/week" className="hover:text-white">Top This Week</Link></li>
+                <li><Link href="/rankings/month" className="hover:text-white">Top This Month</Link></li>
                 <li><Link href="/#pricing" className="hover:text-white">Pricing</Link></li>
                 <li><Link href="/#features" className="hover:text-white">Features</Link></li>
               </ul>
