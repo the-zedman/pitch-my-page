@@ -10,16 +10,16 @@ const config: Config = {
     extend: {
       colors: {
         primary: {
-          50: '#FEF5F3',   // Very light Spring Poppy tint
-          100: '#FDE8E4',   // Light Spring Poppy tint
-          200: '#FDD5CD',   // Lighter Spring Poppy (hover states)
-          300: '#FCC2B6',   // Light Spring Poppy
-          400: '#FCB2A9',   // Spring Poppy (gradient middle)
-          500: '#FCB2A9',   // Spring Poppy (main)
-          600: '#E89D94',   // Darker Spring Poppy (gradient end)
-          700: '#D4887F',   // Dark Spring Poppy
-          800: '#C0736A',   // Darker Spring Poppy
-          900: '#AC5E55',   // Darkest Spring Poppy
+          50: '#F0F7F3',   // Very light English Pear tint
+          100: '#E0EFE7',   // Light English Pear tint
+          200: '#C1DFCF',   // Lighter English Pear (hover states)
+          300: '#B8D9C6',   // Light English Pear
+          400: '#B0D5C0',   // English Pear (gradient middle)
+          500: '#B0D5C0',   // English Pear (main)
+          600: '#9EC1AD',   // Darker English Pear (gradient end)
+          700: '#8CAD9A',   // Dark English Pear
+          800: '#7A9987',   // Darker English Pear
+          900: '#688574',   // Darkest English Pear
         },
         accent: {
           ivory: '#FFFFF8',     // Ivory Crepe
