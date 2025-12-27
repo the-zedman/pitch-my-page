@@ -5,6 +5,7 @@ import { Heart, MessageSquare, ArrowRight, CheckCircle } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 import AnimatedHero from '@/components/AnimatedHero'
 import AnimatedFeaturesSection from '@/components/AnimatedFeaturesSection'
+import AnimatedPricingSection from '@/components/AnimatedPricingSection'
 import CTASection from '@/components/CTASection'
 import RankedPitchesSection from '@/components/RankedPitchesSection'
 

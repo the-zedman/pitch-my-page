@@ -241,11 +241,14 @@ export default function AnimatedFeaturesSection() {
           className="text-center mb-16"
         >
           <motion.h2
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-4"
+            className="text-4xl md:text-5xl font-bold mb-4"
             style={{ fontFamily: 'var(--font-space-grotesk), sans-serif' }}
           >
-            <span className="bg-gradient-to-r from-primary-500 via-accent-blazeOrange to-accent-brightAmber bg-clip-text text-transparent">
-              Why Choose Pitch My Page?
+            <span className="text-gray-900 drop-shadow-sm">
+              Why Choose{' '}
+              <span className="bg-gradient-to-r from-primary-500 via-accent-blazeOrange to-accent-brightAmber bg-clip-text text-transparent">
+                Pitch My Page?
+              </span>
             </span>
           </motion.h2>
           <motion.div
