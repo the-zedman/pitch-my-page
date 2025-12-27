@@ -44,7 +44,6 @@ export default function SubmissionForm() {
   const [isLoading, setIsLoading] = useState(false)
   const [isFetchingOG, setIsFetchingOG] = useState(false)
   const [ogData, setOgData] = useState<OGData | null>(null)
-  const [pointsReward, setPointsReward] = useState(10)
   const [verifiedReciprocalUrls, setVerifiedReciprocalUrls] = useState<string[]>([])
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [uploadingThumbnail, setUploadingThumbnail] = useState(false)
@@ -587,13 +586,6 @@ export default function SubmissionForm() {
               onVerificationChange={setVerifiedReciprocalUrls}
             />
           )}
-
-          {/* Points Reward Info */}
-          <div className="bg-accent-eggshell border border-primary-300 rounded-lg p-4">
-            <p className="text-sm text-primary-400">
-              <strong>You'll earn {pointsReward} points</strong> for submitting this pitch!
-            </p>
-          </div>
 
           {/* Submit Button */}
           <button
