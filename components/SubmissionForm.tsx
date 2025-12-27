@@ -375,6 +375,7 @@ export default function SubmissionForm() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Tags <span className="text-red-500">*</span>
+              <span className="text-sm font-normal text-gray-500 ml-2">(Maximum 10 tags)</span>
             </label>
             <div className="flex gap-2 mb-2">
               <Tag className="w-5 h-5 text-gray-400 mt-2" />
