@@ -166,43 +166,47 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Features */}
+      {/* Features Section */}
       <section id="features" className="bg-white py-20">
         <div className="container mx-auto px-4">
           <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">
-            Why Choose Pitch My Page?
+            Features
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            <FeatureCard
-              icon={<Shield className="w-8 h-8" />}
-              title="Community-Driven Rankings"
-              description="Your content rises based on real votes from real people. No pay-to-play, no hidden algorithms—just genuine community engagement that determines what gets seen."
-            />
-            <FeatureCard
-              icon={<Star className="w-8 h-8" />}
-              title="Transparent Voting System"
-              description="Every vote is public and authentic. See what the community loves, engage with comments, and watch your content climb the rankings organically—no shortcuts, just real engagement."
-            />
-            <FeatureCard
-              icon={<Users className="w-8 h-8" />}
-              title="Genuine Community"
-              description="Real feedback, networking opportunities, and collaboration tools. No spam, no scams—just authentic community engagement."
-            />
-            <FeatureCard
-              icon={<CheckCircle className="w-8 h-8" />}
-              title="For All Content Creators"
-              description="Whether you're an indie developer launching a product, a writer sharing your latest article, or a marketer promoting content—our platform gives everyone an equal chance to be discovered."
-            />
-            <FeatureCard
-              icon={<TrendingUp className="w-8 h-8" />}
-              title="Perfect for Writers & Bloggers"
-              description="Get your articles, blog posts, and content discovered by an engaged audience. Whether you're a solo blogger or part of a content team, showcase your best work and build real readership."
-            />
-            <FeatureCard
-              icon={<Link2 className="w-8 h-8" />}
-              title="Ethical Dofollow Backlinks"
-              description="Build valuable SEO backlinks the right way. Get 2 free dofollow backlinks with reciprocal linking, or unlock unlimited backlinks with our affordable plans starting at $5/month."
-            />
+          <div className="max-w-4xl mx-auto">
+            <ul className="space-y-4 text-lg text-gray-700">
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>Unlimited Pitch Submissions</strong> - Submit as many pitches as you want, completely free</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>Community Voting</strong> - Real votes from real people drive authentic rankings</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>Public Comments & Feedback</strong> - Engage with your audience and receive genuine feedback</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>Free Dofollow Backlinks</strong> - Get 2 reciprocal dofollow backlinks included with every pitch</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>Backlink Monitoring</strong> - Track your backlinks with weekly monitoring alerts</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>Transparent Rankings</strong> - See exactly why content ranks where it does</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>No Pay-to-Win</strong> - Rankings based solely on community engagement, not payments</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
+                <span><strong>SEO Tools & Resources</strong> - Access our blog and resources to improve your SEO strategy</span>
+              </li>
+            </ul>
           </div>
         </div>
       </section>
