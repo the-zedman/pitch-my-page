@@ -299,7 +299,7 @@ export default function FAQPage() {
           </section>
 
           {/* Backlink Monitoring */}
-          <section className="bg-white rounded-lg shadow-md p-8">
+          <section id="backlink-monitoring" className="bg-white rounded-lg shadow-md p-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
               <CheckCircle className="w-8 h-8 text-primary-500" />
               Backlink Monitoring
