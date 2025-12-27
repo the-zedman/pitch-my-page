@@ -32,7 +32,7 @@ const features = [
   {
     icon: TrendingUp,
     title: 'Perfect for Writers & Bloggers',
-    description: 'Get your articles, blog posts, and content discovered by an engaged audience. Whether you're a solo blogger or part of a content team, showcase your best work and build real readership.',
+    description: "Get your articles, blog posts, and content discovered by an engaged audience. Whether you're a solo blogger or part of a content team, showcase your best work and build real readership.",
     color: 'from-indigo-500 to-blue-500',
   },
   {
