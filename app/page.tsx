@@ -111,14 +111,6 @@ export default function LandingPage() {
       </section>
 
       {/* Ranked Pitches */}
-      <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px', border: '5px solid blue', backgroundColor: '#ffff00' }}>
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-            TEST: Ranked Pitches Section
-          </h2>
-          <p className="text-center">If you see this, the section is rendering!</p>
-        </div>
-      </section>
       <RankedPitchesSection />
 
       {/* Pricing Preview */}

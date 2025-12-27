@@ -21,13 +21,10 @@ export default function RankedPitchesSection() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Only fetch in browser
-    if (typeof window !== 'undefined') {
-      fetchRankedPitches()
-    } else {
-      setLoading(false)
-    }
+    fetchRankedPitches()
   }, [])
+  
+  // eslint-disable-next-line react-hooks/exhaustive-deps
 
   const fetchRankedPitches = async () => {
     try {
@@ -65,17 +62,9 @@ export default function RankedPitchesSection() {
     return category.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
   }
 
-  // Debug: Log when component renders
-  useEffect(() => {
-    console.log('RankedPitchesSection mounted', { weekPitches: weekPitches.length, monthPitches: monthPitches.length, loading, error })
-  }, [weekPitches.length, monthPitches.length, loading, error])
-
   return (
-    <section className="bg-white py-16" id="ranked-pitches" style={{ minHeight: '400px', border: '3px solid red', backgroundColor: '#fff' }}>
+    <section className="bg-white py-16" id="ranked-pitches">
       <div className="container mx-auto px-4">
-        <div style={{ padding: '20px', backgroundColor: 'yellow', marginBottom: '20px' }}>
-          DEBUG: Ranked Pitches Section is rendering!
-        </div>
         <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
           Top Ranked Pitches
         </h2>
