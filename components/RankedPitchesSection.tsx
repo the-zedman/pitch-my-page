@@ -80,7 +80,7 @@ export default function RankedPitchesSection() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">Top This Week</h3>
               <Link 
-                href="/gallery?sort=votes&period=week" 
+                href="/rankings/week" 
                 className="text-sm text-primary-500 hover:text-primary-200 flex items-center gap-1"
               >
                 View All
@@ -146,7 +146,7 @@ export default function RankedPitchesSection() {
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-xl font-semibold text-gray-900">Top This Month</h3>
               <Link 
-                href="/gallery?sort=votes&period=month" 
+                href="/rankings/month" 
                 className="text-sm text-primary-500 hover:text-primary-200 flex items-center gap-1"
               >
                 View All
