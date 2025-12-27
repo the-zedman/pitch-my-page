@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { createSupabaseClient } from '@/lib/supabase/client'
 import {
   Loader2,
@@ -12,6 +13,11 @@ import {
   Eye,
 } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
+
+// Dynamically import React Quill to avoid SSR issues
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
+import 'react-quill/dist/quill.snow.css'
+import './quill-styles.css'
 
 interface BlogPost {
   id: string
