@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createServerSupabaseClient } from '@/lib/supabase/server-api'
+import { createServerSupabaseAdminClient } from '@/lib/supabase/admin'
 import { verifyReciprocalLinks } from '@/lib/utils/reciprocal'
-import { sendPitchSubmissionEmail } from '@/lib/email/ses'
+import { sendPitchSubmissionEmail, sendAdminPitchNotificationEmail } from '@/lib/email/ses'
 
 export async function POST(request: NextRequest) {
   try {

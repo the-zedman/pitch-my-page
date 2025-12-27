@@ -8,7 +8,10 @@ import {
   Settings,
   Loader2,
   AlertCircle,
-  Save
+  Save,
+  Mail,
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react'
 import DashboardHeader from '@/components/DashboardHeader'
 
@@ -17,9 +20,11 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [saving, setSaving] = useState(false)
+  const [emailAlertEnabled, setEmailAlertEnabled] = useState(true)
 
   useEffect(() => {
     checkAdminAccess()
+    loadSettings()
   }, [])
 
   const checkAdminAccess = async () => {
@@ -52,13 +57,46 @@ export default function AdminSettingsPage() {
     }
   }
 
+  const loadSettings = async () => {
+    try {
+      const response = await fetch('/api/admin/settings')
+      if (!response.ok) {
+        throw new Error('Failed to load settings')
+      }
+      const data = await response.json()
+      setEmailAlertEnabled(data.email_alert_enabled !== false) // Default to true
+    } catch (err: any) {
+      console.error('Error loading settings:', err)
+      // Don't show error, just use defaults
+    }
+  }
+
   const handleSave = async () => {
     setSaving(true)
-    // TODO: Implement settings save functionality
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/admin/settings', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email_alert_enabled: emailAlertEnabled,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || 'Failed to save settings')
+      }
+
+      // Show success message
+      alert('Settings saved successfully!')
+    } catch (err: any) {
+      console.error('Error saving settings:', err)
+      alert(`Failed to save settings: ${err.message}`)
+    } finally {
       setSaving(false)
-      alert('Settings saved! (This is a placeholder - settings functionality coming soon)')
-    }, 500)
+    }
   }
 
   if (loading) {
@@ -113,16 +151,43 @@ export default function AdminSettingsPage() {
         <div className="bg-white rounded-lg shadow-md p-6 space-y-6">
           <div>
             <h2 className="text-xl font-semibold mb-4">Platform Settings</h2>
-            <p className="text-gray-600 mb-6">
-              Admin settings functionality is coming soon. This page will allow you to configure:
-            </p>
-            <ul className="list-disc list-inside space-y-2 text-gray-600 mb-6">
-              <li>Auto-approval settings for pitches</li>
-              <li>Email notification preferences</li>
-              <li>Content moderation rules</li>
-              <li>Feature flags and toggles</li>
-              <li>System maintenance mode</li>
-            </ul>
+            
+            {/* Email Alerts Section */}
+            <div className="border border-gray-200 rounded-lg p-6 mb-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <Mail className="w-5 h-5 text-primary-500" />
+                    <h3 className="text-lg font-semibold text-gray-900">Email Alerts</h3>
+                  </div>
+                  <p className="text-gray-600 mb-4">
+                    Receive email notifications when new pitches are submitted. These emails include all pitch details, user information, and links to manage the pitch in the admin panel.
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setEmailAlertEnabled(!emailAlertEnabled)}
+                      className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition"
+                    >
+                      {emailAlertEnabled ? (
+                        <ToggleRight className="w-8 h-8 text-primary-500" />
+                      ) : (
+                        <ToggleLeft className="w-8 h-8 text-gray-400" />
+                      )}
+                      <span className="font-medium">
+                        {emailAlertEnabled ? 'Enabled' : 'Disabled'}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-800">
+                <strong>Note:</strong> Additional settings such as auto-approval, content moderation rules, and feature flags will be available in future updates.
+              </p>
+            </div>
           </div>
 
           <div className="flex justify-end pt-4 border-t border-gray-200">
@@ -149,4 +214,3 @@ export default function AdminSettingsPage() {
     </div>
   )
 }
-

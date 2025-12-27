@@ -350,4 +350,162 @@ export async function sendNewUserNotificationEmail(
   })
 }
 
+export interface AdminPitchNotificationData {
+  pitchId: string
+  pitchTitle: string
+  pitchUrl: string
+  pitchDescription: string
+  category: string | null
+  tags: string[]
+  launchStatus: string
+  launchDate: string | null
+  thumbnailUrl: string | null
+  faviconUrl: string | null
+  userId: string
+  userEmail: string | null
+  username: string | null
+  userFullName: string | null
+  createdAt: string
+  hasReciprocalLinks: boolean
+  verifiedReciprocalUrls: string[]
+}
 
+export async function sendAdminPitchNotificationEmail(
+  adminEmails: string[],
+  pitchData: AdminPitchNotificationData
+): Promise<void> {
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.pitchmypage.com'
+  const pitchPageUrl = `${appUrl}/pitches/${pitchData.pitchId}`
+  const adminPitchUrl = `${appUrl}/admin/pitches/${pitchData.pitchId}`
+
+  await sendEmail({
+    to: adminEmails,
+    subject: `📝 New Pitch Submission: "${pitchData.pitchTitle}"`,
+    html: `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        </head>
+        <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #333; max-width: 700px; margin: 0 auto; padding: 20px;">
+          <div style="background: linear-gradient(135deg, #2274A5 0%, #F75C03 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: white; margin: 0;">📝 New Pitch Submission</h1>
+          </div>
+          <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
+            <h2 style="color: #1f2937; margin-top: 0;">A new pitch has been submitted</h2>
+            
+            <!-- Pitch Details -->
+            <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 25px; margin: 20px 0;">
+              <h3 style="color: #1f2937; margin-top: 0; margin-bottom: 15px;">Pitch Information</h3>
+              
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; width: 160px; vertical-align: top;">Title:</td>
+                  <td style="padding: 10px 0; color: #1f2937;">${pitchData.pitchTitle}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">URL:</td>
+                  <td style="padding: 10px 0; color: #2274A5;"><a href="${pitchData.pitchUrl}" style="color: #2274A5; word-break: break-all;">${pitchData.pitchUrl}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">Description:</td>
+                  <td style="padding: 10px 0; color: #1f2937;">${pitchData.pitchDescription}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">Category:</td>
+                  <td style="padding: 10px 0; color: #1f2937;">${pitchData.category || 'Not specified'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">Tags:</td>
+                  <td style="padding: 10px 0; color: #1f2937;">
+                    ${pitchData.tags.length > 0 
+                      ? pitchData.tags.map(tag => `<span style="display: inline-block; background: #E5E7EB; color: #374151; padding: 4px 12px; border-radius: 12px; font-size: 12px; margin: 2px;">${tag}</span>`).join(' ')
+                      : 'No tags'
+                    }
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">Launch Status:</td>
+                  <td style="padding: 10px 0; color: #1f2937;">
+                    ${pitchData.launchStatus === 'launching_soon' 
+                      ? `Launching Soon${pitchData.launchDate ? ` (${new Date(pitchData.launchDate).toLocaleDateString()})` : ''}`
+                      : 'Live'
+                    }
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; font-weight: 600; color: #374151; vertical-align: top;">Submitted:</td>
+                  <td style="padding: 10px 0; color: #1f2937;">${new Date(pitchData.createdAt).toLocaleString()}</td>
+                </tr>
+              </table>
+
+              ${pitchData.thumbnailUrl ? `
+                <div style="margin-top: 20px;">
+                  <p style="font-weight: 600; color: #374151; margin-bottom: 10px;">Thumbnail:</p>
+                  <img src="${pitchData.thumbnailUrl}" alt="Pitch thumbnail" style="max-width: 100%; border-radius: 8px; border: 1px solid #e5e7eb;" />
+                </div>
+              ` : ''}
+
+              ${pitchData.faviconUrl ? `
+                <div style="margin-top: 20px;">
+                  <p style="font-weight: 600; color: #374151; margin-bottom: 10px;">Favicon:</p>
+                  <img src="${pitchData.faviconUrl}" alt="Pitch favicon" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid #e5e7eb;" />
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- User Details -->
+            <div style="background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 25px; margin: 20px 0;">
+              <h3 style="color: #1f2937; margin-top: 0; margin-bottom: 15px;">Submitted By</h3>
+              
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151; width: 160px;">Username:</td>
+                  <td style="padding: 8px 0; color: #1f2937;">${pitchData.username ? `@${pitchData.username}` : 'Not set'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151;">Name:</td>
+                  <td style="padding: 8px 0; color: #1f2937;">${pitchData.userFullName || 'Not set'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151;">Email:</td>
+                  <td style="padding: 8px 0; color: #1f2937;">${pitchData.userEmail || 'Not available'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 8px 0; font-weight: 600; color: #374151;">User ID:</td>
+                  <td style="padding: 8px 0; color: #1f2937; font-family: monospace; font-size: 12px;">${pitchData.userId}</td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Reciprocal Links -->
+            ${pitchData.hasReciprocalLinks && pitchData.verifiedReciprocalUrls.length > 0 ? `
+              <div style="background: #d1fae5; border-left: 4px solid #10b981; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                <p style="margin: 0; color: #065f46; font-weight: 600; margin-bottom: 10px;">✅ Reciprocal Links Verified</p>
+                <ul style="margin: 10px 0; padding-left: 20px; color: #065f46;">
+                  ${pitchData.verifiedReciprocalUrls.map(url => `<li style="margin-bottom: 5px;"><a href="${url}" style="color: #065f46; word-break: break-all;">${url}</a></li>`).join('')}
+                </ul>
+              </div>
+            ` : `
+              <div style="background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 8px; padding: 20px; margin: 20px 0;">
+                <p style="margin: 0; color: #92400e; font-weight: 600;">⚠️ No Reciprocal Links</p>
+                <p style="margin: 10px 0 0 0; color: #92400e;">This pitch does not have verified reciprocal links.</p>
+              </div>
+            `}
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${adminPitchUrl}" style="display: inline-block; background: #2274A5; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">View in Admin Panel</a>
+              <a href="${pitchPageUrl}" style="display: inline-block; background: #F75C03; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; margin: 5px;">View Public Pitch</a>
+            </div>
+            
+            <p style="color: #6b7280; font-size: 14px; margin-top: 30px; border-top: 1px solid #e5e7eb; padding-top: 20px;">
+              This is an automated notification from Pitch My Page. You can disable these emails in the Admin Settings.
+            </p>
+          </div>
+        </body>
+      </html>
+    `,
+    text: `New Pitch Submission\n\nTitle: ${pitchData.pitchTitle}\nURL: ${pitchData.pitchUrl}\nDescription: ${pitchData.pitchDescription}\nCategory: ${pitchData.category || 'Not specified'}\nTags: ${pitchData.tags.join(', ') || 'None'}\n\nSubmitted By:\nUsername: ${pitchData.username || 'Not set'}\nName: ${pitchData.userFullName || 'Not set'}\nEmail: ${pitchData.userEmail || 'Not available'}\nUser ID: ${pitchData.userId}\n\nSubmitted: ${new Date(pitchData.createdAt).toLocaleString()}\n\n${pitchData.hasReciprocalLinks ? `Reciprocal Links Verified: ${pitchData.verifiedReciprocalUrls.join(', ')}` : 'No reciprocal links'}\n\nView in Admin Panel: ${adminPitchUrl}\nView Public Pitch: ${pitchPageUrl}`,
+  })
+}

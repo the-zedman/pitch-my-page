@@ -13,3 +13,4 @@ Files in this folder are accessible from the root URL:
 - `/favicon.ico` → `public/favicon.ico`
 
 
+
