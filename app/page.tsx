@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import type { Metadata } from 'next'
-import { Shield, Users, TrendingUp, Link2, CheckCircle, Star, Heart, MessageSquare, ArrowRight } from 'lucide-react'
+import { Heart, MessageSquare, ArrowRight, CheckCircle } from 'lucide-react'
 import HeaderNav from '@/components/HeaderNav'
 import AnimatedHero from '@/components/AnimatedHero'
 import AnimatedFeaturesSection from '@/components/AnimatedFeaturesSection'
