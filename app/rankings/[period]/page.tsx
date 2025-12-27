@@ -50,12 +50,97 @@ export default function RankingsPage() {
       }
 
       const data = await response.json()
-      setPitches(data.pitches || [])
+      const pitchesData = data.pitches || []
+
+      // Fetch user votes for all pitches
+      const supabase = createSupabaseClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        // Fetch votes for all pitches
+        const pitchesWithVotes = await Promise.all(
+          pitchesData.map(async (pitch: RankedPitch) => {
+            try {
+              const voteResponse = await fetch(`/api/votes?pitch_id=${pitch.id}`)
+              if (voteResponse.ok) {
+                const voteData = await voteResponse.json()
+                return {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              }
+            } catch (error) {
+              console.error(`Error fetching votes for pitch ${pitch.id}:`, error)
+            }
+            return { ...pitch, userVote: null }
+          })
+        )
+
+        setPitches(pitchesWithVotes)
+      } else {
+        setPitches(pitchesData)
+      }
     } catch (error) {
       console.error('Error fetching ranked pitches:', error)
       setError('Failed to load ranked pitches')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleVote = async (pitchId: string) => {
+    if (votingId === pitchId) return
+    
+    setVotingId(pitchId)
+    try {
+      const response = await fetch('/api/votes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          pitch_id: pitchId,
+          vote_type: 'upvote',
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          window.location.href = `/auth/login?redirect=/rankings/${period}`
+          return
+        }
+        alert(data.error || 'Failed to vote')
+        return
+      }
+
+      // Refresh votes for this pitch
+      const voteResponse = await fetch(`/api/votes?pitch_id=${pitchId}`)
+      if (voteResponse.ok) {
+        const voteData = await voteResponse.json()
+        setPitches((prevPitches) =>
+          prevPitches.map((pitch) =>
+            pitch.id === pitchId
+              ? {
+                  ...pitch,
+                  upvotes: voteData.upvotes || pitch.upvotes || 0,
+                  userVote: voteData.userVote || null,
+                }
+              : pitch
+          )
+        )
+        // Also refresh the ranked pitches to get updated counts
+        if (period) {
+          fetchRankedPitches()
+        }
+      }
+    } catch (error: any) {
+      console.error('Error voting:', error)
+      alert('Failed to vote. Please try again.')
+    } finally {
+      setVotingId(null)
     }
   }
 
