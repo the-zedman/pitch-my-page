@@ -68,7 +68,7 @@ export default function HeaderNav({ variant = 'dark' }: { variant?: 'light' | 'd
         </Link>
         <div className="flex gap-6 items-center">
           <Link href="/gallery" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Gallery</Link>
-          <a href="#pricing" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Pricing</a>
+          <Link href="/#pricing" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Pricing</Link>
           <div className={`w-20 h-8 ${variant === 'light' ? 'bg-gray-200' : 'bg-white/20'} rounded-lg animate-pulse`}></div> {/* Placeholder */}
         </div>
       </nav>
@@ -97,7 +97,7 @@ export default function HeaderNav({ variant = 'dark' }: { variant?: 'light' | 'd
         </Link>
       <div className="flex gap-6 items-center">
         <Link href="/gallery" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Gallery</Link>
-        <a href="#pricing" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Pricing</a>
+        <Link href="/#pricing" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Pricing</Link>
         {isLoggedIn ? (
           <>
             <Link href="/dashboard" className={variant === 'light' ? 'text-gray-700 hover:text-primary-500' : 'text-white hover:text-accent-apricot'}>Dashboard</Link>
