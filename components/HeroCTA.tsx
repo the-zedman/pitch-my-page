@@ -3,20 +3,52 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Sparkles } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { createSupabaseClient } from '@/lib/supabase/client'
 
 export default function HeroCTA() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const supabase = createSupabaseClient()
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession()
+      setIsLoggedIn(!!session)
+    }
+
+    checkSession()
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsLoggedIn(!!session)
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase])
+
+  const buttonVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.8 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      scale: 1,
+      transition: {
+        type: 'spring' as const,
+        stiffness: 200,
+        damping: 15,
+      },
+    },
+  }
+
   return (
     <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-      {/* Submit Pitch Button */}
+      {/* Primary CTA Button */}
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.8 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{
-          delay: 1.2,
-          type: 'spring' as const,
-          stiffness: 200,
-          damping: 15,
-        }}
+        variants={buttonVariants}
+        initial="hidden"
+        animate="visible"
+        custom={0}
         whileHover={{
           scale: 1.05,
           y: -5,
@@ -43,7 +75,7 @@ export default function HeroCTA() {
           }}
         >
           <Link
-            href="/submit"
+            href={isLoggedIn ? '/submit' : '/auth/signup'}
             className="relative inline-flex items-center gap-3 bg-gradient-to-r from-primary-500 via-primary-400 to-accent-blazeOrange text-white px-8 py-4 rounded-full font-bold text-lg hover:from-primary-400 hover:via-primary-300 hover:to-accent-blazeOrange transition-all duration-300 overflow-hidden group"
           >
             {/* Animated background gradient */}
@@ -76,7 +108,7 @@ export default function HeroCTA() {
             </motion.div>
             
             <span className="relative z-10 flex items-center gap-2">
-              Submit Pitch
+              {isLoggedIn ? 'Submit Pitch' : 'Start Pitching Free'}
               <motion.span
                 animate={{ x: [0, 5, 0] }}
                 transition={{
@@ -94,14 +126,11 @@ export default function HeroCTA() {
 
       {/* Explore Gallery Button */}
       <motion.div
-        initial={{ opacity: 0, y: 30, scale: 0.8 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{
-          delay: 1.4,
-          type: 'spring' as const,
-          stiffness: 200,
-          damping: 15,
-        }}
+        variants={buttonVariants}
+        initial="hidden"
+        animate="visible"
+        custom={1}
+        transition={{ delay: 0.2 }}
         whileHover={{
           scale: 1.05,
           y: -5,
