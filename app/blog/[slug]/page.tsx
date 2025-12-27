@@ -20,6 +20,7 @@ interface BlogPost {
   author_id: string | null
   meta_title: string | null
   meta_description: string | null
+  excerpt: string | null
   profiles?: {
     username: string | null
   }
