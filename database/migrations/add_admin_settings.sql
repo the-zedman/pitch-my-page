@@ -7,10 +7,7 @@ CREATE TABLE IF NOT EXISTS public.admin_settings (
   
   -- Timestamps
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  
-  -- Store only one settings record
-  -- We'll handle uniqueness via application logic
+  updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Insert default settings if none exist
