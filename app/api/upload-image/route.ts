@@ -134,8 +134,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json(
           { 
             error: 'Storage bucket "pitches" is not configured. Please create a public storage bucket named "pitches" in your Supabase project.',
-            details: uploadError.message || errorMessage,
-            errorCode: uploadError.statusCode || uploadError.code
+            details: uploadError.message || errorMessage
           },
           { status: 500 }
         )
