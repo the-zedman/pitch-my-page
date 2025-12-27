@@ -25,7 +25,7 @@ const titleVariants = {
     y: 0,
     scale: 1,
     transition: {
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 100,
       damping: 12,
       duration: 0.8,
@@ -42,7 +42,7 @@ const subtitleVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 100,
       damping: 15,
       duration: 0.6,
@@ -58,7 +58,7 @@ const wordVariants = {
     y: 0,
     transition: {
       delay: i * 0.1,
-      type: 'spring',
+      type: 'spring' as const,
       stiffness: 100,
     },
   }),
@@ -174,7 +174,7 @@ export default function AnimatedHero() {
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 1.1, type: 'spring', stiffness: 100 }}
+          transition={{ delay: 1.1, type: 'spring' as const, stiffness: 100 }}
         >
           <HeroCTA />
         </motion.div>
