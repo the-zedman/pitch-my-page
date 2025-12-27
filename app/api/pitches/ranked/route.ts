@@ -27,9 +27,7 @@ export async function GET(request: NextRequest) {
       startDate.setMonth(now.getMonth() - 1)
     }
 
-    // Fetch approved pitches with engagement metrics
-    // Note: We filter by created_at for the period, but if no pitches in that period,
-    // we'll still return empty array (component will show "No pitches this week/month yet")
+    // Fetch approved pitches (we'll calculate metrics dynamically for accuracy)
     const { data: pitches, error } = await supabase
       .from('pitches')
       .select(`
@@ -37,16 +35,12 @@ export async function GET(request: NextRequest) {
         title,
         favicon_url,
         category,
-        upvotes,
-        comments_count,
         created_at,
         updated_at
       `)
       .eq('status', 'approved')
       .gte('created_at', startDate.toISOString())
-      .order('upvotes', { ascending: false })
-      .order('comments_count', { ascending: false })
-      .limit(limit * 2) // Get more to sort properly
+      .limit(limit * 3) // Get more to calculate and sort properly
 
     console.log(`[Ranked Pitches API] Period: ${period}, Found: ${pitches?.length || 0} pitches`)
 
@@ -58,10 +52,42 @@ export async function GET(request: NextRequest) {
       )
     }
 
+    if (!pitches || pitches.length === 0) {
+      return NextResponse.json({
+        pitches: [],
+        period,
+      })
+    }
+
+    // Calculate upvotes and comments_count dynamically for each pitch
+    const pitchesWithMetrics = await Promise.all(
+      pitches.map(async (pitch) => {
+        // Get upvote count from votes table
+        const { count: upvotesCount } = await supabase
+          .from('votes')
+          .select('*', { count: 'exact', head: true })
+          .eq('pitch_id', pitch.id)
+          .eq('vote_type', 'upvote')
+
+        // Get comments count from comments table
+        const { count: commentsCount } = await supabase
+          .from('comments')
+          .select('*', { count: 'exact', head: true })
+          .eq('pitch_id', pitch.id)
+          .eq('is_deleted', false)
+
+        return {
+          ...pitch,
+          upvotes: upvotesCount || 0,
+          comments_count: commentsCount || 0,
+        }
+      })
+    )
+
     // Sort by: upvotes (desc), then comments (desc), then longest-held rank
     // For longest-held rank, we use updated_at - older updated_at means the pitch
     // has held its current upvote count longer (hasn't been updated recently)
-    const sortedPitches = (pitches || []).sort((a, b) => {
+    const sortedPitches = pitchesWithMetrics.sort((a, b) => {
       // First: upvotes
       if (b.upvotes !== a.upvotes) {
         return b.upvotes - a.upvotes
