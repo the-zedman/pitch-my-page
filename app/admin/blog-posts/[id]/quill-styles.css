@@ -1,0 +1,111 @@
+/* Custom styles for React Quill editor in admin blog posts */
+.quill {
+  background: white;
+}
+
+.quill .ql-container {
+  font-size: 16px;
+  min-height: 400px;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem;
+}
+
+.quill .ql-editor {
+  min-height: 400px;
+  padding: 1rem;
+}
+
+.quill .ql-toolbar {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f9fafb;
+  padding: 0.75rem;
+}
+
+.quill .ql-toolbar .ql-stroke {
+  stroke: #374151;
+}
+
+.quill .ql-toolbar .ql-fill {
+  fill: #374151;
+}
+
+.quill .ql-toolbar button:hover,
+.quill .ql-toolbar button.ql-active {
+  color: #2274A5;
+}
+
+.quill .ql-toolbar button:hover .ql-stroke,
+.quill .ql-toolbar button.ql-active .ql-stroke {
+  stroke: #2274A5;
+}
+
+.quill .ql-toolbar button:hover .ql-fill,
+.quill .ql-toolbar button.ql-active .ql-fill {
+  fill: #2274A5;
+}
+
+.quill .ql-editor.ql-blank::before {
+  color: #9ca3af;
+  font-style: normal;
+}
+
+.quill .ql-editor {
+  color: #111827;
+  line-height: 1.75;
+}
+
+.quill .ql-editor h1,
+.quill .ql-editor h2,
+.quill .ql-editor h3,
+.quill .ql-editor h4,
+.quill .ql-editor h5,
+.quill .ql-editor h6 {
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quill .ql-editor h1 {
+  font-size: 2.25rem;
+}
+
+.quill .ql-editor h2 {
+  font-size: 1.875rem;
+}
+
+.quill .ql-editor h3 {
+  font-size: 1.5rem;
+}
+
+.quill .ql-editor p {
+  margin-bottom: 1rem;
+}
+
+.quill .ql-editor ul,
+.quill .ql-editor ol {
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.quill .ql-editor blockquote {
+  border-left: 4px solid #2274A5;
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  color: #6b7280;
+}
+
+.quill .ql-editor a {
+  color: #2274A5;
+  text-decoration: underline;
+}
+
+.quill .ql-editor img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+

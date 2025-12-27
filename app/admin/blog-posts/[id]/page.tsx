@@ -351,17 +351,40 @@ export default function BlogPostEditPage() {
           {/* Content */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Content (HTML) <span className="text-red-500">*</span>
+              Content <span className="text-red-500">*</span>
             </label>
-            <textarea
-              value={post.content || ''}
-              onChange={(e) => setPost({ ...post, content: e.target.value })}
-              rows={20}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent font-mono text-sm"
-              placeholder="Enter HTML content here"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Enter HTML content. You can use HTML tags like &lt;p&gt;, &lt;h2&gt;, &lt;ul&gt;, &lt;li&gt;, etc.
+            <div className="bg-white">
+              <ReactQuill
+                theme="snow"
+                value={post.content || ''}
+                onChange={(value) => setPost({ ...post, content: value })}
+                placeholder="Write your blog post content here..."
+                style={{ minHeight: '400px' }}
+                modules={{
+                  toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    [{ 'font': [] }],
+                    [{ 'size': [] }],
+                    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    ['link', 'image', 'video'],
+                    ['clean']
+                  ],
+                }}
+                formats={[
+                  'header', 'font', 'size',
+                  'bold', 'italic', 'underline', 'strike', 'blockquote',
+                  'list', 'bullet', 'indent',
+                  'color', 'background',
+                  'align',
+                  'link', 'image', 'video'
+                ]}
+              />
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Use the toolbar to format your content. The content is saved as HTML.
             </p>
           </div>
 
