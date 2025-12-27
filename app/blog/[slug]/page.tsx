@@ -194,6 +194,25 @@ export default function BlogPostPage() {
           `}</style>
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </div>
+
+        {/* Explore More Section */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Explore More</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link href="/blog" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition">
+              <div className="font-semibold text-gray-900 mb-1">All Blog Posts</div>
+              <div className="text-sm text-gray-600">Read more SEO and content marketing tips</div>
+            </Link>
+            <Link href="/gallery" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition">
+              <div className="font-semibold text-gray-900 mb-1">Browse Gallery</div>
+              <div className="text-sm text-gray-600">Discover pitches from the community</div>
+            </Link>
+            <Link href="/submit" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition">
+              <div className="font-semibold text-gray-900 mb-1">Submit Your Pitch</div>
+              <div className="text-sm text-gray-600">Share your content with the community</div>
+            </Link>
+          </div>
+        </div>
       </article>
 
       {/* Footer */}

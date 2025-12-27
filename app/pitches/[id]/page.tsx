@@ -274,6 +274,25 @@ export default function PitchDetailPage() {
 
         {/* Comments Section */}
         <CommentsSection pitchId={pitchId} />
+
+        {/* Explore More Section */}
+        <div className="bg-white rounded-lg shadow-md p-6 mt-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Explore More</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link href="/gallery" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition">
+              <div className="font-semibold text-gray-900 mb-1">Browse Gallery</div>
+              <div className="text-sm text-gray-600">Discover more pitches from the community</div>
+            </Link>
+            <Link href="/blog" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition">
+              <div className="font-semibold text-gray-900 mb-1">SEO Blog</div>
+              <div className="text-sm text-gray-600">Read SEO and content marketing tips</div>
+            </Link>
+            <Link href="/submit" className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition">
+              <div className="font-semibold text-gray-900 mb-1">Submit Your Pitch</div>
+              <div className="text-sm text-gray-600">Share your content with the community</div>
+            </Link>
+          </div>
+        </div>
         </div>
       </div>
     </div>
