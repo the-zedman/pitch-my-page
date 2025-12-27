@@ -69,57 +69,7 @@ export default function LandingPage() {
       <AnimatedFeaturesSection />
 
       {/* Pricing Preview */}
-      <section id="pricing" className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-4 text-gray-900">
-            Simple, Affordable Pricing
-          </h2>
-          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Start free, upgrade when you see value. No pay-to-win mechanics—just transparent pricing.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            <PricingCard
-              name="Free"
-              price="$0"
-              features={[
-                'Submit unlimited pitches',
-                'Community voting and comments',
-                'Unlimited backlink monitoring with weekly alerts',
-                '2 reciprocal DOFOLLOW backlinks'
-              ]}
-              highlighted={true}
-              comingSoon={false}
-            />
-            <PricingCard
-              name="Basic"
-              price="$5"
-              period="/month"
-              features={[
-                'Everything in the FREE plan, plus',
-                'Daily backlink monitoring and alerts',
-                'Bulk upload (CSV) of backlinks to monitor',
-                '10 extra DOFOLLOW backlinks'
-              ]}
-              highlighted={false}
-              comingSoon={true}
-            />
-            <PricingCard
-              name="Power"
-              price="$29"
-              period="/month"
-              features={[
-                'Everything in the BASIC plan, plus',
-                'Hourly backlink monitoring and alerts',
-                'Auto-submit pitches on schedule',
-                'Bulk upload (CSV) of pitches',
-                'Unlimited DOFOLLOW backlinks'
-              ]}
-              highlighted={false}
-              comingSoon={true}
-            />
-          </div>
-        </div>
-      </section>
+      <AnimatedPricingSection />
 
       {/* Features Section */}
       <section id="features" className="bg-white py-20">
