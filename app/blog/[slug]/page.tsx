@@ -223,6 +223,9 @@ export default function BlogPostPage() {
               <ul className="space-y-2 text-sm">
                 <li><Link href="/blog" className="hover:text-white">SEO Blog</Link></li>
                 <li><Link href="/faq" className="hover:text-white">FAQ</Link></li>
+                <li><Link href="/auth/login" className="hover:text-white">Login</Link></li>
+                <li><Link href="/auth/signup" className="hover:text-white">Sign Up</Link></li>
+                <li><Link href="/auth/forgot-password" className="hover:text-white">Forgot Password</Link></li>
                 <li><Link href="/llms.txt" className="hover:text-white">llms.txt</Link></li>
               </ul>
             </div>
