@@ -112,9 +112,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate a unique filename
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${user.id}/${imageType}_${Date.now()}.${fileExt}`
-    const filePath = `pitches/${fileName}`
+    const fileExt = file.name.split('.').pop() || 'jpg'
+    const timestamp = Date.now()
+    const randomSuffix = Math.random().toString(36).substring(7)
+    const fileName = `${imageType}_${timestamp}_${randomSuffix}.${fileExt}`
+    const filePath = `${user.id}/${fileName}`
 
     // Upload to Supabase Storage
     // Note: You'll need to configure a storage bucket called 'pitches'
