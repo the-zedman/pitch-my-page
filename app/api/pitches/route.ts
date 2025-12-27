@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
     const userPitchCount = pitchCount || 0
     const hasReciprocalLinks = backlinksCreated > 0
 
-    // Send submission email
+    // Send submission email to user
     if (userEmail) {
       try {
         await sendPitchSubmissionEmail(
@@ -178,6 +178,69 @@ export async function POST(request: NextRequest) {
         console.error('Error sending pitch submission email:', emailError)
         // Don't fail the submission if email fails
       }
+    }
+
+    // Send admin notification email if enabled
+    try {
+      const adminSupabase = createAdminSupabaseClient()
+      
+      // Check if email alerts are enabled
+      const { data: settings } = await adminSupabase
+        .from('admin_settings')
+        .select('email_alert_enabled')
+        .limit(1)
+        .single()
+
+      const emailAlertsEnabled = settings?.email_alert_enabled !== false // Default to true if no settings exist
+
+      if (emailAlertsEnabled) {
+        // Get all admin users
+        const { data: admins } = await adminSupabase
+          .from('profiles')
+          .select('email')
+          .eq('role', 'admin')
+          .not('email', 'is', null)
+
+        if (admins && admins.length > 0) {
+          const adminEmails = admins.map(admin => admin.email).filter(Boolean) as string[]
+
+          if (adminEmails.length > 0) {
+            // Get user profile info
+            const { data: userProfile } = await adminSupabase
+              .from('profiles')
+              .select('username, full_name, email')
+              .eq('id', user.id)
+              .single()
+
+            // Send admin notification email
+            await sendAdminPitchNotificationEmail(adminEmails, {
+              pitchId: pitch.id,
+              pitchTitle: pitch.title,
+              pitchUrl: pitch.url,
+              pitchDescription: pitch.description,
+              category: pitch.category,
+              tags: pitch.tags || [],
+              launchStatus: pitch.launch_status || 'live',
+              launchDate: pitch.launch_date,
+              thumbnailUrl: pitch.thumbnail_url,
+              faviconUrl: pitch.favicon_url,
+              userId: user.id,
+              userEmail: userProfile?.email || user.email || null,
+              username: userProfile?.username || null,
+              userFullName: userProfile?.full_name || null,
+              createdAt: pitch.created_at,
+              hasReciprocalLinks,
+              verifiedReciprocalUrls: verifiedUrls,
+            }).catch(err => {
+              console.error('Failed to send admin notification email:', err)
+              // Don't fail the submission if admin email fails
+            })
+          }
+        }
+      }
+    } catch (adminEmailError) {
+      console.error('Error checking admin email settings or sending admin email:', adminEmailError)
+      // Don't fail the submission if admin email check/send fails
     }
 
     // Award points for submission
