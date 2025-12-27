@@ -127,10 +127,16 @@ export async function POST(request: NextRequest) {
 
     if (uploadError) {
       console.error('Upload error:', uploadError)
+      console.error('Upload error details:', JSON.stringify(uploadError, null, 2))
       // Provide more specific error messages
-      if (uploadError.message?.includes('bucket') || uploadError.message?.includes('not found')) {
+      const errorMessage = uploadError.message || uploadError.toString() || ''
+      if (errorMessage.includes('bucket') || errorMessage.includes('not found') || errorMessage.includes('The resource was not found')) {
         return NextResponse.json(
-          { error: 'Storage bucket not configured. Please contact support.', details: uploadError.message },
+          { 
+            error: 'Storage bucket "pitches" is not configured. Please create a public storage bucket named "pitches" in your Supabase project.',
+            details: uploadError.message || errorMessage,
+            errorCode: uploadError.statusCode || uploadError.code
+          },
           { status: 500 }
         )
       }
