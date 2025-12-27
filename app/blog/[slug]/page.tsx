@@ -47,7 +47,17 @@ export default function BlogPostPage() {
       const { data, error: fetchError } = await supabase
         .from('blog_posts')
         .select(`
-          *,
+          id,
+          title,
+          slug,
+          content,
+          featured_image_url,
+          published_at,
+          views,
+          author_id,
+          meta_title,
+          meta_description,
+          excerpt,
           profiles!blog_posts_author_id_fkey (
             username
           )
