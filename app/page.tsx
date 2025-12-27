@@ -69,6 +69,9 @@ export default function LandingPage() {
         <HeroCTA />
       </section>
 
+      {/* Ranked Pitches */}
+      <RankedPitchesSection />
+
       {/* Features */}
       <section className="bg-white py-20">
         <div className="container mx-auto px-4">
@@ -109,9 +112,6 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-
-      {/* Ranked Pitches */}
-      <RankedPitchesSection />
 
       {/* Pricing Preview */}
       <section id="pricing" className="bg-gray-50 py-20">
