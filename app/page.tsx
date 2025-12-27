@@ -196,7 +196,7 @@ export default function LandingPage() {
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Transparent Rankings</strong> - See exactly why content ranks where it does</span>
+                <span><strong>Transparent Rankings</strong> - All ranking factors (upvotes, comments) are publicly visible, so you can see what drives each pitch's position</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
