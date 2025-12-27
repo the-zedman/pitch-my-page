@@ -228,16 +228,6 @@ export default function LandingPage() {
   )
 }
 
-function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
-  return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="text-primary-500 mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold mb-2 text-gray-900">{title}</h3>
-      <p className="text-gray-600">{description}</p>
-    </div>
-  )
-}
-
 function PricingCard({ name, price, period = '', features, highlighted, comingSoon = false }: { 
   name: string
   price: string
