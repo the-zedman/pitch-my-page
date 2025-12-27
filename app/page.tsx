@@ -73,62 +73,10 @@ export default function LandingPage() {
       <AnimatedPricingSection />
 
       {/* Features Section */}
-      <section id="features" className="bg-white py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">
-            Features
-          </h2>
-          <div className="max-w-4xl mx-auto">
-            <ul className="space-y-4 text-lg text-gray-700">
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Unlimited Pitch Submissions</strong> - Submit as many pitches as you want, completely free</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Community Voting</strong> - Real votes from real people drive authentic rankings</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Public Comments & Feedback</strong> - Engage with your audience and receive genuine feedback</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Free Dofollow Backlinks</strong> - Get 2 reciprocal dofollow backlinks</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Backlink Monitoring</strong> - Track your backlinks with weekly monitoring alerts</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Transparent Rankings</strong> - All ranking factors (upvotes, comments) are publicly visible, so you can see what drives each pitch's position</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>No Pay-to-Win</strong> - Rankings based solely on community engagement, not payments</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>SEO Tools & Resources</strong> - Access our blog and resources to improve your SEO strategy</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <AnimatedFeaturesListSection />
 
       {/* CTA */}
-      <section className="bg-primary-400 py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Pitch Your Page?
-          </h2>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join indie creators who are building sustainable growth through community engagement and ethical link building.
-          </p>
-          <CTASection />
-        </div>
-      </section>
+      <AnimatedCTASection />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12">
