@@ -188,7 +188,7 @@ export default function LandingPage() {
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
-                <span><strong>Free Dofollow Backlinks</strong> - Get 2 reciprocal dofollow backlinks included with every pitch</span>
+                <span><strong>Free Dofollow Backlinks</strong> - Get 2 reciprocal dofollow backlinks</span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle className="w-6 h-6 text-primary-500 flex-shrink-0 mt-1" />
