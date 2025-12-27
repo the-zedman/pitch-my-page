@@ -142,9 +142,11 @@ export async function POST(request: NextRequest) {
         )
       }
       if (uploadError.message?.includes('already exists')) {
-        // If file exists, try with a new timestamp
-        const newFileName = `${user.id}/${imageType}_${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
-        const newFilePath = `pitches/${newFileName}`
+        // If file exists, try with a new timestamp and random suffix
+        const newTimestamp = Date.now()
+        const newRandomSuffix = Math.random().toString(36).substring(7)
+        const newFileName = `${imageType}_${newTimestamp}_${newRandomSuffix}.${fileExt}`
+        const newFilePath = `${user.id}/${newFileName}`
         const { data: retryUploadData, error: retryUploadError } = await supabase.storage
           .from('pitches')
           .upload(newFilePath, buffer, {
