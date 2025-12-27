@@ -192,13 +192,20 @@ export default function AdminDashboard() {
         {/* Quick Actions */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <a
               href="/admin/pitches"
               className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition"
             >
               <div className="font-semibold">Manage Pitches</div>
               <div className="text-sm text-gray-600">Approve, reject, or edit pitches</div>
+            </a>
+            <a
+              href="/admin/blog-posts"
+              className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-accent-eggshell transition"
+            >
+              <div className="font-semibold">Blog Posts</div>
+              <div className="text-sm text-gray-600">Create and manage blog posts</div>
             </a>
             <a
               href="/admin/users"
