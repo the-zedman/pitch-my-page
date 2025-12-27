@@ -234,15 +234,35 @@ export default function RankedPitchesSection() {
                             </span>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3 text-xs text-gray-500 flex-shrink-0">
-                          <span className="flex items-center gap-1">
-                            <Heart className="w-3 h-3" />
+                        <div className="flex items-center gap-2 text-xs text-gray-500 flex-shrink-0">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault()
+                              e.stopPropagation()
+                              handleVote(pitch.id, weekPitches, setWeekPitches)
+                            }}
+                            disabled={votingId === pitch.id}
+                            className={`flex items-center gap-1 px-2 py-1 rounded transition ${
+                              pitch.userVote === 'upvote'
+                                ? 'text-red-500 bg-red-50 hover:bg-red-100'
+                                : 'hover:text-red-500 hover:bg-gray-100'
+                            } disabled:opacity-50`}
+                          >
+                            {votingId === pitch.id ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <Heart className={`w-3 h-3 ${pitch.userVote === 'upvote' ? 'fill-current' : ''}`} />
+                            )}
                             {pitch.upvotes || 0}
-                          </span>
-                          <span className="flex items-center gap-1">
+                          </button>
+                          <Link
+                            href={`/pitches/${pitch.id}#comments`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex items-center gap-1 px-2 py-1 rounded hover:text-blue-500 hover:bg-gray-100 transition"
+                          >
                             <MessageSquare className="w-3 h-3" />
                             {pitch.comments_count || 0}
-                          </span>
+                          </Link>
                         </div>
                       </div>
                     </Link>
