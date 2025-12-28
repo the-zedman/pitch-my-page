@@ -1,13 +1,11 @@
-'use client'
-
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import HeaderNav from '@/components/HeaderNav'
 import { ArrowLeft, Calendar, User, Eye } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
-import { createSupabaseClient } from '@/lib/supabase/client'
+import { createServerSupabaseClient } from '@/lib/supabase/server'
+import RelatedPosts from './RelatedPosts'
+import BlogPostContent from './BlogPostContent'
 import './quill-content.css'
 
 interface BlogPost {
@@ -24,112 +22,56 @@ interface BlogPost {
   excerpt: string | null
   profiles?: {
     username: string | null
-  }
+  } | null
 }
 
-export default function BlogPostPage() {
-  const params = useParams()
-  const router = useRouter()
-  const slug = params?.slug as string
-  const [post, setPost] = useState<BlogPost | null>(null)
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+interface RelatedPost {
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  featured_image_url: string | null
+  published_at: string
+  views: number
+}
 
-  useEffect(() => {
-    if (slug) {
-      fetchPost()
-    }
-  }, [slug])
+export default async function BlogPostPage({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const slug = params.slug
+  const supabase = await createServerSupabaseClient()
 
-  const fetchPost = async () => {
-    try {
-      const supabase = createSupabaseClient()
-      
-      // Fetch the post
-      const { data, error: fetchError } = await supabase
-        .from('blog_posts')
-        .select(`
-          id,
-          title,
-          slug,
-          content,
-          featured_image_url,
-          published_at,
-          views,
-          author_id,
-          meta_title,
-          meta_description,
-          excerpt,
-          profiles!blog_posts_author_id_fkey (
-            username
-          )
-        `)
-        .eq('slug', slug)
-        .eq('status', 'published')
-        .single()
+  // Fetch the post
+  const { data: postData, error: fetchError } = await supabase
+    .from('blog_posts')
+    .select(`
+      id,
+      title,
+      slug,
+      content,
+      featured_image_url,
+      published_at,
+      views,
+      author_id,
+      meta_title,
+      meta_description,
+      excerpt,
+      profiles!blog_posts_author_id_fkey (
+        username
+      )
+    `)
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single()
 
-      if (fetchError) throw fetchError
-      if (!data) {
-        setError('Post not found')
-        return
-      }
-
-      setPost(data)
-
-      // Fetch related posts (excluding current post)
-      const { data: related } = await supabase
-        .from('blog_posts')
-        .select(`
-          id,
-          title,
-          slug,
-          excerpt,
-          featured_image_url,
-          published_at,
-          views,
-          profiles!blog_posts_author_id_fkey (
-            username
-          )
-        `)
-        .eq('status', 'published')
-        .neq('id', data.id)
-        .order('published_at', { ascending: false })
-        .limit(3)
-
-      setRelatedPosts(related || [])
-
-      // Increment view count
-      await supabase
-        .from('blog_posts')
-        .update({ views: (data.views || 0) + 1 })
-        .eq('id', data.id)
-
-    } catch (err: any) {
-      console.error('Error fetching blog post:', err)
-      setError(err.message || 'Failed to load blog post')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-          <p className="mt-4 text-gray-600">Loading post...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (error || !post) {
+  if (fetchError || !postData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="text-center max-w-md">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Post Not Found</h1>
-          <p className="text-gray-600 mb-6">{error || 'The blog post you\'re looking for doesn\'t exist.'}</p>
+          <p className="text-gray-600 mb-6">The blog post you're looking for doesn't exist.</p>
           <Link
             href="/blog"
             className="inline-flex items-center gap-2 bg-primary-500 text-white px-4 py-2 rounded-lg hover:bg-primary-200"
@@ -142,8 +84,46 @@ export default function BlogPostPage() {
     )
   }
 
+  // Transform post data
+  const post: BlogPost = {
+    ...postData,
+    profiles: Array.isArray(postData.profiles) && postData.profiles.length > 0
+      ? postData.profiles[0]
+      : (postData.profiles && !Array.isArray(postData.profiles) ? postData.profiles : null)
+  }
+
+  // Fetch related posts (excluding current post)
+  const { data: relatedData } = await supabase
+    .from('blog_posts')
+    .select(`
+      id,
+      title,
+      slug,
+      excerpt,
+      featured_image_url,
+      published_at,
+      views
+    `)
+    .eq('status', 'published')
+    .neq('id', post.id)
+    .order('published_at', { ascending: false })
+    .limit(3)
+
+  const relatedPosts: RelatedPost[] = (relatedData || []).map((p: any) => ({
+    id: p.id,
+    title: p.title,
+    slug: p.slug,
+    excerpt: p.excerpt,
+    featured_image_url: p.featured_image_url,
+    published_at: p.published_at,
+    views: p.views,
+  }))
+
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Client-side component to increment views */}
+      <BlogPostContent postId={post.id} currentViews={post.views} />
+
       {/* Header */}
       <header className="bg-white py-4">
         <div className="container mx-auto px-4">
@@ -203,45 +183,7 @@ export default function BlogPostPage() {
         </div>
 
         {/* Related Posts Section */}
-        {relatedPosts.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Posts</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedPosts.map((relatedPost) => (
-                <Link
-                  key={relatedPost.id}
-                  href={`/blog/${relatedPost.slug}`}
-                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-                >
-                  {relatedPost.featured_image_url && (
-                    <div className="relative w-full h-40 bg-gray-200 overflow-hidden">
-                      <img
-                        src={relatedPost.featured_image_url}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                      {relatedPost.title}
-                    </h3>
-                    {relatedPost.excerpt && (
-                      <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-                        {relatedPost.excerpt}
-                      </p>
-                    )}
-                    {relatedPost.published_at && (
-                      <p className="text-xs text-gray-500">
-                        {formatDate(relatedPost.published_at)}
-                      </p>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
+        <RelatedPosts posts={relatedPosts} />
 
         {/* Explore More Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-12">
@@ -314,4 +256,3 @@ export default function BlogPostPage() {
     </div>
   )
 }
-
