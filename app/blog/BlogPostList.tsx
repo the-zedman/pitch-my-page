@@ -17,7 +17,7 @@ interface BlogPost {
   author_id: string | null
   profiles?: {
     username: string | null
-  }
+  } | null
 }
 
 interface BlogPostListProps {

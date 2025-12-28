@@ -15,7 +15,7 @@ interface BlogPost {
   author_id: string | null
   profiles?: {
     username: string | null
-  }
+  } | null | undefined
 }
 
 export default async function BlogPage() {
@@ -39,7 +39,21 @@ export default async function BlogPage() {
     .eq('status', 'published')
     .order('published_at', { ascending: false })
 
-  const blogPosts: BlogPost[] = posts || []
+  // Transform the data to match the BlogPost interface
+  // Supabase returns profiles as an array, but we want a single object
+  const blogPosts: BlogPost[] = (posts || []).map((post: any) => ({
+    id: post.id,
+    title: post.title,
+    slug: post.slug,
+    excerpt: post.excerpt,
+    featured_image_url: post.featured_image_url,
+    published_at: post.published_at,
+    views: post.views,
+    author_id: post.author_id,
+    profiles: Array.isArray(post.profiles) && post.profiles.length > 0 
+      ? post.profiles[0] 
+      : (post.profiles && !Array.isArray(post.profiles) ? post.profiles : null)
+  }))
 
   return (
     <div className="min-h-screen bg-gray-50">
