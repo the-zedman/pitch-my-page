@@ -9,6 +9,7 @@ import AnimatedPricingSection from '@/components/AnimatedPricingSection'
 import AnimatedFeaturesListSection from '@/components/AnimatedFeaturesListSection'
 import AnimatedCTASection from '@/components/AnimatedCTASection'
 import RankedPitchesSection from '@/components/RankedPitchesSection'
+import RecentBlogPosts from '@/components/RecentBlogPosts'
 
 export const metadata: Metadata = {
   title: 'Pitch My Page - Ethical Indie Content Promotion Platform',
@@ -77,6 +78,9 @@ export default function LandingPage() {
 
       {/* CTA */}
       <AnimatedCTASection />
+
+      {/* Recent Blog Posts */}
+      <RecentBlogPosts />
 
       {/* Footer */}
       <footer className="bg-gray-900 text-gray-400 py-12">

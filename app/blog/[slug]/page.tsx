@@ -32,6 +32,7 @@ export default function BlogPostPage() {
   const router = useRouter()
   const slug = params?.slug as string
   const [post, setPost] = useState<BlogPost | null>(null)
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -75,6 +76,28 @@ export default function BlogPostPage() {
       }
 
       setPost(data)
+
+      // Fetch related posts (excluding current post)
+      const { data: related } = await supabase
+        .from('blog_posts')
+        .select(`
+          id,
+          title,
+          slug,
+          excerpt,
+          featured_image_url,
+          published_at,
+          views,
+          profiles!blog_posts_author_id_fkey (
+            username
+          )
+        `)
+        .eq('status', 'published')
+        .neq('id', data.id)
+        .order('published_at', { ascending: false })
+        .limit(3)
+
+      setRelatedPosts(related || [])
 
       // Increment view count
       await supabase
@@ -178,6 +201,47 @@ export default function BlogPostPage() {
         <div className="blog-content-wrapper mb-12">
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </div>
+
+        {/* Related Posts Section */}
+        {relatedPosts.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Related Posts</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedPosts.map((relatedPost) => (
+                <Link
+                  key={relatedPost.id}
+                  href={`/blog/${relatedPost.slug}`}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  {relatedPost.featured_image_url && (
+                    <div className="relative w-full h-40 bg-gray-200 overflow-hidden">
+                      <img
+                        src={relatedPost.featured_image_url}
+                        alt={relatedPost.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                      {relatedPost.title}
+                    </h3>
+                    {relatedPost.excerpt && (
+                      <p className="text-gray-600 text-sm line-clamp-2 mb-3">
+                        {relatedPost.excerpt}
+                      </p>
+                    )}
+                    {relatedPost.published_at && (
+                      <p className="text-xs text-gray-500">
+                        {formatDate(relatedPost.published_at)}
+                      </p>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Explore More Section */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-12">
