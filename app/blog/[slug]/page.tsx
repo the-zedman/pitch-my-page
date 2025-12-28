@@ -8,6 +8,7 @@ import HeaderNav from '@/components/HeaderNav'
 import { ArrowLeft, Calendar, User, Eye } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import { createSupabaseClient } from '@/lib/supabase/client'
+import './quill-content.css'
 
 interface BlogPost {
   id: string
@@ -174,35 +175,7 @@ export default function BlogPostPage() {
         </header>
 
         {/* Post Content */}
-        <div 
-          className="prose prose-lg max-w-none mb-12"
-          style={{
-            lineHeight: '1.8'
-          }}
-        >
-          <style jsx>{`
-            .prose p {
-              margin-bottom: 1.5rem !important;
-            }
-            .prose h2 {
-              margin-top: 3rem !important;
-              margin-bottom: 1.5rem !important;
-            }
-            .prose h3 {
-              margin-top: 2.5rem !important;
-              margin-bottom: 1rem !important;
-            }
-            .prose h4 {
-              margin-top: 2rem !important;
-              margin-bottom: 0.75rem !important;
-            }
-            .prose ul, .prose ol {
-              margin-bottom: 1.5rem !important;
-            }
-            .prose li {
-              margin-bottom: 0.75rem !important;
-            }
-          `}</style>
+        <div className="blog-content-wrapper mb-12">
           <div dangerouslySetInnerHTML={{ __html: post.content }} />
         </div>
 
