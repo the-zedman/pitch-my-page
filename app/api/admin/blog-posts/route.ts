@@ -127,6 +127,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Convert keywords from comma-separated string to array
+    let keywordsArray: string[] | null = null
+    if (keywords && typeof keywords === 'string' && keywords.trim()) {
+      keywordsArray = keywords.split(',').map(k => k.trim()).filter(k => k.length > 0)
+    }
+
     // Create the blog post
     const { data: post, error } = await adminSupabase
       .from('blog_posts')
@@ -141,7 +147,7 @@ export async function POST(request: NextRequest) {
         published_at: status === 'published' && published_at ? published_at : null,
         meta_title: meta_title || null,
         meta_description: meta_description || null,
-        keywords: keywords || null,
+        keywords: keywordsArray,
       })
       .select()
       .single()
@@ -151,7 +157,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create blog post', details: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ post }, { status: 201 })
+    // Convert keywords array to comma-separated string for the form
+    const postWithStringKeywords = {
+      ...post,
+      keywords: Array.isArray(post.keywords) ? post.keywords.join(', ') : (post.keywords || '')
+    }
+
+    return NextResponse.json({ post: postWithStringKeywords }, { status: 201 })
   } catch (error: any) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 })

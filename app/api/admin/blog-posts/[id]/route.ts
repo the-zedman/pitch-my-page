@@ -47,7 +47,13 @@ export async function GET(
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ post })
+    // Convert keywords array to comma-separated string for the form
+    const postWithStringKeywords = {
+      ...post,
+      keywords: Array.isArray(post.keywords) ? post.keywords.join(', ') : (post.keywords || '')
+    }
+
+    return NextResponse.json({ post: postWithStringKeywords })
   } catch (error: any) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 })
@@ -116,6 +122,12 @@ export async function PUT(
       )
     }
 
+    // Convert keywords from comma-separated string to array
+    let keywordsArray: string[] | null = null
+    if (keywords && typeof keywords === 'string' && keywords.trim()) {
+      keywordsArray = keywords.split(',').map(k => k.trim()).filter(k => k.length > 0)
+    }
+
     // Update the blog post
     const updateData: any = {
       title,
@@ -126,7 +138,7 @@ export async function PUT(
       status: status || 'draft',
       meta_title: meta_title || null,
       meta_description: meta_description || null,
-      keywords: keywords || null,
+      keywords: keywordsArray,
       updated_at: new Date().toISOString(),
     }
 
@@ -153,7 +165,13 @@ export async function PUT(
       return NextResponse.json({ error: 'Blog post not found' }, { status: 404 })
     }
 
-    return NextResponse.json({ post })
+    // Convert keywords array to comma-separated string for the form
+    const postWithStringKeywords = {
+      ...post,
+      keywords: Array.isArray(post.keywords) ? post.keywords.join(', ') : (post.keywords || '')
+    }
+
+    return NextResponse.json({ post: postWithStringKeywords })
   } catch (error: any) {
     console.error('API error:', error)
     return NextResponse.json({ error: 'Internal server error', details: error.message }, { status: 500 })
