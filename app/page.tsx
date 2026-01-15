@@ -8,7 +8,7 @@ import AnimatedFeaturesSection from '@/components/AnimatedFeaturesSection'
 import AnimatedPricingSection from '@/components/AnimatedPricingSection'
 import AnimatedFeaturesListSection from '@/components/AnimatedFeaturesListSection'
 import AnimatedCTASection from '@/components/AnimatedCTASection'
-import RankedPitchesSection from '@/components/RankedPitchesSection'
+import RecentSubmissionsSection from '@/components/RecentSubmissionsSection'
 import RecentBlogPosts from '@/components/RecentBlogPosts'
 
 export const metadata: Metadata = {
@@ -64,8 +64,8 @@ export default function LandingPage() {
       {/* Hero Section */}
       <AnimatedHero />
 
-      {/* Ranked Pitches */}
-      <RankedPitchesSection />
+      {/* Recent Submissions */}
+      <RecentSubmissionsSection />
 
       {/* Features */}
       <AnimatedFeaturesSection />
